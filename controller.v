@@ -12,7 +12,7 @@ module controller(
 	opcode,
 	sub_opcode,
 	mux4to1_select,
-	mux2to1_select,
+	write_reg_select,
 	imm_reg_select,
 	clock,
 	reset,
@@ -41,7 +41,7 @@ module controller(
 	output [5:0] opcode;
 	output [4:0] sub_opcode;
 	output reg [1:0] mux4to1_select;
-	output reg mux2to1_select;
+	output reg [1:0] write_reg_select;
 	output reg [1:0] imm_reg_select;
 	
 	output reg enable_pc;
@@ -85,109 +85,109 @@ module controller(
 					//`NOP:begin
 					//	imm_reg_select=2'b00;
 					//	mux4to1_select=2'b00;
-					//	mux2to1_select=1'b0;
+					//	write_reg_select=2'b00;
 					//end
 					`ADD:begin
 						imm_reg_select=2'b00;
 						mux4to1_select=2'b00;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 					`SUB:begin
 						imm_reg_select=2'b00;
 						mux4to1_select=2'b00;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 					`AND:begin
 						imm_reg_select=2'b00;
 						mux4to1_select=2'b00;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 					`OR :begin
 						imm_reg_select=2'b00;
 						mux4to1_select=2'b00;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 					`XOR:begin
 						imm_reg_select=2'b00;
 						mux4to1_select=2'b00;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 					//Immediate
 					`SRLI:begin
 						imm_reg_select=2'b01;
 						mux4to1_select=2'b00;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 					`SLLI:begin
 						imm_reg_select=2'b01;
 						mux4to1_select=2'b00;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 					`ROTRI:begin
 						imm_reg_select=2'b01;
 						mux4to1_select=2'b00;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 					default:begin
 						imm_reg_select=2'b00;
 						mux4to1_select=2'b00;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 				endcase	
 			end
 			`ADDI:begin
 				imm_reg_select=2'b01;
 				mux4to1_select=2'b01;
-				mux2to1_select=1'b0;
+				write_reg_select=2'b00;
 			end
 			`ORI:begin
 				imm_reg_select=2'b01;
 				mux4to1_select=2'b10;
-				mux2to1_select=1'b0;
+				write_reg_select=2'b00;
 			end
 			`XORI:begin
 				imm_reg_select=2'b01;
 				mux4to1_select=2'b10;
-				mux2to1_select=1'b0;
+				write_reg_select=2'b00;
 			end
 			`MOVI:begin
 				imm_reg_select=2'b01;
 				mux4to1_select=2'b11;
-				mux2to1_select=1'b1;
+				write_reg_select=2'b01;
 			end
 			`LWI:begin
 				imm_reg_select=2'b10;
 				mux4to1_select=2'bxx;
-				mux2to1_select=1'b0;
+				write_reg_select=2'b00;
 			end
 			`SWI:begin
 				imm_reg_select=2'b10;
 				mux4to1_select=2'bxx;
-				mux2to1_select=1'b0;
+				write_reg_select=2'b00;
 			end
 			`TY_LS:begin
 				case(`SUBOP_LS)
 					`LW:begin
 						imm_reg_select=2'b11;
 						mux4to1_select=2'bxx;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 					`SW:begin
 						imm_reg_select=2'b11;
 						mux4to1_select=2'bxx;
-						mux2to1_select=1'b0;
+						write_reg_select=2'b00;
 					end
 					default:begin
 						imm_reg_select=2'bxx;
 						mux4to1_select=2'bxx;
-						mux2to1_select=1'bx;
+						write_reg_select=2'bxx;
 					end
 				endcase
 			end
 			default:begin
 				imm_reg_select=2'b00;
 				mux4to1_select=2'b00;
-				mux2to1_select=1'b0;
+				write_reg_select=2'b00;
 			end
 		endcase
 	end

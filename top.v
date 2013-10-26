@@ -45,7 +45,7 @@ module top(
 
 	//controller to muxs
 	wire [1:0] mux4to1_select;
-	wire mux2to1_select;
+	wire [1:0] write_reg_select;
 	wire [1:0] imm_reg_select;
 
 	//controller to alu
@@ -104,7 +104,7 @@ module top(
 		.ir_rb(instruction[14:10]),
 		.ir_sv(instruction[9:8]),
 		.mux4to1_select(mux4to1_select),
-		.mux2to1_select(mux2to1_select),
+		.write_reg_select(write_reg_select),
 		.imm_reg_select(imm_reg_select),
 		.output_imm_reg_mux(alu_src2),
 		.write_data(write_data),
@@ -121,7 +121,7 @@ module top(
 		.opcode(opcode),
 		.sub_opcode(sub_opcode),
 		.mux4to1_select(mux4to1_select),
-		.mux2to1_select(mux2to1_select),
+		.write_reg_select(write_reg_select),
 		.imm_reg_select(imm_reg_select),
 		.enable_pc(enable_pc),
 		.IM_enable(IM_enable),

@@ -4,7 +4,7 @@ module muxs(
 	imm_20bit,
 	read_data2,
 	mux4to1_select,
-	mux2to1_select,
+	write_reg_select,
 	imm_reg_select,
 	output_imm_reg_mux,
 	write_data,
@@ -28,7 +28,7 @@ module muxs(
 	input [1:0] ir_sv;
 	
 	input [1:0] mux4to1_select;
-	input mux2to1_select;
+	input [1:0] write_reg_select;
 	input [1:0] imm_reg_select;
 
 	input [DataSize-1:0] alu_output;
@@ -70,11 +70,11 @@ module muxs(
 	end
 
 	always @(*) begin
-		case(mux2to1_select)
-			1'b0: begin
+		case(write_reg_select)
+			2'b00: begin
 				write_data = alu_output;
 			end
-			1'b1: begin
+			2'b01: begin
 				write_data = output_imm_reg_mux;
 			end
 		endcase
