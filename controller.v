@@ -44,8 +44,8 @@ module controller(
 	output reg enable_pc;
 
 	output reg IM_enable;
-	output reg IM_read;
-	output reg IM_write;
+	output IM_read;
+	output IM_write;
 
 	output reg DM_enable;
 	output reg DM_read;
@@ -56,6 +56,9 @@ module controller(
 	reg [2:0] current_state;
 	reg [2:0] next_state;
 	reg [31:0] present_instruction;
+
+	assign IM_read=1'b1;
+	assign IM_write=1'b0;
 
 	parameter S0=3'b000;
 	parameter S1=3'b001;
@@ -236,8 +239,6 @@ module controller(
 
 				enable_pc=1'b1;
 				IM_enable=1'b1;
-				IM_read=1'b1;
-				IM_write=1'b0;
 			end
 			S1: begin
 				next_state=S2;
@@ -247,8 +248,6 @@ module controller(
 
 				enable_pc=1'b0;
 				IM_enable=1'b0;
-				IM_read=1'b0;
-				IM_write=1'b0;
 			end
 			S2: begin
 				next_state=S3;
@@ -258,8 +257,6 @@ module controller(
 
 				enable_pc=1'b0;
 				IM_enable=1'b0;
-				IM_read=1'b0;
-				IM_write=1'b0;
 			end
 			S3: begin
 				next_state=S4;
@@ -269,20 +266,15 @@ module controller(
 
 				enable_pc=1'b0;
 				IM_enable=1'b0;
-				IM_read=1'b0;
-				IM_write=1'b0;
 			end
 			S4: begin
 				next_state=S0;
 				enable_fetch=1'b0;
-				enable_execute=1'b0;//**STRANGE**//
-				//enable_execute=1'b1;//**STRANGE**//
+				enable_execute=1'b0;
 				enable_writeback=1'b1;
 
 				enable_pc=1'b0;
 				IM_enable=1'b0;
-				IM_read=1'b0;
-				IM_write=1'b0;
 			end
 			default: begin
 				next_state=S0;
@@ -292,8 +284,6 @@ module controller(
 
 				enable_pc=1'b0;
 				IM_enable=1'b0;
-				IM_read=1'b0;
-				IM_write=1'b0;
 			end
 		endcase
 	end
