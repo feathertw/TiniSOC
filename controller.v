@@ -155,6 +155,35 @@ module controller(
 				mux4to1_select=2'b11;
 				mux2to1_select=1'b1;
 			end
+			`LWI:begin
+				imm_reg_select=2'b10;
+				mux4to1_select=2'bxx;
+				mux2to1_select=1'b0;
+			end
+			`SWI:begin
+				imm_reg_select=2'b10;
+				mux4to1_select=2'bxx;
+				mux2to1_select=1'b0;
+			end
+			`TY_LS:begin
+				case(`SUBOP_LS)
+					`LW:begin
+						imm_reg_select=2'b11;
+						mux4to1_select=2'bxx;
+						mux2to1_select=1'b0;
+					end
+					`SW:begin
+						imm_reg_select=2'b11;
+						mux4to1_select=2'bxx;
+						mux2to1_select=1'b0;
+					end
+					default:begin
+						imm_reg_select=2'bxx;
+						mux4to1_select=2'bxx;
+						mux2to1_select=1'bx;
+					end
+				endcase
+			end
 			default:begin
 				imm_reg_select=2'b00;
 				mux4to1_select=2'b00;
