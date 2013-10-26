@@ -10,7 +10,7 @@ module muxs(
 	write_data,
 	alu_output,
 	
-	ir_imm,
+	ir_imm_15bit,
 	ir_rb,
 	ir_sv,
 );
@@ -25,7 +25,7 @@ module muxs(
 	input [20-1:0] imm_20bit;
 	input [DataSize-1:0] read_data2;
 
-	input [14:0] ir_imm;
+	input [14:0] ir_imm_15bit;
 	input [4:0] ir_rb;
 	input [1:0] ir_sv;
 	
@@ -63,7 +63,7 @@ module muxs(
 				output_imm_reg_mux = imm;
 			end
 			2'b10: begin
-				output_imm_reg_mux = ir_imm<<2; 
+				output_imm_reg_mux = ir_imm_15bit<<2; 
 			end
 			2'b11: begin
 				output_imm_reg_mux = ir_rb<<ir_sv;
