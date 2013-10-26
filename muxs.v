@@ -3,6 +3,8 @@ module muxs(
 	imm_15bit,
 	imm_20bit,
 	read_data2,
+	mem_read_data,
+
 	mux4to1_select,
 	write_reg_select,
 	imm_reg_select,
@@ -23,6 +25,7 @@ module muxs(
 	input [15-1:0] imm_15bit;
 	input [20-1:0] imm_20bit;
 	input [DataSize-1:0] read_data2;
+	input [DataSize-1:0] mem_read_data;
 
 	input [4:0] ir_rb;
 	input [1:0] ir_sv;
@@ -76,6 +79,9 @@ module muxs(
 			end
 			2'b01: begin
 				write_data = output_imm_reg_mux;
+			end
+			2'b10: begin
+				write_data = mem_read_data;
 			end
 		endcase
 	end

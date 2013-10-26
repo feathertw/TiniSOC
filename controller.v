@@ -158,24 +158,24 @@ module controller(
 			`LWI:begin
 				imm_reg_select=2'b10;
 				mux4to1_select=2'bxx;
-				write_reg_select=2'b00;
+				write_reg_select=2'b10;
 			end
 			`SWI:begin
 				imm_reg_select=2'b10;
 				mux4to1_select=2'bxx;
-				write_reg_select=2'b00;
+				write_reg_select=2'bxx;
 			end
 			`TY_LS:begin
 				case(`SUBOP_LS)
 					`LW:begin
 						imm_reg_select=2'b11;
 						mux4to1_select=2'bxx;
-						write_reg_select=2'b00;
+						write_reg_select=2'b10;
 					end
 					`SW:begin
 						imm_reg_select=2'b11;
 						mux4to1_select=2'bxx;
-						write_reg_select=2'b00;
+						write_reg_select=2'bxx;
 					end
 					default:begin
 						imm_reg_select=2'bxx;

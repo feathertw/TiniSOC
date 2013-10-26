@@ -43,8 +43,8 @@ module top_tb;
 	        .DM_write(DM_write),
 	        .DM_enable(DM_enable),
 		.DM_address(DM_address),
-		.DM_in(DM_in),
-		.DM_out(DM_out)
+		.DM_out(DM_out),
+		.mem_read_data(DM_out)
 	); 
  
 	im IM(

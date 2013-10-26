@@ -20,6 +20,7 @@ module top(
 	DM_address,
 	DM_in,
 	DM_out,
+	mem_read_data,
 );
 	input clk;
 	input rst;
@@ -38,6 +39,7 @@ module top(
 	output [11:0] DM_address;
 	output [31:0] DM_in;
 	input [31:0] DM_out;
+	input [31:0] mem_read_data;
 
 	//controller to regfile
 	wire enable_fetch;
@@ -101,6 +103,7 @@ module top(
 		.imm_15bit(instruction[14:0]),
 		.imm_20bit(instruction[19:0]),
 		.read_data2(read_data2),
+		.mem_read_data(mem_read_data),
 		.ir_rb(instruction[14:10]),
 		.ir_sv(instruction[9:8]),
 		.mux4to1_select(mux4to1_select),
