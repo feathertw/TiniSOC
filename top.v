@@ -78,6 +78,7 @@ module top(
 		.src2(alu_src2),
 		.opcode(opcode),
 		.sub_opcode(sub_opcode),
+		.sub_op_ls(instruction[7:0]),
 		.enable_execute(enable_execute),
 		.reset(rst)
 	);

@@ -1,6 +1,16 @@
 `include "def_op.v"
  
-module alu(alu_result,alu_overflow,src1,src2,opcode,sub_opcode,enable_execute,reset);
+module alu(
+	alu_result,
+	alu_overflow,
+	src1,
+	src2,
+	opcode,
+	sub_opcode,
+	sub_op_ls,
+	enable_execute,
+	reset
+);
 
     output reg [31:0] alu_result;
     output reg alu_overflow;
@@ -9,6 +19,7 @@ module alu(alu_result,alu_overflow,src1,src2,opcode,sub_opcode,enable_execute,re
     input [31:0] src2;
     input [5:0]  opcode;
     input [4:0]  sub_opcode;
+    input [7:0]  sub_op_ls;
     input reset;
     input enable_execute;
 
@@ -103,7 +114,34 @@ module alu(alu_result,alu_overflow,src1,src2,opcode,sub_opcode,enable_execute,re
                     alu_result=src1;
                     alu_overflow=1'b0;
                 end
-
+		`LWI:begin
+                    {a,alu_result[30:0]}=src1[30:0]+src2[30:0];
+                    {b,alu_result[31]}=src1[31]+src2[31]+a;
+                    alu_overflow=a^b;
+		end
+		`SWI:begin
+                    {a,alu_result[30:0]}=src1[30:0]+src2[30:0];
+                    {b,alu_result[31]}=src1[31]+src2[31]+a;
+                    alu_overflow=a^b;
+		end
+		`TY_LS:begin
+			case(sub_op_ls)
+				`LW:begin
+					{a,alu_result[30:0]}=src1[30:0]+src2[30:0];
+					{b,alu_result[31]}=src1[31]+src2[31]+a;
+					alu_overflow=a^b;
+				end
+				`SW:begin
+					{a,alu_result[30:0]}=src1[30:0]+src2[30:0];
+					{b,alu_result[31]}=src1[31]+src2[31]+a;
+					alu_overflow=a^b;
+				end
+				default:begin
+					alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
+					alu_overflow=1'bx;
+				end
+			endcase
+		end
                 default:
                 begin
                     alu_result=32'b0;
