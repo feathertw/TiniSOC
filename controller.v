@@ -53,14 +53,14 @@ module controller(
 
 	wire [5:0] opcode = ir[30:25];
 	wire [4:0] sub_opcode = ir[4:0];
-	reg [1:0] current_state;
-	reg [1:0] next_state;
+	reg [2:0] current_state;
+	reg [2:0] next_state;
 	reg [31:0] present_instruction;
 
-	parameter S0=2'b00;
-	parameter S1=2'b01;
-	parameter S2=2'b10;
-	parameter S3=2'b11;
+	parameter S0=3'b000;
+	parameter S1=3'b001;
+	parameter S2=3'b010;
+	parameter S3=3'b011;
 
 	always@(posedge clock) begin
 		if(reset)begin 
