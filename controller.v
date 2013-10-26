@@ -61,6 +61,7 @@ module controller(
 	parameter S1=3'b001;
 	parameter S2=3'b010;
 	parameter S3=3'b011;
+	parameter S4=3'b100;
 
 	always@(posedge clock) begin
 		if(reset)begin 
@@ -261,6 +262,17 @@ module controller(
 				IM_write=1'b0;
 			end
 			S3: begin
+				next_state=S4;
+				enable_fetch=1'b0;
+				enable_execute=1'b0;
+				enable_writeback=1'b0;
+
+				enable_pc=1'b0;
+				IM_enable=1'b0;
+				IM_read=1'b0;
+				IM_write=1'b0;
+			end
+			S4: begin
 				next_state=S0;
 				enable_fetch=1'b0;
 				enable_execute=1'b0;//**STRANGE**//

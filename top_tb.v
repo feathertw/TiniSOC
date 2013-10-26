@@ -78,19 +78,19 @@ module top_tb;
   
 	initial begin
 		#10
-		#40 `DEBUG("MOVI  ",0,4)
-		#40 `DEBUG("ADDI  ",0,17)
-		#40 `DEBUG("ORI   ",1,19)
-		#40 `DEBUG("XORI  ",1,20)
-		#40 
-		#40 `DEBUG("ADD   ",1,37)
-		#40 `DEBUG("SUB   ",1,20)
-		#40 `DEBUG("AND   ",1,16)
-		#40 `DEBUG("OR    ",0,17)
-		#40 `DEBUG("XOR   ",2,1)
-		#40 `DEBUG("SRLI  ",2,2)
-		#40 `DEBUG("SLLI  ",2,16)
-		#40 `DEBUG("ROTRI ",2,136)
+		#50 `DEBUG("MOVI  ",0,4)
+		#50 `DEBUG("ADDI  ",0,17)
+		#50 `DEBUG("ORI   ",1,19)
+		#50 `DEBUG("XORI  ",1,20)
+		#50 
+		#50 `DEBUG("ADD   ",1,37)
+		#50 `DEBUG("SUB   ",1,20)
+		#50 `DEBUG("AND   ",1,16)
+		#50 `DEBUG("OR    ",0,17)
+		#50 `DEBUG("XOR   ",2,1)
+		#50 `DEBUG("SRLI  ",2,2)
+		#50 `DEBUG("SLLI  ",2,16)
+		#50 `DEBUG("ROTRI ",2,136)
 	end
 	initial begin
   		$display("\n____________________TESTBENCH____________________");
@@ -100,7 +100,7 @@ module top_tb;
 		
 		$readmemb("ir_data.txt",IM.mem_data); //machine code for fig.2-2
 		   
-		#520
+		#650
 		#10
 		$display( "done" );
 		for( i=0;i<5;i=i+1 ) $display( "IM[%3d]=%b",i,IM.mem_data[i] ); 
