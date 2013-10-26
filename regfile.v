@@ -1,11 +1,21 @@
 module regfile(
-	read_data1,read_data2,
-	read_address1,read_address2,write_address,write_data,
-	clock,reset,enable_fetch,enable_writeback);
+	clock,
+	reset,
+	mem_write_data,
+	read_data1,
+	read_data2,
+	read_address1,
+	read_address2,
+	write_address,
+	write_data,
+	enable_fetch,
+	enable_writeback
+);
 
 	parameter DataSize = 32;
 	parameter AddrSize = 5;
 
+	output [DataSize-1:0] mem_write_data;
 	output reg [DataSize-1:0] read_data1;
 	output reg [DataSize-1:0] read_data2;
 
@@ -20,6 +30,8 @@ module regfile(
 
 	reg [DataSize-1:0] rw_reg [31:0];
 	integer i;
+
+	assign mem_write_data = rw_reg[write_address];
 
 	always @(posedge clock, posedge reset) begin
 		if(reset) begin

@@ -86,6 +86,7 @@ module top(
 	);
 	
 	regfile REGFILE(
+		.mem_write_data(DM_in),
 		.read_data1(read_data1),
 		.read_data2(read_data2),
 		.read_address1(instruction[19:15]),
