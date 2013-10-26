@@ -101,6 +101,7 @@ module top_tb;
 		$readmemb("ir_data.txt",IM.mem_data); //machine code for fig.2-2
 		   
 		#520
+		#10
 		$display( "done" );
 		for( i=0;i<5;i=i+1 ) $display( "IM[%3d]=%b",i,IM.mem_data[i] ); 
 		for( i=0;i<5;i=i+1 ) $display( "register[%d]=%d",i,TOP.REGFILE.rw_reg[i] ); 
