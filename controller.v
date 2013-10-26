@@ -26,9 +26,6 @@ module controller(
 	DM_enable,
 	DM_read,
 	DM_write,
-	DM_address,
-	DM_in,
-	DM_out,
 );
 	
 	input clock;
@@ -53,10 +50,6 @@ module controller(
 	output reg DM_enable;
 	output reg DM_read;
 	output reg DM_write;
-
-	output reg [11:0] DM_address;
-	output reg [31:0] DM_in;
-	input [31:0] DM_out;
 
 	wire [5:0] opcode = ir[30:25];
 	wire [4:0] sub_opcode = ir[4:0];

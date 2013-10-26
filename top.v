@@ -20,7 +20,6 @@ module top(
 	DM_address,
 	DM_in,
 	DM_out,
-	mem_read_data,
 );
 	input clk;
 	input rst;
@@ -39,7 +38,6 @@ module top(
 	output [11:0] DM_address;
 	output [31:0] DM_in;
 	input [31:0] DM_out;
-	input [31:0] mem_read_data;
 
 	//controller to regfile
 	wire enable_fetch;
@@ -73,6 +71,8 @@ module top(
 	//muxs to alu
 	wire [31:0] alu_src2;
 
+	assign DM_address=alu_result[11:0];
+
 	alu ALU(
 		.alu_result(alu_result),
 		.alu_overflow(alu_overflow),
@@ -103,7 +103,7 @@ module top(
 		.imm_15bit(instruction[14:0]),
 		.imm_20bit(instruction[19:0]),
 		.read_data2(read_data2),
-		.mem_read_data(mem_read_data),
+		.mem_read_data(DM_out),
 		.ir_rb(instruction[14:10]),
 		.ir_sv(instruction[9:8]),
 		.mux4to1_select(mux4to1_select),
@@ -132,10 +132,7 @@ module top(
 		.IM_write(IM_write),
 		.DM_enable(DM_enable),
 		.DM_read(DM_read),
-		.DM_write(DM_write),
-		.DM_address(DM_address),
-		.DM_in(DM_in),
-		.DM_out(DM_out)
+		.DM_write(DM_write)
 	);
 	pc PC(
 		.clock(clk),
