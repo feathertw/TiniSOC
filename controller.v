@@ -233,7 +233,7 @@ module controller(
 				enable_execute=1'b0;
 				enable_writeback=1'b0;
 
-				enable_pc=1'b0;
+				enable_pc=1'b1;
 				IM_enable=1'b1;
 				IM_read=1'b1;
 				IM_write=1'b0;
@@ -244,7 +244,7 @@ module controller(
 				enable_execute=1'b0;
 				enable_writeback=1'b0;
 
-				enable_pc=1'b1;
+				enable_pc=1'b0;
 				IM_enable=1'b0;
 				IM_read=1'b0;
 				IM_write=1'b0;
