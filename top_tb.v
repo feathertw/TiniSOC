@@ -4,6 +4,8 @@
 `include "im.v"
 `include "dm.v"
 
+`define PROG1
+
 module top_tb;
 
 	reg clk;
@@ -83,8 +85,9 @@ module top_tb;
 		clk=0;
 		rst=1'b1;
 		#10 rst=1'b0;
-		$readmemb("ir_data1.prog",IM.mem_data); //machine code for fig.2-2
 
+`ifdef PROG1
+		$readmemb("ir_data1.prog",IM.mem_data); //machine code for fig.2-2
 		#50 `DEBUG_REG("ADDI  ",1,9)
 		#50 `DEBUG_REG("XORI  ",1,3)
 		#50 `DEBUG_REG("MOVI  ",0,3)
@@ -106,6 +109,7 @@ module top_tb;
 		#50 `DEBUG_REG("SUB   ",3,5)
 		#50 `DEBUG_REG("XOR   ",1,13)
 		#50 `DEBUG_REG("ROTRI ",2,12)
+`endif
 		#10
 		//for( i=0;i<5;i=i+1 ) $display( "IM[%4d]=%b",i*4,IM.mem_data[i] ); 
 		for( i=0;i<5;i=i+1 ) $display( "register[%d]=%d",i,TOP.REGFILE.rw_reg[i] );
