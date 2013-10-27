@@ -78,45 +78,39 @@ module top_tb;
 	//clock gen.
 	always #5 clk=~clk;
   
-	/*
-	initial begin
-		#10
-		//#50 `DEBUG("MOVI  ",0,4)
-		//#50 `DEBUG("ADDI  ",0,17)
-		//#50 `DEBUG("ORI   ",1,19)
-		//#50 `DEBUG("XORI  ",1,20)
-		//#50 
-		//#50 `DEBUG("ADD   ",1,37)
-		//#50 `DEBUG("SUB   ",1,20)
-		//#50 `DEBUG("AND   ",1,16)
-		//#50 `DEBUG("OR    ",0,17)
-		//#50 `DEBUG("XOR   ",2,1)
-		//#50 `DEBUG("SRLI  ",2,2)
-		//#50 `DEBUG("SLLI  ",2,16)
-		//#50 `DEBUG("ROTRI ",2,136)
-	end
-	*/
 	initial begin
   		$display("\n____________________TESTBENCH____________________");
 		clk=0;
 		rst=1'b1;
 		#10 rst=1'b0;
-		
 		$readmemb("ir_data.prog",IM.mem_data); //machine code for fig.2-2
-		   
-		//#650
-		#(50*5)
+
+		#50 `DEBUG_REG("ADDI  ",1,9)
+		#50 `DEBUG_REG("XORI  ",1,3)
+		#50 `DEBUG_REG("MOVI  ",0,3)
+		#50 `DEBUG_SWX("SW    ",0,3)
+		#50 `DEBUG_REG("ORI   ",0,7)
+		#50 `DEBUG_REG("AND   ",1,3)
+		#50 `DEBUG_LWX("LW    ",0,0)
+		#50
+		#50 `DEBUG_REG("ADD   ",1,6)
+		#50 `DEBUG_REG("OR    ",1,7)
+		#50 `DEBUG_REG("SUB   ",1,4)
+		#50 `DEBUG_SWX("SWI   ",76,4)
+		#50 `DEBUG_REG("SRLI  ",2,1)
+		#50 `DEBUG_REG("SLLI  ",2,8)
+		#50 `DEBUG_LWX("LWI   ",1,92)
+		#50 `DEBUG_REG("AND   ",1,0)
+		#50 `DEBUG_SWX("SWI   ",140,8)
+		#50 `DEBUG_LWX("LWI   ",3,140)
+		#50 `DEBUG_REG("SUB   ",3,5)
+		#50 `DEBUG_REG("XOR   ",1,13)
+		#50 `DEBUG_REG("ROTRI ",2,12)
 		#10
-		$display( "done" );
-		for( i=0;i<5;i=i+1 ) $display( "IM[%4d]=%b",i*4,IM.mem_data[i] ); 
-		for( i=0;i<5;i=i+1 ) $display( "register[%d]=%d",i,TOP.REGFILE.rw_reg[i] ); 
-		for( i=0;i<8;i=i+1 ) $display( "DM[%4d]=%d",i*4,DM.mem_data[i] );
-		//for( i=0;i<31;i=i+1 ) $display( "IM[%h]=%h",i,IM.mem_data[i] ); 
-		//for( i=0;i<32;i=i+1 ) $display( "register[%d]=%d",i,TOP.REGFILE.rw_reg[i] ); 
-		//for( i=0;i<40;i=i+1 ) $display( "DM[%d]=%d",i,DM1.mem_data[i] );
-		        
+		//for( i=0;i<5;i=i+1 ) $display( "IM[%4d]=%b",i*4,IM.mem_data[i] ); 
+		for( i=0;i<5;i=i+1 ) $display( "register[%d]=%d",i,TOP.REGFILE.rw_reg[i] );
+		for( i=0;i<5;i=i+1 ) $display( "DM[%4d]=%d",i*4,DM.mem_data[i] );
   		$display("____________________FINISH____________________\n");
 		$finish;
 	end
-  
 endmodule
