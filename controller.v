@@ -262,6 +262,7 @@ module controller(
 
 				enable_pc=1'b1;
 				IM_enable=1'b1;
+				DM_enable=1'b0;
 			end
 			S1: begin
 				next_state=S2;
@@ -271,6 +272,7 @@ module controller(
 
 				enable_pc=1'b0;
 				IM_enable=1'b0;
+				DM_enable=1'b0;
 			end
 			S2: begin
 				next_state=S3;
@@ -280,6 +282,7 @@ module controller(
 
 				enable_pc=1'b0;
 				IM_enable=1'b0;
+				DM_enable=1'b0;
 			end
 			S3: begin
 				next_state=S4;
@@ -289,6 +292,7 @@ module controller(
 
 				enable_pc=1'b0;
 				IM_enable=1'b0;
+				DM_enable=1'b1;
 			end
 			S4: begin
 				next_state=S0;
@@ -298,6 +302,7 @@ module controller(
 
 				enable_pc=1'b0;
 				IM_enable=1'b0;
+				DM_enable=1'b0;
 			end
 			default: begin
 				next_state=S0;
