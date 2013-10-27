@@ -2,7 +2,7 @@ module muxs(
 	imm_5bit,
 	imm_15bit,
 	imm_20bit,
-	read_data2,
+	read_reg_data2,
 	mem_read_data,
 
 	imm_extend_select,
@@ -23,7 +23,7 @@ module muxs(
 	input [ 5-1:0] imm_5bit;
 	input [15-1:0] imm_15bit;
 	input [20-1:0] imm_20bit;
-	input [DataSize-1:0] read_data2;
+	input [DataSize-1:0] read_reg_data2;
 	input [DataSize-1:0] mem_read_data;
 
 	input [1:0] ir_sv;
@@ -56,7 +56,7 @@ module muxs(
 	always @(*) begin
 		case(imm_reg_select)
 			2'b00: begin
-				output_imm_reg_mux = read_data2;
+				output_imm_reg_mux = read_reg_data2;
 			end
 			2'b01: begin
 				output_imm_reg_mux = imm;
@@ -65,7 +65,7 @@ module muxs(
 				output_imm_reg_mux = imm_15bit<<2; 
 			end
 			2'b11: begin
-				output_imm_reg_mux = read_data2<<ir_sv;
+				output_imm_reg_mux = read_reg_data2<<ir_sv;
 			end
 		endcase
 	end

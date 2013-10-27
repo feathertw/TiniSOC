@@ -72,7 +72,7 @@ module top(
 	wire [31:0] alu_result;
 
 	//regfile to muxs
-	wire [31:0] read_data2;
+	wire [31:0] read_reg_data2;
 	wire [4:0] imm_5bit;
 	wire [14:0] imm_15bit;
 	wire [19:0] imm_20bit;
@@ -100,7 +100,7 @@ module top(
 	regfile REGFILE(
 		.mem_write_data(DM_in),
 		.reag_reg_data1(reag_reg_data1),
-		.read_data2(read_data2),
+		.read_reg_data2(read_reg_data2),
 		.read_reg_addr1(read_reg_addr1),
 		.read_reg_addr2(read_reg_addr2),
 		.write_address(write_address),
@@ -116,7 +116,7 @@ module top(
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
-		.read_data2(read_data2),
+		.read_reg_data2(read_reg_data2),
 		.mem_read_data(DM_out),
 		.ir_sv(sub_op_sv),
 		.imm_extend_select(imm_extend_select),
