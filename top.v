@@ -51,9 +51,9 @@ module top(
 	wire [4:0] write_address;
 
 	//controller to muxs
+	wire [1:0] imm_reg_select;
 	wire [1:0] imm_extend_select;
 	wire [1:0] write_reg_select;
-	wire [1:0] imm_reg_select;
 
 	//controller to alu
 	wire [5:0] opcode;
@@ -66,7 +66,7 @@ module top(
 	wire enable_pc;
 
 	// regfile to alu
-	wire [31:0] read_data1;
+	wire [31:0] reag_reg_data1;
 
 	//alu to muxs
 	wire [31:0] alu_result;
@@ -88,7 +88,7 @@ module top(
 	alu ALU(
 		.alu_result(alu_result),
 		.alu_overflow(alu_overflow),
-		.src1(read_data1),
+		.src1(reag_reg_data1),
 		.src2(alu_src2),
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
@@ -99,7 +99,7 @@ module top(
 	
 	regfile REGFILE(
 		.mem_write_data(DM_in),
-		.read_data1(read_data1),
+		.reag_reg_data1(reag_reg_data1),
 		.read_data2(read_data2),
 		.read_reg_addr1(read_reg_addr1),
 		.read_reg_addr2(read_reg_addr2),

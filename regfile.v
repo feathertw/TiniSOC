@@ -2,7 +2,7 @@ module regfile(
 	clock,
 	reset,
 	mem_write_data,
-	read_data1,
+	reag_reg_data1,
 	read_data2,
 	read_reg_addr1,
 	read_reg_addr2,
@@ -17,7 +17,7 @@ module regfile(
 	parameter AddrSize = 5;
 
 	output [DataSize-1:0] mem_write_data;
-	output reg [DataSize-1:0] read_data1;
+	output reg [DataSize-1:0] reag_reg_data1;
 	output reg [DataSize-1:0] read_data2;
 
 	input [AddrSize-1:0] read_reg_addr1;
@@ -42,14 +42,14 @@ module regfile(
 		end
 		else begin
 			if(do_reg_fetch) begin
-				read_data1 <= rw_reg[read_reg_addr1];	
+				reag_reg_data1 <= rw_reg[read_reg_addr1];	
 				read_data2 <= rw_reg[read_reg_addr2];	
 			end
 			else if(do_reg_write && enable_reg_write) begin
 				rw_reg[write_address] <= write_data;
 			end
 			else begin
-				read_data1 <= 32'b0;
+				reag_reg_data1 <= 32'b0;
 				read_data2 <= 32'b0;
 			end
 		end
