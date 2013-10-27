@@ -83,7 +83,7 @@ module top_tb;
 		clk=0;
 		rst=1'b1;
 		#10 rst=1'b0;
-		$readmemb("ir_data.prog",IM.mem_data); //machine code for fig.2-2
+		$readmemb("ir_data1.prog",IM.mem_data); //machine code for fig.2-2
 
 		#50 `DEBUG_REG("ADDI  ",1,9)
 		#50 `DEBUG_REG("XORI  ",1,3)
