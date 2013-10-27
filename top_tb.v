@@ -4,7 +4,8 @@
 `include "im.v"
 `include "dm.v"
 
-`define PROG1
+//`define PROG1
+`define PROG2
 
 module top_tb;
 
@@ -91,7 +92,7 @@ module top_tb;
 		#50 `DEBUG_REG("ADDI  ",1,9)
 		#50 `DEBUG_REG("XORI  ",1,3)
 		#50 `DEBUG_REG("MOVI  ",0,3)
-		#50 `DEBUG_SWX("SW    ",0,3)
+		#50 `DEBUG_SWX("SW    ",0,0)
 		#50 `DEBUG_REG("ORI   ",0,7)
 		#50 `DEBUG_REG("AND   ",1,3)
 		#50 `DEBUG_LWX("LW    ",0,0)
@@ -99,16 +100,37 @@ module top_tb;
 		#50 `DEBUG_REG("ADD   ",1,6)
 		#50 `DEBUG_REG("OR    ",1,7)
 		#50 `DEBUG_REG("SUB   ",1,4)
-		#50 `DEBUG_SWX("SWI   ",76,4)
+		#50 `DEBUG_SWX("SWI   ",1,76)
 		#50 `DEBUG_REG("SRLI  ",2,1)
 		#50 `DEBUG_REG("SLLI  ",2,8)
 		#50 `DEBUG_LWX("LWI   ",1,92)
 		#50 `DEBUG_REG("AND   ",1,0)
-		#50 `DEBUG_SWX("SWI   ",140,8)
+		#50 `DEBUG_SWX("SWI   ",2,140)
 		#50 `DEBUG_LWX("LWI   ",3,140)
 		#50 `DEBUG_REG("SUB   ",3,5)
 		#50 `DEBUG_REG("XOR   ",1,13)
 		#50 `DEBUG_REG("ROTRI ",2,12)
+`endif
+`ifdef PROG2
+		$readmemb("ir_data2.prog",IM.mem_data);
+		#50 `DEBUG_REG("MOVI  ",0,9)
+		#50 `DEBUG_REG("MOVI  ",1,7)
+		#50 `DEBUG_REG("MOVI  ",2,2)
+		#50 `DEBUG_REG("ADD   ",3,16)
+		#50 `DEBUG_REG("SUB   ",4,7)
+		#50 `DEBUG_REG("AND   ",0,0)
+		#50 `DEBUG_REG("OR    ",1,18)
+		#50 `DEBUG_REG("XOR   ",0,5)
+		#50 `DEBUG_REG("SRLI  ",2,2)
+		#50 `DEBUG_REG("SLLI  ",3,20)
+		#50 `DEBUG_REG("ROTRI ",4,144)
+		#50 `DEBUG_REG("ADDI  ",0,20)
+		#50 `DEBUG_REG("ORI   ",1,18)
+		#50 `DEBUG_REG("XORI  ",2,12)
+		#50 `DEBUG_SWX("SWI   ",2,4)
+		#50 `DEBUG_SWX("SW    ",1,96)
+		#50 `DEBUG_LWX("LW    ",3,96)
+		#50 `DEBUG_LWX("LWI   ",4,4)
 `endif
 		#10
 		//for( i=0;i<5;i=i+1 ) $display( "IM[%4d]=%b",i*4,IM.mem_data[i] ); 
