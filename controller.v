@@ -13,7 +13,7 @@ module controller(
 	sub_op_base,
 	sub_op_ls,
 	sub_op_sv,
-	mux4to1_select,
+	imm_extend_select,
 	write_reg_select,
 	imm_reg_select,
 	clock,
@@ -50,7 +50,7 @@ module controller(
 	output [4:0] sub_op_base;
 	output [7:0] sub_op_ls;
 	output [1:0] sub_op_sv;
-	output reg [1:0] mux4to1_select;
+	output reg [1:0] imm_extend_select;
 	output reg [1:0] write_reg_select;
 	output reg [1:0] imm_reg_select;
 
@@ -113,14 +113,14 @@ module controller(
 				case(`SUBOP_BASE)
 					//`NOP:begin
 					//	imm_reg_select=2'b00;
-					//	mux4to1_select=2'b00;
+					//	imm_extend_select=2'b00;
 					//	write_reg_select=2'b00;
 					//	DM_read=1'b0;
 					//	DM_write=1'b0;
 					//end
 					`ADD:begin
 						imm_reg_select=2'b00;
-						mux4to1_select=2'b00;
+						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -128,7 +128,7 @@ module controller(
 					end
 					`SUB:begin
 						imm_reg_select=2'b00;
-						mux4to1_select=2'b00;
+						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -136,7 +136,7 @@ module controller(
 					end
 					`AND:begin
 						imm_reg_select=2'b00;
-						mux4to1_select=2'b00;
+						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -144,7 +144,7 @@ module controller(
 					end
 					`OR :begin
 						imm_reg_select=2'b00;
-						mux4to1_select=2'b00;
+						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -152,7 +152,7 @@ module controller(
 					end
 					`XOR:begin
 						imm_reg_select=2'b00;
-						mux4to1_select=2'b00;
+						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -161,7 +161,7 @@ module controller(
 					//Immediate
 					`SRLI:begin
 						imm_reg_select=2'b01;
-						mux4to1_select=2'b00;
+						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -169,7 +169,7 @@ module controller(
 					end
 					`SLLI:begin
 						imm_reg_select=2'b01;
-						mux4to1_select=2'b00;
+						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -177,7 +177,7 @@ module controller(
 					end
 					`ROTRI:begin
 						imm_reg_select=2'b01;
-						mux4to1_select=2'b00;
+						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -185,7 +185,7 @@ module controller(
 					end
 					default:begin
 						imm_reg_select=2'b00;
-						mux4to1_select=2'b00;
+						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -195,7 +195,7 @@ module controller(
 			end
 			`ADDI:begin
 				imm_reg_select=2'b01;
-				mux4to1_select=2'b01;
+				imm_extend_select=2'b01;
 				write_reg_select=2'b00;
 				DM_read=1'b0;
 				DM_write=1'b0;
@@ -203,7 +203,7 @@ module controller(
 			end
 			`ORI:begin
 				imm_reg_select=2'b01;
-				mux4to1_select=2'b10;
+				imm_extend_select=2'b10;
 				write_reg_select=2'b00;
 				DM_read=1'b0;
 				DM_write=1'b0;
@@ -211,7 +211,7 @@ module controller(
 			end
 			`XORI:begin
 				imm_reg_select=2'b01;
-				mux4to1_select=2'b10;
+				imm_extend_select=2'b10;
 				write_reg_select=2'b00;
 				DM_read=1'b0;
 				DM_write=1'b0;
@@ -219,7 +219,7 @@ module controller(
 			end
 			`MOVI:begin
 				imm_reg_select=2'b01;
-				mux4to1_select=2'b11;
+				imm_extend_select=2'b11;
 				write_reg_select=2'b01;
 				DM_read=1'b0;
 				DM_write=1'b0;
@@ -227,7 +227,7 @@ module controller(
 			end
 			`LWI:begin
 				imm_reg_select=2'b10;
-				mux4to1_select=2'bxx;
+				imm_extend_select=2'bxx;
 				write_reg_select=2'b10;
 				DM_read=1'b1;
 				DM_write=1'b0;
@@ -235,7 +235,7 @@ module controller(
 			end
 			`SWI:begin
 				imm_reg_select=2'b10;
-				mux4to1_select=2'bxx;
+				imm_extend_select=2'bxx;
 				write_reg_select=2'bxx;
 				DM_read=1'b0;
 				DM_write=1'b1;
@@ -245,7 +245,7 @@ module controller(
 				case(`SUBOP_LS)
 					`LW:begin
 						imm_reg_select=2'b11;
-						mux4to1_select=2'bxx;
+						imm_extend_select=2'bxx;
 						write_reg_select=2'b10;
 						DM_read=1'b1;
 						DM_write=1'b0;
@@ -253,7 +253,7 @@ module controller(
 					end
 					`SW:begin
 						imm_reg_select=2'b11;
-						mux4to1_select=2'bxx;
+						imm_extend_select=2'bxx;
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
 						DM_write=1'b1;
@@ -261,7 +261,7 @@ module controller(
 					end
 					default:begin
 						imm_reg_select=2'bxx;
-						mux4to1_select=2'bxx;
+						imm_extend_select=2'bxx;
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -271,7 +271,7 @@ module controller(
 			end
 			default:begin
 				imm_reg_select=2'b00;
-				mux4to1_select=2'b00;
+				imm_extend_select=2'b00;
 				write_reg_select=2'b00;
 				DM_read=1'b0;
 				DM_write=1'b0;

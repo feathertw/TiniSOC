@@ -5,7 +5,7 @@ module muxs(
 	read_data2,
 	mem_read_data,
 
-	mux4to1_select,
+	imm_extend_select,
 	write_reg_select,
 	imm_reg_select,
 	output_imm_reg_mux,
@@ -28,7 +28,7 @@ module muxs(
 
 	input [1:0] ir_sv;
 	
-	input [1:0] mux4to1_select;
+	input [1:0] imm_extend_select;
 	input [1:0] write_reg_select;
 	input [1:0] imm_reg_select;
 
@@ -37,7 +37,7 @@ module muxs(
 	reg [DataSize-1:0] imm;
 
 	always @(*) begin
-		case(mux4to1_select)
+		case(imm_extend_select)
 			2'b00: begin //5bit ZE
 				imm={ {27{1'b0}}, imm_5bit };
 			end
