@@ -42,6 +42,7 @@ module top(
 	//controller to regfile
 	wire enable_fetch;
 	wire enable_writeback;
+	wire REG_write;
 
 	//controller to muxs
 	wire [1:0] mux4to1_select;
@@ -96,7 +97,8 @@ module top(
 		.clock(clk),
 		.reset(rst),
 		.enable_fetch(enable_fetch),
-		.enable_writeback(enable_writeback)
+		.enable_writeback(enable_writeback),
+		.REG_write(REG_write)
 	);
 
 	muxs MUXS(
@@ -133,7 +135,8 @@ module top(
 		.IM_write(IM_write),
 		.DM_enable(DM_enable),
 		.DM_read(DM_read),
-		.DM_write(DM_write)
+		.DM_write(DM_write),
+		.REG_write(REG_write)
 	);
 	pc PC(
 		.clock(clk),
