@@ -45,7 +45,7 @@ module top(
 	//controller to regfile
 	wire do_reg_fetch;
 	wire do_reg_writeback;
-	wire enable_reg_write;
+	wire enable_reg_writeback;
 	wire [4:0] read_address1;
 	wire [4:0] read_address2;
 	wire [4:0] write_address;
@@ -109,7 +109,7 @@ module top(
 		.reset(rst),
 		.do_reg_fetch(do_reg_fetch),
 		.do_reg_writeback(do_reg_writeback),
-		.enable_reg_write(enable_reg_write)
+		.enable_reg_writeback(enable_reg_writeback)
 	);
 
 	muxs MUXS(
@@ -148,7 +148,7 @@ module top(
 		.DM_enable(DM_enable),
 		.DM_read(DM_read),
 		.DM_write(DM_write),
-		.enable_reg_write(enable_reg_write),
+		.enable_reg_writeback(enable_reg_writeback),
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
