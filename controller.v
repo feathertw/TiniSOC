@@ -11,12 +11,21 @@ module controller(
 	enable_writeback,
 	opcode,
 	sub_op_base,
+	sub_op_ls,
+	sub_op_sv,
 	mux4to1_select,
 	write_reg_select,
 	imm_reg_select,
 	clock,
 	reset,
 	ir,
+
+	imm_5bit,
+	imm_15bit,
+	imm_20bit,
+	read_address1,
+	read_address2,
+	write_address,
 
 	IM_enable,
 	IM_read,
@@ -39,9 +48,19 @@ module controller(
 	output reg enable_writeback;
 	output [5:0] opcode;
 	output [4:0] sub_op_base;
+	output [7:0] sub_op_ls;
+	output [1:0] sub_op_sv;
 	output reg [1:0] mux4to1_select;
 	output reg [1:0] write_reg_select;
 	output reg [1:0] imm_reg_select;
+
+	output [4:0] read_address1;
+	output [4:0] read_address2;
+	output [4:0] write_address;
+
+	output [4:0] imm_5bit;
+	output [14:0] imm_15bit;
+	output [19:0] imm_20bit;
 	
 	output reg enable_pc;
 
@@ -55,11 +74,20 @@ module controller(
 
 	output reg REG_write;
 
-	wire [5:0] opcode = ir[30:25];
-	wire [4:0] sub_op_base = ir[4:0];
 	reg [2:0] current_state;
 	reg [2:0] next_state;
 	reg [31:0] present_instruction;
+
+	wire [5:0] opcode=ir[30:25];
+	wire [4:0] sub_op_base=ir[4:0];
+	wire [7:0] sub_op_ls=ir[7:0];
+	wire [1:0] sub_op_sv=ir[9:8];
+	wire [4:0] imm_5bit=ir[14:10];
+	wire [14:0] imm_15bit=ir[14:0];
+	wire [19:0] imm_20bit=ir[19:0];
+	wire [4:0] read_address1=ir[19:15];
+	wire [4:0] read_address2=ir[14:10];
+	wire [4:0] write_address=ir[24:20];
 
 	assign IM_read=1'b1;
 	assign IM_write=1'b0;

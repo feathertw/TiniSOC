@@ -43,6 +43,9 @@ module top(
 	wire enable_fetch;
 	wire enable_writeback;
 	wire REG_write;
+	wire [4:0] read_address1;
+	wire [4:0] read_address2;
+	wire [4:0] write_address;
 
 	//controller to muxs
 	wire [1:0] mux4to1_select;
@@ -52,6 +55,8 @@ module top(
 	//controller to alu
 	wire [5:0] opcode;
 	wire [4:0] sub_op_base;
+	wire [7:0] sub_op_ls;
+	wire [1:0] sub_op_sv;
 	wire enable_execute;
 
 	//controller to pc
@@ -65,6 +70,9 @@ module top(
 
 	//regfile to muxs
 	wire [31:0] read_data2;
+	wire [4:0] imm_5bit;
+	wire [14:0] imm_15bit;
+	wire [19:0] imm_20bit;
 
 	//muxs to regfile
 	wire [31:0] write_data;
@@ -72,7 +80,7 @@ module top(
 	//muxs to alu
 	wire [31:0] alu_src2;
 
-	assign DM_address=alu_result[11:0];
+	wire [11:0] DM_address=alu_result[11:0];
 
 	alu ALU(
 		.alu_result(alu_result),
@@ -81,7 +89,7 @@ module top(
 		.src2(alu_src2),
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
-		.sub_op_ls(instruction[7:0]),
+		.sub_op_ls(sub_op_ls),
 		.enable_execute(enable_execute),
 		.reset(rst)
 	);
@@ -90,9 +98,9 @@ module top(
 		.mem_write_data(DM_in),
 		.read_data1(read_data1),
 		.read_data2(read_data2),
-		.read_address1(instruction[19:15]),
-		.read_address2(instruction[14:10]),
-		.write_address(instruction[24:20]),
+		.read_address1(read_address1),
+		.read_address2(read_address2),
+		.write_address(write_address),
 		.write_data(write_data),
 		.clock(clk),
 		.reset(rst),
@@ -102,12 +110,12 @@ module top(
 	);
 
 	muxs MUXS(
-		.imm_5bit(instruction[14:10]),
-		.imm_15bit(instruction[14:0]),
-		.imm_20bit(instruction[19:0]),
+		.imm_5bit(imm_5bit),
+		.imm_15bit(imm_15bit),
+		.imm_20bit(imm_20bit),
 		.read_data2(read_data2),
 		.mem_read_data(DM_out),
-		.ir_sv(instruction[9:8]),
+		.ir_sv(sub_op_sv),
 		.mux4to1_select(mux4to1_select),
 		.write_reg_select(write_reg_select),
 		.imm_reg_select(imm_reg_select),
@@ -125,6 +133,8 @@ module top(
 		.enable_writeback(enable_writeback),
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
+		.sub_op_ls(sub_op_ls),
+		.sub_op_sv(sub_op_sv),
 		.mux4to1_select(mux4to1_select),
 		.write_reg_select(write_reg_select),
 		.imm_reg_select(imm_reg_select),
@@ -135,7 +145,13 @@ module top(
 		.DM_enable(DM_enable),
 		.DM_read(DM_read),
 		.DM_write(DM_write),
-		.REG_write(REG_write)
+		.REG_write(REG_write),
+		.imm_5bit(imm_5bit),
+		.imm_15bit(imm_15bit),
+		.imm_20bit(imm_20bit),
+		.read_address1(read_address1),
+		.read_address2(read_address2),
+		.write_address(write_address)
 	);
 	pc PC(
 		.clock(clk),
