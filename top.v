@@ -43,9 +43,9 @@ module top(
 	input [31:0] DM_out;
 
 	//controller to regfile
-	wire do_reg_fetch;
-	wire do_reg_write;
+	wire enable_reg_fetch;
 	wire enable_reg_write;
+	wire do_reg_write;
 	wire [4:0] read_reg_addr1;
 	wire [4:0] read_reg_addr2;
 	wire [4:0] write_address;
@@ -107,9 +107,9 @@ module top(
 		.write_reg_data(write_reg_data),
 		.clock(clk),
 		.reset(rst),
-		.do_reg_fetch(do_reg_fetch),
-		.do_reg_write(do_reg_write),
-		.enable_reg_write(enable_reg_write)
+		.enable_reg_fetch(enable_reg_fetch),
+		.enable_reg_write(enable_reg_write),
+		.do_reg_write(do_reg_write)
 	);
 
 	muxs MUXS(
@@ -132,8 +132,8 @@ module top(
 		.reset(rst),
 		.ir(instruction),
 		.enable_execute(enable_execute),
-		.do_reg_fetch(do_reg_fetch),
-		.do_reg_write(do_reg_write),
+		.enable_reg_fetch(enable_reg_fetch),
+		.enable_reg_write(enable_reg_write),
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
 		.sub_op_ls(sub_op_ls),
@@ -148,7 +148,7 @@ module top(
 		.DM_enable(DM_enable),
 		.DM_read(DM_read),
 		.DM_write(DM_write),
-		.enable_reg_write(enable_reg_write),
+		.do_reg_write(do_reg_write),
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
