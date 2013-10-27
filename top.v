@@ -46,8 +46,8 @@ module top(
 	wire do_reg_fetch;
 	wire do_reg_write;
 	wire enable_reg_write;
-	wire [4:0] read_address1;
-	wire [4:0] read_address2;
+	wire [4:0] read_reg_addr1;
+	wire [4:0] read_reg_addr2;
 	wire [4:0] write_address;
 
 	//controller to muxs
@@ -101,8 +101,8 @@ module top(
 		.mem_write_data(DM_in),
 		.read_data1(read_data1),
 		.read_data2(read_data2),
-		.read_address1(read_address1),
-		.read_address2(read_address2),
+		.read_reg_addr1(read_reg_addr1),
+		.read_reg_addr2(read_reg_addr2),
 		.write_address(write_address),
 		.write_data(write_data),
 		.clock(clk),
@@ -152,8 +152,8 @@ module top(
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
-		.read_address1(read_address1),
-		.read_address2(read_address2),
+		.read_reg_addr1(read_reg_addr1),
+		.read_reg_addr2(read_reg_addr2),
 		.write_address(write_address)
 	);
 	pc PC(
