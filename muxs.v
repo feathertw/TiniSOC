@@ -9,7 +9,7 @@ module muxs(
 	write_reg_select,
 	imm_reg_select,
 	output_imm_reg_mux,
-	write_data,
+	write_reg_data,
 	alu_output,
 	
 	ir_sv,
@@ -18,7 +18,7 @@ module muxs(
 	parameter DataSize = 32;
 
 	output reg [DataSize-1:0] output_imm_reg_mux;
-	output reg [DataSize-1:0] write_data;
+	output reg [DataSize-1:0] write_reg_data;
 
 	input [ 5-1:0] imm_5bit;
 	input [15-1:0] imm_15bit;
@@ -73,13 +73,13 @@ module muxs(
 	always @(*) begin
 		case(write_reg_select)
 			2'b00: begin
-				write_data = alu_output;
+				write_reg_data = alu_output;
 			end
 			2'b01: begin
-				write_data = output_imm_reg_mux;
+				write_reg_data = output_imm_reg_mux;
 			end
 			2'b10: begin
-				write_data = mem_read_data;
+				write_reg_data = mem_read_data;
 			end
 		endcase
 	end

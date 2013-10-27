@@ -78,7 +78,7 @@ module top(
 	wire [19:0] imm_20bit;
 
 	//muxs to regfile
-	wire [31:0] write_data;
+	wire [31:0] write_reg_data;
 	
 	//muxs to alu
 	wire [31:0] alu_src2;
@@ -104,7 +104,7 @@ module top(
 		.read_reg_addr1(read_reg_addr1),
 		.read_reg_addr2(read_reg_addr2),
 		.write_address(write_address),
-		.write_data(write_data),
+		.write_reg_data(write_reg_data),
 		.clock(clk),
 		.reset(rst),
 		.do_reg_fetch(do_reg_fetch),
@@ -123,7 +123,7 @@ module top(
 		.write_reg_select(write_reg_select),
 		.imm_reg_select(imm_reg_select),
 		.output_imm_reg_mux(alu_src2),
-		.write_data(write_data),
+		.write_reg_data(write_reg_data),
 		.alu_output(alu_result)
 	);
 	
