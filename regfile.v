@@ -10,7 +10,7 @@ module regfile(
 	write_data,
 	enable_reg_writeback,
 	do_reg_fetch,
-	do_reg_writeback
+	do_reg_write
 );
 
 	parameter DataSize = 32;
@@ -28,7 +28,7 @@ module regfile(
 	input reset;
 	input enable_reg_writeback;
 	input do_reg_fetch; 
-	input do_reg_writeback;
+	input do_reg_write;
 
 	reg [DataSize-1:0] rw_reg [31:0];
 	integer i;
@@ -45,7 +45,7 @@ module regfile(
 				read_data1 <= rw_reg[read_address1];	
 				read_data2 <= rw_reg[read_address2];	
 			end
-			else if(do_reg_writeback && enable_reg_writeback) begin
+			else if(do_reg_write && enable_reg_writeback) begin
 				rw_reg[write_address] <= write_data;
 			end
 			else begin

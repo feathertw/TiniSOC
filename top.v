@@ -44,7 +44,7 @@ module top(
 
 	//controller to regfile
 	wire do_reg_fetch;
-	wire do_reg_writeback;
+	wire do_reg_write;
 	wire enable_reg_writeback;
 	wire [4:0] read_address1;
 	wire [4:0] read_address2;
@@ -108,7 +108,7 @@ module top(
 		.clock(clk),
 		.reset(rst),
 		.do_reg_fetch(do_reg_fetch),
-		.do_reg_writeback(do_reg_writeback),
+		.do_reg_write(do_reg_write),
 		.enable_reg_writeback(enable_reg_writeback)
 	);
 
@@ -133,7 +133,7 @@ module top(
 		.ir(instruction),
 		.enable_execute(enable_execute),
 		.do_reg_fetch(do_reg_fetch),
-		.do_reg_writeback(do_reg_writeback),
+		.do_reg_write(do_reg_write),
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
 		.sub_op_ls(sub_op_ls),
