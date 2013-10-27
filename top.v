@@ -107,7 +107,6 @@ module top(
 		.imm_20bit(instruction[19:0]),
 		.read_data2(read_data2),
 		.mem_read_data(DM_out),
-		.ir_rb(instruction[14:10]),
 		.ir_sv(instruction[9:8]),
 		.mux4to1_select(mux4to1_select),
 		.write_reg_select(write_reg_select),
