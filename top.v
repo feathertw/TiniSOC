@@ -9,14 +9,16 @@ module top(
 	instruction,
 	alu_overflow,
 
+	pc,
+
 	IM_read,
 	IM_write,
 	IM_enable,
-	pc,
 
 	DM_read,
 	DM_write,
 	DM_enable,
+
 	DM_address,
 	DM_in,
 	DM_out,
@@ -26,10 +28,11 @@ module top(
 	input [31:0] instruction;
 	output alu_overflow;
 
+	output [9:0] pc;
+
 	output IM_read;
 	output IM_write;
 	output IM_enable;
-	output [9:0] pc;
 
 	output DM_read;
 	output DM_write;
@@ -42,7 +45,7 @@ module top(
 	//controller to regfile
 	wire enable_fetch;
 	wire enable_writeback;
-	wire REG_write;
+	wire enable_reg_write;
 	wire [4:0] read_address1;
 	wire [4:0] read_address2;
 	wire [4:0] write_address;
@@ -106,7 +109,7 @@ module top(
 		.reset(rst),
 		.enable_fetch(enable_fetch),
 		.enable_writeback(enable_writeback),
-		.REG_write(REG_write)
+		.enable_reg_write(enable_reg_write)
 	);
 
 	muxs MUXS(
@@ -145,7 +148,7 @@ module top(
 		.DM_enable(DM_enable),
 		.DM_read(DM_read),
 		.DM_write(DM_write),
-		.REG_write(REG_write),
+		.enable_reg_write(enable_reg_write),
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),

@@ -8,7 +8,7 @@ module regfile(
 	read_address2,
 	write_address,
 	write_data,
-	REG_write,
+	enable_reg_write,
 	enable_fetch,
 	enable_writeback
 );
@@ -26,7 +26,7 @@ module regfile(
 	input [DataSize-1:0] write_data;
 	input clock;
 	input reset;
-	input REG_write;
+	input enable_reg_write;
 	input enable_fetch; 
 	input enable_writeback;
 
@@ -45,7 +45,7 @@ module regfile(
 				read_data1 <= rw_reg[read_address1];	
 				read_data2 <= rw_reg[read_address2];	
 			end
-			else if(enable_writeback && REG_write) begin
+			else if(enable_writeback && enable_reg_write) begin
 				rw_reg[write_address] <= write_data;
 			end
 			else begin

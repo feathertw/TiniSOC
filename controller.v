@@ -36,7 +36,7 @@ module controller(
 	DM_read,
 	DM_write,
 
-	REG_write,
+	enable_reg_write,
 );
 	
 	input clock;
@@ -72,7 +72,7 @@ module controller(
 	output reg DM_read;
 	output reg DM_write;
 
-	output reg REG_write;
+	output reg enable_reg_write;
 
 	reg [2:0] current_state;
 	reg [2:0] next_state;
@@ -124,7 +124,7 @@ module controller(
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
-						REG_write=1'b1;
+						enable_reg_write=1'b1;
 					end
 					`SUB:begin
 						imm_reg_select=2'b00;
@@ -132,7 +132,7 @@ module controller(
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
-						REG_write=1'b1;
+						enable_reg_write=1'b1;
 					end
 					`AND:begin
 						imm_reg_select=2'b00;
@@ -140,7 +140,7 @@ module controller(
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
-						REG_write=1'b1;
+						enable_reg_write=1'b1;
 					end
 					`OR :begin
 						imm_reg_select=2'b00;
@@ -148,7 +148,7 @@ module controller(
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
-						REG_write=1'b1;
+						enable_reg_write=1'b1;
 					end
 					`XOR:begin
 						imm_reg_select=2'b00;
@@ -156,7 +156,7 @@ module controller(
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
-						REG_write=1'b1;
+						enable_reg_write=1'b1;
 					end
 					//Immediate
 					`SRLI:begin
@@ -165,7 +165,7 @@ module controller(
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
-						REG_write=1'b1;
+						enable_reg_write=1'b1;
 					end
 					`SLLI:begin
 						imm_reg_select=2'b01;
@@ -173,7 +173,7 @@ module controller(
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
-						REG_write=1'b1;
+						enable_reg_write=1'b1;
 					end
 					`ROTRI:begin
 						imm_reg_select=2'b01;
@@ -181,7 +181,7 @@ module controller(
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
-						REG_write=1'b1;
+						enable_reg_write=1'b1;
 					end
 					default:begin
 						imm_reg_select=2'b00;
@@ -189,7 +189,7 @@ module controller(
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
-						REG_write=1'b0;
+						enable_reg_write=1'b0;
 					end
 				endcase	
 			end
@@ -199,7 +199,7 @@ module controller(
 				write_reg_select=2'b00;
 				DM_read=1'b0;
 				DM_write=1'b0;
-				REG_write=1'b1;
+				enable_reg_write=1'b1;
 			end
 			`ORI:begin
 				imm_reg_select=2'b01;
@@ -207,7 +207,7 @@ module controller(
 				write_reg_select=2'b00;
 				DM_read=1'b0;
 				DM_write=1'b0;
-				REG_write=1'b1;
+				enable_reg_write=1'b1;
 			end
 			`XORI:begin
 				imm_reg_select=2'b01;
@@ -215,7 +215,7 @@ module controller(
 				write_reg_select=2'b00;
 				DM_read=1'b0;
 				DM_write=1'b0;
-				REG_write=1'b1;
+				enable_reg_write=1'b1;
 			end
 			`MOVI:begin
 				imm_reg_select=2'b01;
@@ -223,7 +223,7 @@ module controller(
 				write_reg_select=2'b01;
 				DM_read=1'b0;
 				DM_write=1'b0;
-				REG_write=1'b1;
+				enable_reg_write=1'b1;
 			end
 			`LWI:begin
 				imm_reg_select=2'b10;
@@ -231,7 +231,7 @@ module controller(
 				write_reg_select=2'b10;
 				DM_read=1'b1;
 				DM_write=1'b0;
-				REG_write=1'b1;
+				enable_reg_write=1'b1;
 			end
 			`SWI:begin
 				imm_reg_select=2'b10;
@@ -239,7 +239,7 @@ module controller(
 				write_reg_select=2'bxx;
 				DM_read=1'b0;
 				DM_write=1'b1;
-				REG_write=1'b0;
+				enable_reg_write=1'b0;
 			end
 			`TY_LS:begin
 				case(`SUBOP_LS)
@@ -249,7 +249,7 @@ module controller(
 						write_reg_select=2'b10;
 						DM_read=1'b1;
 						DM_write=1'b0;
-						REG_write=1'b1;
+						enable_reg_write=1'b1;
 					end
 					`SW:begin
 						imm_reg_select=2'b11;
@@ -257,7 +257,7 @@ module controller(
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
 						DM_write=1'b1;
-						REG_write=1'b0;
+						enable_reg_write=1'b0;
 					end
 					default:begin
 						imm_reg_select=2'bxx;
@@ -265,7 +265,7 @@ module controller(
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
 						DM_write=1'b0;
-						REG_write=1'b0;
+						enable_reg_write=1'b0;
 					end
 				endcase
 			end
@@ -275,7 +275,7 @@ module controller(
 				write_reg_select=2'b00;
 				DM_read=1'b0;
 				DM_write=1'b0;
-				REG_write=1'b0;
+				enable_reg_write=1'b0;
 			end
 		endcase
 	end
