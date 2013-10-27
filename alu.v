@@ -6,10 +6,10 @@ module alu(
 	src1,
 	src2,
 	opcode,
-	sub_opcode,
+	sub_op_base,
 	sub_op_ls,
 	enable_execute,
-	reset
+	reset,
 );
 
     output reg [31:0] alu_result;
@@ -18,7 +18,7 @@ module alu(
     input [31:0] src1;
     input [31:0] src2;
     input [5:0]  opcode;
-    input [4:0]  sub_opcode;
+    input [4:0]  sub_op_base;
     input [7:0]  sub_op_ls;
     input reset;
     input enable_execute;
@@ -36,7 +36,7 @@ module alu(
             case(opcode)
                 `TY_BASE: //subopcode
                 begin
-                    case(sub_opcode)
+                    case(sub_op_base)
                         //NOP:
                         //begin
                         //  alu_result=32'b0;

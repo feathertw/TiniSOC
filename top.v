@@ -51,7 +51,7 @@ module top(
 
 	//controller to alu
 	wire [5:0] opcode;
-	wire [4:0] sub_opcode;
+	wire [4:0] sub_op_base;
 	wire enable_execute;
 
 	//controller to pc
@@ -80,7 +80,7 @@ module top(
 		.src1(read_data1),
 		.src2(alu_src2),
 		.opcode(opcode),
-		.sub_opcode(sub_opcode),
+		.sub_op_base(sub_op_base),
 		.sub_op_ls(instruction[7:0]),
 		.enable_execute(enable_execute),
 		.reset(rst)
@@ -124,7 +124,7 @@ module top(
 		.enable_fetch(enable_fetch),
 		.enable_writeback(enable_writeback),
 		.opcode(opcode),
-		.sub_opcode(sub_opcode),
+		.sub_op_base(sub_op_base),
 		.mux4to1_select(mux4to1_select),
 		.write_reg_select(write_reg_select),
 		.imm_reg_select(imm_reg_select),

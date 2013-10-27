@@ -10,7 +10,7 @@ module controller(
 	enable_fetch,
 	enable_writeback,
 	opcode,
-	sub_opcode,
+	sub_op_base,
 	mux4to1_select,
 	write_reg_select,
 	imm_reg_select,
@@ -38,7 +38,7 @@ module controller(
 	output reg enable_fetch;
 	output reg enable_writeback;
 	output [5:0] opcode;
-	output [4:0] sub_opcode;
+	output [4:0] sub_op_base;
 	output reg [1:0] mux4to1_select;
 	output reg [1:0] write_reg_select;
 	output reg [1:0] imm_reg_select;
@@ -56,7 +56,7 @@ module controller(
 	output reg REG_write;
 
 	wire [5:0] opcode = ir[30:25];
-	wire [4:0] sub_opcode = ir[4:0];
+	wire [4:0] sub_op_base = ir[4:0];
 	reg [2:0] current_state;
 	reg [2:0] next_state;
 	reg [31:0] present_instruction;
