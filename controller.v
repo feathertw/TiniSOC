@@ -7,7 +7,7 @@
 
 module controller(
 	enable_execute,
-	do_fetch,
+	do_reg_fetch,
 	enable_writeback,
 	opcode,
 	sub_op_base,
@@ -44,7 +44,7 @@ module controller(
 	input [31:0] ir;
 	
 	output reg enable_execute;
-	output reg do_fetch;
+	output reg do_reg_fetch;
 	output reg enable_writeback;
 	output [5:0] opcode;
 	output [4:0] sub_op_base;
@@ -284,7 +284,7 @@ module controller(
 		case(current_state)
 			S0: begin
 				next_state=S1;
-				do_fetch=1'b0;
+				do_reg_fetch=1'b0;
 				enable_execute=1'b0;
 				enable_writeback=1'b0;
 
@@ -294,7 +294,7 @@ module controller(
 			end
 			S1: begin
 				next_state=S2;
-				do_fetch=1'b1;
+				do_reg_fetch=1'b1;
 				enable_execute=1'b0;
 				enable_writeback=1'b0;
 
@@ -304,7 +304,7 @@ module controller(
 			end
 			S2: begin
 				next_state=S3;
-				do_fetch=1'b0;
+				do_reg_fetch=1'b0;
 				enable_execute=1'b1;
 				enable_writeback=1'b0;
 
@@ -314,7 +314,7 @@ module controller(
 			end
 			S3: begin
 				next_state=S4;
-				do_fetch=1'b0;
+				do_reg_fetch=1'b0;
 				enable_execute=1'b0;
 				enable_writeback=1'b0;
 
@@ -324,7 +324,7 @@ module controller(
 			end
 			S4: begin
 				next_state=S0;
-				do_fetch=1'b0;
+				do_reg_fetch=1'b0;
 				enable_execute=1'b0;
 				enable_writeback=1'b1;
 
@@ -334,7 +334,7 @@ module controller(
 			end
 			default: begin
 				next_state=S0;
-				do_fetch=1'b0;
+				do_reg_fetch=1'b0;
 				enable_execute=1'b0;
 				enable_writeback=1'b0;
 
