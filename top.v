@@ -87,7 +87,7 @@ module top(
 	wire [11:0] DM_address=alu_result[11:0];
 
 	alu ALU(
-		.reset(rst)
+		.reset(rst),
 		.enable_execute(enable_execute),
 		.src1(reag_reg_data1),
 		.src2(alu_src2),
@@ -96,7 +96,7 @@ module top(
 		.sub_op_ls(sub_op_ls),
 
 		.alu_result(alu_result),
-		.alu_overflow(alu_overflow),
+		.alu_overflow(alu_overflow)
 	);
 	
 	regfile REGFILE(
