@@ -83,6 +83,7 @@ module top(
 	//muxs to alu
 	wire [31:0] alu_src2;
 
+	wire IM_enable=enable_irfetch;
 	wire [11:0] DM_address=alu_result[11:0];
 
 	alu ALU(
@@ -142,7 +143,6 @@ module top(
 		.write_reg_select(write_reg_select),
 		.imm_reg_select(imm_reg_select),
 		.enable_irfetch(enable_irfetch),
-		.IM_enable(IM_enable),
 		.IM_read(IM_read),
 		.IM_write(IM_write),
 		.enable_memaccess(DM_enable),

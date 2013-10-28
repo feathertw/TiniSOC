@@ -27,7 +27,6 @@ module controller(
 	read_reg_addr2,
 	write_address,
 
-	IM_enable,
 	IM_read,
 	IM_write,
 	enable_irfetch,
@@ -64,7 +63,6 @@ module controller(
 	
 	output reg enable_irfetch;
 
-	output reg IM_enable;
 	output IM_read;
 	output IM_write;
 
@@ -284,62 +282,51 @@ module controller(
 		case(current_state)
 			S0: begin
 				next_state=S1;
+				enable_irfetch=1'b1;
 				enable_decode=1'b0;
 				enable_execute=1'b0;
-				enable_writeback=1'b0;
-
-				enable_irfetch=1'b1;
-				IM_enable=1'b1;
 				enable_memaccess=1'b0;
+				enable_writeback=1'b0;
 			end
 			S1: begin
 				next_state=S2;
+				enable_irfetch=1'b0;
 				enable_decode=1'b1;
 				enable_execute=1'b0;
-				enable_writeback=1'b0;
-
-				enable_irfetch=1'b0;
-				IM_enable=1'b0;
 				enable_memaccess=1'b0;
+				enable_writeback=1'b0;
 			end
 			S2: begin
 				next_state=S3;
+				enable_irfetch=1'b0;
 				enable_decode=1'b0;
 				enable_execute=1'b1;
-				enable_writeback=1'b0;
-
-				enable_irfetch=1'b0;
-				IM_enable=1'b0;
 				enable_memaccess=1'b0;
+				enable_writeback=1'b0;
 			end
 			S3: begin
 				next_state=S4;
+				enable_irfetch=1'b0;
 				enable_decode=1'b0;
 				enable_execute=1'b0;
-				enable_writeback=1'b0;
-
-				enable_irfetch=1'b0;
-				IM_enable=1'b0;
 				enable_memaccess=1'b1;
+				enable_writeback=1'b0;
 			end
 			S4: begin
 				next_state=S0;
+				enable_irfetch=1'b0;
 				enable_decode=1'b0;
 				enable_execute=1'b0;
-				enable_writeback=1'b1;
-
-				enable_irfetch=1'b0;
-				IM_enable=1'b0;
 				enable_memaccess=1'b0;
+				enable_writeback=1'b1;
 			end
 			default: begin
 				next_state=S0;
+				enable_irfetch=1'b0;
 				enable_decode=1'b0;
 				enable_execute=1'b0;
+				enable_memaccess=1'b0;
 				enable_writeback=1'b0;
-
-				enable_irfetch=1'b0;
-				IM_enable=1'b0;
 			end
 		endcase
 	end
