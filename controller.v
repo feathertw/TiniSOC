@@ -6,35 +6,36 @@
 `define SV ir[9:8]
 
 module controller(
-	enable_execute,
-	enable_decode,
-	enable_writeback,
-	opcode,
-	sub_op_base,
-	sub_op_ls,
-	sub_op_sv,
-	imm_extend_select,
-	write_reg_select,
-	imm_reg_select,
 	clock,
 	reset,
 	ir,
 
-	imm_5bit,
-	imm_15bit,
-	imm_20bit,
+	enable_fetch,
+	enable_execute,
+	enable_decode,
+	enable_memaccess,
+	enable_writeback,
+
+	opcode,
+	sub_op_base,
+	sub_op_ls,
+	sub_op_sv,
+
 	read_reg_addr1,
 	read_reg_addr2,
 	write_address,
 
+	imm_5bit,
+	imm_15bit,
+	imm_20bit,
+	imm_reg_select,
+	imm_extend_select,
+	write_reg_select,
+
 	IM_read,
 	IM_write,
-	enable_fetch,
-
-	enable_memaccess,
 	DM_read,
 	DM_write,
-
 	do_reg_write,
 );
 	
@@ -42,16 +43,16 @@ module controller(
 	input reset;
 	input [31:0] ir;
 	
+	output reg enable_fetch;
 	output reg enable_execute;
 	output reg enable_decode;
+	output reg enable_memaccess;
 	output reg enable_writeback;
+
 	output [5:0] opcode;
 	output [4:0] sub_op_base;
 	output [7:0] sub_op_ls;
 	output [1:0] sub_op_sv;
-	output reg [1:0] imm_extend_select;
-	output reg [1:0] write_reg_select;
-	output reg [1:0] imm_reg_select;
 
 	output [4:0] read_reg_addr1;
 	output [4:0] read_reg_addr2;
@@ -60,16 +61,14 @@ module controller(
 	output [4:0] imm_5bit;
 	output [14:0] imm_15bit;
 	output [19:0] imm_20bit;
-	
-	output reg enable_fetch;
+	output reg [1:0] imm_reg_select;
+	output reg [1:0] imm_extend_select;
+	output reg [1:0] write_reg_select;
 
 	output IM_read;
 	output IM_write;
-
-	output reg enable_memaccess;
 	output reg DM_read;
 	output reg DM_write;
-
 	output reg do_reg_write;
 
 	reg [2:0] current_state;
@@ -80,12 +79,14 @@ module controller(
 	wire [4:0] sub_op_base=ir[4:0];
 	wire [7:0] sub_op_ls=ir[7:0];
 	wire [1:0] sub_op_sv=ir[9:8];
-	wire [4:0] imm_5bit=ir[14:10];
-	wire [14:0] imm_15bit=ir[14:0];
-	wire [19:0] imm_20bit=ir[19:0];
+
 	wire [4:0] read_reg_addr1=ir[19:15];
 	wire [4:0] read_reg_addr2=ir[14:10];
 	wire [4:0] write_address=ir[24:20];
+
+	wire [4:0] imm_5bit=ir[14:10];
+	wire [14:0] imm_15bit=ir[14:0];
+	wire [19:0] imm_20bit=ir[19:0];
 
 	assign IM_read=1'b1;
 	assign IM_write=1'b0;

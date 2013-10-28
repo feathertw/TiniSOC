@@ -132,29 +132,34 @@ module top(
 		.clock(clk),
 		.reset(rst),
 		.ir(instruction),
+
+		.enable_fetch(enable_fetch),
 		.enable_execute(enable_execute),
 		.enable_decode(enable_decode),
+		.enable_memaccess(DM_enable),
 		.enable_writeback(enable_writeback),
+
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
 		.sub_op_ls(sub_op_ls),
 		.sub_op_sv(sub_op_sv),
-		.imm_extend_select(imm_extend_select),
-		.write_reg_select(write_reg_select),
-		.imm_reg_select(imm_reg_select),
-		.enable_fetch(enable_fetch),
-		.IM_read(IM_read),
-		.IM_write(IM_write),
-		.enable_memaccess(DM_enable),
-		.DM_read(DM_read),
-		.DM_write(DM_write),
-		.do_reg_write(do_reg_write),
+
+		.read_reg_addr1(read_reg_addr1),
+		.read_reg_addr2(read_reg_addr2),
+		.write_address(write_address),
+
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
-		.read_reg_addr1(read_reg_addr1),
-		.read_reg_addr2(read_reg_addr2),
-		.write_address(write_address)
+		.imm_reg_select(imm_reg_select),
+		.imm_extend_select(imm_extend_select),
+		.write_reg_select(write_reg_select),
+
+		.IM_read(IM_read),
+		.IM_write(IM_write),
+		.DM_read(DM_read),
+		.DM_write(DM_write),
+		.do_reg_write(do_reg_write)
 	);
 	pc PC(
 		.clock(clk),
