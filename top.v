@@ -8,11 +8,11 @@ module top(
 	rst,
 	instruction,
 	alu_overflow,
-	pc,
 
 	IM_read,
 	IM_write,
 	IM_enable,
+	IM_address,
 
 	DM_read,
 	DM_write,
@@ -25,11 +25,11 @@ module top(
 	input rst;
 	input [31:0] instruction;
 	output alu_overflow;
-	output [9:0] pc;
 
 	output IM_read;
 	output IM_write;
 	output IM_enable;
+	output [9:0] IM_address;
 
 	output DM_read;
 	output DM_write;
@@ -131,7 +131,7 @@ module top(
 	controller CONTROLLER(
 		.clock(clk),
 		.reset(rst),
-		.ir(instruction),
+		.instruction(instruction),
 
 		.enable_fetch(enable_fetch),
 		.enable_execute(enable_execute),
@@ -165,6 +165,6 @@ module top(
 		.clock(clk),
 		.reset(rst),
 		.enable_pc(enable_fetch),
-		.pc(pc)
+		.pc(IM_address)
 	);
 endmodule

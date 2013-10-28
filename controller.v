@@ -1,14 +1,14 @@
 `include "def_op.v"
 
-`define OPCODE ir[30:25]
-`define SUBOP_BASE ir[4:0]
-`define SUBOP_LS ir[7:0]
-`define SV ir[9:8]
+`define OPCODE instruction[30:25]
+`define SUBOP_BASE instruction[4:0]
+`define SUBOP_LS instruction[7:0]
+`define SV instruction[9:8]
 
 module controller(
 	clock,
 	reset,
-	ir,
+	instruction,
 
 	enable_fetch,
 	enable_execute,
@@ -41,7 +41,7 @@ module controller(
 	
 	input clock;
 	input reset;
-	input [31:0] ir;
+	input [31:0] instruction;
 	
 	output reg enable_fetch;
 	output reg enable_execute;
@@ -75,18 +75,18 @@ module controller(
 	reg [2:0] next_state;
 	reg [31:0] present_instruction;
 
-	wire [5:0] opcode=ir[30:25];
-	wire [4:0] sub_op_base=ir[4:0];
-	wire [7:0] sub_op_ls=ir[7:0];
-	wire [1:0] sub_op_sv=ir[9:8];
+	wire [5:0] opcode=instruction[30:25];
+	wire [4:0] sub_op_base=instruction[4:0];
+	wire [7:0] sub_op_ls=instruction[7:0];
+	wire [1:0] sub_op_sv=instruction[9:8];
 
-	wire [4:0] read_reg_addr1=ir[19:15];
-	wire [4:0] read_reg_addr2=ir[14:10];
-	wire [4:0] write_addr=ir[24:20];
+	wire [4:0] read_reg_addr1=instruction[19:15];
+	wire [4:0] read_reg_addr2=instruction[14:10];
+	wire [4:0] write_addr=instruction[24:20];
 
-	wire [4:0] imm_5bit=ir[14:10];
-	wire [14:0] imm_15bit=ir[14:0];
-	wire [19:0] imm_20bit=ir[19:0];
+	wire [4:0] imm_5bit=instruction[14:10];
+	wire [14:0] imm_15bit=instruction[14:0];
+	wire [19:0] imm_20bit=instruction[19:0];
 
 	assign IM_read=1'b1;
 	assign IM_write=1'b0;
@@ -334,7 +334,7 @@ module controller(
 	
 	always@(posedge clock or posedge reset) begin
 		if(reset) present_instruction<=0;
-		else	  present_instruction<=ir;
+		else	  present_instruction<=instruction;
 	end
 endmodule
 
