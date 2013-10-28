@@ -115,18 +115,20 @@ module top(
 	);
 
 	muxs MUXS(
+		.sub_op_sv(sub_op_sv),
+		.read_reg_data2(read_reg_data2),
+		.mem_read_data(DM_out),
+		.alu_output(alu_result),
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
-		.read_reg_data2(read_reg_data2),
-		.mem_read_data(DM_out),
-		.ir_sv(sub_op_sv),
+
+		.imm_reg_select(imm_reg_select),
 		.imm_extend_select(imm_extend_select),
 		.write_reg_select(write_reg_select),
-		.imm_reg_select(imm_reg_select),
+
 		.output_imm_reg_mux(alu_src2),
-		.write_reg_data(write_reg_data),
-		.alu_output(alu_result)
+		.write_reg_data(write_reg_data)
 	);
 	
 	controller CONTROLLER(
