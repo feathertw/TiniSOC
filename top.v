@@ -48,7 +48,7 @@ module top(
 	wire do_reg_write;
 	wire [4:0] read_reg_addr1;
 	wire [4:0] read_reg_addr2;
-	wire [4:0] write_address;
+	wire [4:0] write_addr;
 
 	//controller to muxs
 	wire [1:0] imm_reg_select;
@@ -100,18 +100,19 @@ module top(
 	);
 	
 	regfile REGFILE(
-		.mem_write_data(DM_in),
-		.reag_reg_data1(reag_reg_data1),
-		.read_reg_data2(read_reg_data2),
-		.read_reg_addr1(read_reg_addr1),
-		.read_reg_addr2(read_reg_addr2),
-		.write_address(write_address),
-		.write_reg_data(write_reg_data),
 		.clock(clk),
 		.reset(rst),
 		.enable_reg_fetch(enable_decode),
 		.enable_reg_write(enable_writeback),
-		.do_reg_write(do_reg_write)
+		.read_reg_addr1(read_reg_addr1),
+		.read_reg_addr2(read_reg_addr2),
+		.write_addr(write_addr),
+		.write_reg_data(write_reg_data),
+		.do_reg_write(do_reg_write),
+
+		.reag_reg_data1(reag_reg_data1),
+		.read_reg_data2(read_reg_data2),
+		.mem_write_data(DM_in)
 	);
 
 	muxs MUXS(
@@ -149,7 +150,7 @@ module top(
 
 		.read_reg_addr1(read_reg_addr1),
 		.read_reg_addr2(read_reg_addr2),
-		.write_address(write_address),
+		.write_addr(write_addr),
 
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),

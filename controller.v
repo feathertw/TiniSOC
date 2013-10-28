@@ -23,7 +23,7 @@ module controller(
 
 	read_reg_addr1,
 	read_reg_addr2,
-	write_address,
+	write_addr,
 
 	imm_5bit,
 	imm_15bit,
@@ -56,7 +56,7 @@ module controller(
 
 	output [4:0] read_reg_addr1;
 	output [4:0] read_reg_addr2;
-	output [4:0] write_address;
+	output [4:0] write_addr;
 
 	output [4:0] imm_5bit;
 	output [14:0] imm_15bit;
@@ -82,7 +82,7 @@ module controller(
 
 	wire [4:0] read_reg_addr1=ir[19:15];
 	wire [4:0] read_reg_addr2=ir[14:10];
-	wire [4:0] write_address=ir[24:20];
+	wire [4:0] write_addr=ir[24:20];
 
 	wire [4:0] imm_5bit=ir[14:10];
 	wire [14:0] imm_15bit=ir[14:0];
