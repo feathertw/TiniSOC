@@ -1,10 +1,10 @@
 module im(
 	clock,
 	reset,
-	IM_address,
 	IM_read,
 	IM_write,
 	IM_enable,
+	IM_address,
 	IMin,
 	IMout
 );
@@ -19,7 +19,6 @@ module im(
 	input IM_enable;
 	input [mem_size_bit-1:0] IM_address;
 	input [data_size-1:0] IMin;
-
 	output reg [data_size-1:0] IMout;
 
 	reg [data_size-1:0] mem_data[mem_size-1:0];

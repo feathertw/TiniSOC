@@ -28,7 +28,6 @@ module top_tb;
 	wire [31:0] DM_in;
 	wire [31:0] DM_out;
 
-	
 	assign IM_address=pc/4;
 	assign xDM_address=DM_address/4;
 
@@ -39,11 +38,12 @@ module top_tb;
 		.rst(rst),
 		.instruction(IM_out),
 		.alu_overflow(alu_overflow),
-
 	        .pc(pc),
+
 		.IM_read(IM_read),
 	        .IM_write(IM_write),
 	        .IM_enable(IM_enable),
+
 		.DM_read(DM_read),
 	        .DM_write(DM_write),
 	        .DM_enable(DM_enable),
@@ -55,10 +55,10 @@ module top_tb;
 	im IM(
 		.clock(clk),
 		.reset(rst),
-		.IM_address(IM_address),
 		.IM_read(IM_read),
 		.IM_write(IM_write),
 		.IM_enable(IM_enable),
+		.IM_address(IM_address),
 		.IMin(),
 		.IMout(IM_out)
 	); 
