@@ -29,7 +29,7 @@ module controller(
 
 	IM_read,
 	IM_write,
-	enable_irfetch,
+	enable_fetch,
 
 	enable_memaccess,
 	DM_read,
@@ -61,7 +61,7 @@ module controller(
 	output [14:0] imm_15bit;
 	output [19:0] imm_20bit;
 	
-	output reg enable_irfetch;
+	output reg enable_fetch;
 
 	output IM_read;
 	output IM_write;
@@ -282,7 +282,7 @@ module controller(
 		case(current_state)
 			S0: begin
 				next_state=S1;
-				enable_irfetch=1'b1;
+				enable_fetch=1'b1;
 				enable_decode=1'b0;
 				enable_execute=1'b0;
 				enable_memaccess=1'b0;
@@ -290,7 +290,7 @@ module controller(
 			end
 			S1: begin
 				next_state=S2;
-				enable_irfetch=1'b0;
+				enable_fetch=1'b0;
 				enable_decode=1'b1;
 				enable_execute=1'b0;
 				enable_memaccess=1'b0;
@@ -298,7 +298,7 @@ module controller(
 			end
 			S2: begin
 				next_state=S3;
-				enable_irfetch=1'b0;
+				enable_fetch=1'b0;
 				enable_decode=1'b0;
 				enable_execute=1'b1;
 				enable_memaccess=1'b0;
@@ -306,7 +306,7 @@ module controller(
 			end
 			S3: begin
 				next_state=S4;
-				enable_irfetch=1'b0;
+				enable_fetch=1'b0;
 				enable_decode=1'b0;
 				enable_execute=1'b0;
 				enable_memaccess=1'b1;
@@ -314,7 +314,7 @@ module controller(
 			end
 			S4: begin
 				next_state=S0;
-				enable_irfetch=1'b0;
+				enable_fetch=1'b0;
 				enable_decode=1'b0;
 				enable_execute=1'b0;
 				enable_memaccess=1'b0;
@@ -322,7 +322,7 @@ module controller(
 			end
 			default: begin
 				next_state=S0;
-				enable_irfetch=1'b0;
+				enable_fetch=1'b0;
 				enable_decode=1'b0;
 				enable_execute=1'b0;
 				enable_memaccess=1'b0;

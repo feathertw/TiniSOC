@@ -63,7 +63,7 @@ module top(
 	wire enable_execute;
 
 	//controller to pc
-	wire enable_irfetch;
+	wire enable_fetch;
 
 	// regfile to alu
 	wire [31:0] reag_reg_data1;
@@ -83,7 +83,7 @@ module top(
 	//muxs to alu
 	wire [31:0] alu_src2;
 
-	wire IM_enable=enable_irfetch;
+	wire IM_enable=enable_fetch;
 	wire [11:0] DM_address=alu_result[11:0];
 
 	alu ALU(
@@ -142,7 +142,7 @@ module top(
 		.imm_extend_select(imm_extend_select),
 		.write_reg_select(write_reg_select),
 		.imm_reg_select(imm_reg_select),
-		.enable_irfetch(enable_irfetch),
+		.enable_fetch(enable_fetch),
 		.IM_read(IM_read),
 		.IM_write(IM_write),
 		.enable_memaccess(DM_enable),
@@ -159,7 +159,7 @@ module top(
 	pc PC(
 		.clock(clk),
 		.reset(rst),
-		.enable_pc(enable_irfetch),
+		.enable_pc(enable_fetch),
 		.pc(pc)
 	);
 endmodule
