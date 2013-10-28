@@ -7,8 +7,8 @@
 
 module controller(
 	enable_execute,
-	enable_reg_fetch,
-	enable_reg_write,
+	enable_decode,
+	enable_writeback,
 	opcode,
 	sub_op_base,
 	sub_op_ls,
@@ -30,9 +30,9 @@ module controller(
 	IM_enable,
 	IM_read,
 	IM_write,
-	enable_pc,
+	enable_irfetch,
 
-	DM_enable,
+	enable_memaccess,
 	DM_read,
 	DM_write,
 
@@ -44,8 +44,8 @@ module controller(
 	input [31:0] ir;
 	
 	output reg enable_execute;
-	output reg enable_reg_fetch;
-	output reg enable_reg_write;
+	output reg enable_decode;
+	output reg enable_writeback;
 	output [5:0] opcode;
 	output [4:0] sub_op_base;
 	output [7:0] sub_op_ls;
@@ -62,13 +62,13 @@ module controller(
 	output [14:0] imm_15bit;
 	output [19:0] imm_20bit;
 	
-	output reg enable_pc;
+	output reg enable_irfetch;
 
 	output reg IM_enable;
 	output IM_read;
 	output IM_write;
 
-	output reg DM_enable;
+	output reg enable_memaccess;
 	output reg DM_read;
 	output reg DM_write;
 
@@ -284,61 +284,61 @@ module controller(
 		case(current_state)
 			S0: begin
 				next_state=S1;
-				enable_reg_fetch=1'b0;
+				enable_decode=1'b0;
 				enable_execute=1'b0;
-				enable_reg_write=1'b0;
+				enable_writeback=1'b0;
 
-				enable_pc=1'b1;
+				enable_irfetch=1'b1;
 				IM_enable=1'b1;
-				DM_enable=1'b0;
+				enable_memaccess=1'b0;
 			end
 			S1: begin
 				next_state=S2;
-				enable_reg_fetch=1'b1;
+				enable_decode=1'b1;
 				enable_execute=1'b0;
-				enable_reg_write=1'b0;
+				enable_writeback=1'b0;
 
-				enable_pc=1'b0;
+				enable_irfetch=1'b0;
 				IM_enable=1'b0;
-				DM_enable=1'b0;
+				enable_memaccess=1'b0;
 			end
 			S2: begin
 				next_state=S3;
-				enable_reg_fetch=1'b0;
+				enable_decode=1'b0;
 				enable_execute=1'b1;
-				enable_reg_write=1'b0;
+				enable_writeback=1'b0;
 
-				enable_pc=1'b0;
+				enable_irfetch=1'b0;
 				IM_enable=1'b0;
-				DM_enable=1'b0;
+				enable_memaccess=1'b0;
 			end
 			S3: begin
 				next_state=S4;
-				enable_reg_fetch=1'b0;
+				enable_decode=1'b0;
 				enable_execute=1'b0;
-				enable_reg_write=1'b0;
+				enable_writeback=1'b0;
 
-				enable_pc=1'b0;
+				enable_irfetch=1'b0;
 				IM_enable=1'b0;
-				DM_enable=1'b1;
+				enable_memaccess=1'b1;
 			end
 			S4: begin
 				next_state=S0;
-				enable_reg_fetch=1'b0;
+				enable_decode=1'b0;
 				enable_execute=1'b0;
-				enable_reg_write=1'b1;
+				enable_writeback=1'b1;
 
-				enable_pc=1'b0;
+				enable_irfetch=1'b0;
 				IM_enable=1'b0;
-				DM_enable=1'b0;
+				enable_memaccess=1'b0;
 			end
 			default: begin
 				next_state=S0;
-				enable_reg_fetch=1'b0;
+				enable_decode=1'b0;
 				enable_execute=1'b0;
-				enable_reg_write=1'b0;
+				enable_writeback=1'b0;
 
-				enable_pc=1'b0;
+				enable_irfetch=1'b0;
 				IM_enable=1'b0;
 			end
 		endcase

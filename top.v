@@ -43,8 +43,8 @@ module top(
 	input [31:0] DM_out;
 
 	//controller to regfile
-	wire enable_reg_fetch;
-	wire enable_reg_write;
+	wire enable_decode;
+	wire enable_writeback;
 	wire do_reg_write;
 	wire [4:0] read_reg_addr1;
 	wire [4:0] read_reg_addr2;
@@ -63,7 +63,7 @@ module top(
 	wire enable_execute;
 
 	//controller to pc
-	wire enable_pc;
+	wire enable_irfetch;
 
 	// regfile to alu
 	wire [31:0] reag_reg_data1;
@@ -107,8 +107,8 @@ module top(
 		.write_reg_data(write_reg_data),
 		.clock(clk),
 		.reset(rst),
-		.enable_reg_fetch(enable_reg_fetch),
-		.enable_reg_write(enable_reg_write),
+		.enable_reg_fetch(enable_decode),
+		.enable_reg_write(enable_writeback),
 		.do_reg_write(do_reg_write)
 	);
 
@@ -132,8 +132,8 @@ module top(
 		.reset(rst),
 		.ir(instruction),
 		.enable_execute(enable_execute),
-		.enable_reg_fetch(enable_reg_fetch),
-		.enable_reg_write(enable_reg_write),
+		.enable_decode(enable_decode),
+		.enable_writeback(enable_writeback),
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
 		.sub_op_ls(sub_op_ls),
@@ -141,11 +141,11 @@ module top(
 		.imm_extend_select(imm_extend_select),
 		.write_reg_select(write_reg_select),
 		.imm_reg_select(imm_reg_select),
-		.enable_pc(enable_pc),
+		.enable_irfetch(enable_irfetch),
 		.IM_enable(IM_enable),
 		.IM_read(IM_read),
 		.IM_write(IM_write),
-		.DM_enable(DM_enable),
+		.enable_memaccess(DM_enable),
 		.DM_read(DM_read),
 		.DM_write(DM_write),
 		.do_reg_write(do_reg_write),
@@ -159,7 +159,7 @@ module top(
 	pc PC(
 		.clock(clk),
 		.reset(rst),
-		.enable_pc(enable_pc),
+		.enable_pc(enable_irfetch),
 		.pc(pc)
 	);
 endmodule
