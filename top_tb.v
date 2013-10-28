@@ -11,10 +11,9 @@ module top_tb;
 
 	reg clk;
 	reg rst;
-	integer i;
 	wire alu_overflow;
+	wire [9:0] pc;
 
-	//IM
 	wire IM_read; 
 	wire IM_write; 
 	wire IM_enable;
@@ -25,14 +24,15 @@ module top_tb;
 	wire DM_write;
 	wire DM_enable;
 	wire [11:0] DM_address;
-	wire [11:0] oDM_address;
+	wire [11:0] xDM_address;
 	wire [31:0] DM_in;
 	wire [31:0] DM_out;
 
-	wire [9:0] pc;
 	
 	assign IM_address=pc/4;
-	assign oDM_address=DM_address/4;
+	assign xDM_address=DM_address/4;
+
+	integer i;
 
 	top TOP(
 		.clk(clk),
@@ -68,7 +68,7 @@ module top_tb;
 		.DM_read(DM_read),
 		.DM_write(DM_write),
 		.DM_enable(DM_enable),
-		.DM_address(oDM_address),
+		.DM_address(xDM_address),
 		.DMin(DM_in),
 		.DMout(DM_out)
 	); 

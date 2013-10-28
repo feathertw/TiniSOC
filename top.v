@@ -8,7 +8,6 @@ module top(
 	rst,
 	instruction,
 	alu_overflow,
-
 	pc,
 
 	IM_read,
@@ -18,7 +17,6 @@ module top(
 	DM_read,
 	DM_write,
 	DM_enable,
-
 	DM_address,
 	DM_in,
 	DM_out,
@@ -27,7 +25,6 @@ module top(
 	input rst;
 	input [31:0] instruction;
 	output alu_overflow;
-
 	output [9:0] pc;
 
 	output IM_read;
@@ -37,7 +34,6 @@ module top(
 	output DM_read;
 	output DM_write;
 	output DM_enable;
-
 	output [11:0] DM_address;
 	output [31:0] DM_in;
 	input [31:0] DM_out;
