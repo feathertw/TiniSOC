@@ -75,8 +75,10 @@ module top_tb;
 	); 
   
 	initial begin
-		$fsdbDumpfile("top.fsdb");
-		$fsdbDumpvars(0, top_tb);
+		$dumpfile("wave/top.vcd");
+		$dumpvars;
+  		$fsdbDumpfile("wave/top.fsdb");
+  		$fsdbDumpvars();
 	end
 
 	//clock gen.
@@ -89,7 +91,7 @@ module top_tb;
 		#10 rst=1'b0;
 
 `ifdef PROG1
-		$readmemb("ir_data1.prog",IM.mem_data); //machine code for fig.2-2
+		$readmemb("mins/mins1.prog",IM.mem_data); //machine code for fig.2-2
 		#50 `DEBUG_REG("ADDI  ",1,9)
 		#50 `DEBUG_REG("XORI  ",1,3)
 		#50 `DEBUG_REG("MOVI  ",0,3)
@@ -113,7 +115,7 @@ module top_tb;
 		#50 `DEBUG_REG("ROTRI ",2,12)
 `endif
 `ifdef PROG2
-		$readmemb("ir_data2.prog",IM.mem_data);
+		$readmemb("mins/mins2.prog",IM.mem_data);
 		#50 `DEBUG_REG("MOVI  ",0,9)
 		#50 `DEBUG_REG("MOVI  ",1,7)
 		#50 `DEBUG_REG("MOVI  ",2,2)
@@ -134,7 +136,7 @@ module top_tb;
 		#50 `DEBUG_LWX("LWI   ",4,4)
 `endif
 `ifdef PROG3
-		$readmemb("ir_data3.prog",IM.mem_data);
+		$readmemb("mins/mins3.prog",IM.mem_data);
 		#50 `DEBUG_REG("MOVI  ",0,10)
 		#50 `DEBUG_REG("ADDI  ",1,21)
 		#50 `DEBUG_REG("ADDI  ",2,15)
