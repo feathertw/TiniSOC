@@ -4,9 +4,9 @@
 `include "im.v"
 `include "dm.v"
 
-//`define PROG1
+`define PROG1
 //`define PROG2
-`define PROG3
+//`define PROG3
 
 module top_tb;
 
