@@ -148,7 +148,7 @@ module alu(
 			endcase
 		end
 		`TY_B:begin
-                            alu_result=src1&src2;
+                            alu_result=src1^src2;
                             alu_overflow=1'b0;
 		end
 		`JJ:begin
