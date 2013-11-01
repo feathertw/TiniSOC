@@ -3,6 +3,7 @@ module muxs(
 	pc_from,
 	sub_op_sv,
 	reg_rb_data,
+	reg_rt_data,
 	mem_read_data,
 	alu_output,
 	imm_5bit,
@@ -26,6 +27,7 @@ module muxs(
 	input [9:0] pc_from;
 	input [1:0] sub_op_sv;
 	input [DataSize-1:0] reg_rb_data;
+	input [DataSize-1:0] reg_rt_data;
 	input [DataSize-1:0] mem_read_data;
 	input [DataSize-1:0] alu_output;
 	input [4:0] imm_5bit;
@@ -89,6 +91,9 @@ module muxs(
 			end
 			3'b011: begin
 				output_imm_reg_mux = reg_rb_data<<sub_op_sv;
+			end
+			3'b100: begin
+				output_imm_reg_mux = reg_rt_data;
 			end
 		endcase
 	end

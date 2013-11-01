@@ -73,6 +73,7 @@ module top(
 
 	//regfile to muxs
 	wire [31:0] reg_rb_data;
+	wire [31:0] reg_rt_data;
 	wire [4:0] imm_5bit;
 	wire [13:0] imm_14bit;
 	wire [14:0] imm_15bit;
@@ -97,6 +98,7 @@ module top(
 	wire IM_enable=enable_fetch;
 	wire [11:0] DM_address=alu_result[11:0];
 	wire [9:0] IM_address=pc_out[9:0];
+	wire [31:0] DM_in=reg_rt_data[31:0];
 
 	alu ALU(
 		.reset(rst),
@@ -125,12 +127,13 @@ module top(
 
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
-		.reg_rt_data(DM_in)
+		.reg_rt_data(reg_rt_data)
 	);
 
 	muxs MUXS(
 		.sub_op_sv(sub_op_sv),
 		.reg_rb_data(reg_rb_data),
+		.reg_rt_data(reg_rt_data),
 		.mem_read_data(DM_out),
 		.alu_output(alu_result),
 		.imm_5bit(imm_5bit),

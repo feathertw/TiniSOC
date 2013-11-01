@@ -303,7 +303,7 @@ module controller(
 			`TY_B:begin
 				case(`SUBOP_B)
 					`BEQ:begin
-						alu_src2_select=3'b000;
+						alu_src2_select=3'b100;
 						imm_extend_select=2'bxx;
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
@@ -311,7 +311,7 @@ module controller(
 						do_reg_write=1'b0;
 					end
 					`BNE:begin
-						alu_src2_select=3'b000;
+						alu_src2_select=3'b100;
 						imm_extend_select=2'bxx;
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
