@@ -2,7 +2,7 @@ module muxs(
 
 	pc_from,
 	sub_op_sv,
-	read_reg_data2,
+	reg_rb_data,
 	mem_read_data,
 	alu_output,
 	imm_5bit,
@@ -25,7 +25,7 @@ module muxs(
 
 	input [9:0] pc_from;
 	input [1:0] sub_op_sv;
-	input [DataSize-1:0] read_reg_data2;
+	input [DataSize-1:0] reg_rb_data;
 	input [DataSize-1:0] mem_read_data;
 	input [DataSize-1:0] alu_output;
 	input [4:0] imm_5bit;
@@ -79,7 +79,7 @@ module muxs(
 	always @(*) begin
 		case(imm_reg_select)
 			2'b00: begin
-				output_imm_reg_mux = read_reg_data2;
+				output_imm_reg_mux = reg_rb_data;
 			end
 			2'b01: begin
 				output_imm_reg_mux = imm;
@@ -88,7 +88,7 @@ module muxs(
 				output_imm_reg_mux = imm_15bit<<2; 
 			end
 			2'b11: begin
-				output_imm_reg_mux = read_reg_data2<<sub_op_sv;
+				output_imm_reg_mux = reg_rb_data<<sub_op_sv;
 			end
 		endcase
 	end

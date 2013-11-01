@@ -23,9 +23,9 @@ module controller(
 	sub_op_ls,
 	sub_op_sv,
 
-	read_reg_addr1,
-	read_reg_addr2,
-	write_addr,
+	reg_ra_addr,
+	reg_rb_addr,
+	reg_rt_addr,
 
 	imm_5bit,
 	imm_14bit,
@@ -62,9 +62,9 @@ module controller(
 	output [7:0] sub_op_ls;
 	output [1:0] sub_op_sv;
 
-	output [4:0] read_reg_addr1;
-	output [4:0] read_reg_addr2;
-	output [4:0] write_addr;
+	output [4:0] reg_ra_addr;
+	output [4:0] reg_rb_addr;
+	output [4:0] reg_rt_addr;
 
 	output [4:0] imm_5bit;
 	output [13:0] imm_14bit;
@@ -93,9 +93,9 @@ module controller(
 	wire [7:0] sub_op_ls=instruction[7:0];
 	wire [1:0] sub_op_sv=instruction[9:8];
 
-	wire [4:0] read_reg_addr1=instruction[19:15];
-	wire [4:0] read_reg_addr2=instruction[14:10];
-	wire [4:0] write_addr=instruction[24:20];
+	wire [4:0] reg_ra_addr=instruction[19:15];
+	wire [4:0] reg_rb_addr=instruction[14:10];
+	wire [4:0] reg_rt_addr=instruction[24:20];
 
 	wire [4:0] imm_5bit=instruction[14:10];
 	wire [13:0] imm_14bit=instruction[13:0];

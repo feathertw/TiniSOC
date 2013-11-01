@@ -42,9 +42,9 @@ module top(
 	wire enable_decode;
 	wire enable_writeback;
 	wire do_reg_write;
-	wire [4:0] read_reg_addr1;
-	wire [4:0] read_reg_addr2;
-	wire [4:0] write_addr;
+	wire [4:0] reg_ra_addr;
+	wire [4:0] reg_rb_addr;
+	wire [4:0] reg_rt_addr;
 
 	//controller to muxs
 	wire [1:0] pc_select;
@@ -66,13 +66,13 @@ module top(
 	wire enable_fetch;
 
 	// regfile to alu
-	wire [31:0] reag_reg_data1;
+	wire [31:0] reg_ra_data;
 
 	//alu to muxs
 	wire [31:0] alu_result;
 
 	//regfile to muxs
-	wire [31:0] read_reg_data2;
+	wire [31:0] reg_rb_data;
 	wire [4:0] imm_5bit;
 	wire [13:0] imm_14bit;
 	wire [14:0] imm_15bit;
@@ -101,7 +101,7 @@ module top(
 	alu ALU(
 		.reset(rst),
 		.enable_execute(enable_execute),
-		.src1(reag_reg_data1),
+		.src1(reg_ra_data),
 		.src2(alu_src2),
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
@@ -117,20 +117,20 @@ module top(
 		.reset(rst),
 		.enable_reg_fetch(enable_decode),
 		.enable_reg_write(enable_writeback),
-		.read_reg_addr1(read_reg_addr1),
-		.read_reg_addr2(read_reg_addr2),
-		.write_addr(write_addr),
+		.reg_ra_addr(reg_ra_addr),
+		.reg_rb_addr(reg_rb_addr),
+		.reg_rt_addr(reg_rt_addr),
 		.write_reg_data(write_reg_data),
 		.do_reg_write(do_reg_write),
 
-		.reag_reg_data1(reag_reg_data1),
-		.read_reg_data2(read_reg_data2),
-		.mem_write_data(DM_in)
+		.reg_ra_data(reg_ra_data),
+		.reg_rb_data(reg_rb_data),
+		.reg_rt_data(DM_in)
 	);
 
 	muxs MUXS(
 		.sub_op_sv(sub_op_sv),
-		.read_reg_data2(read_reg_data2),
+		.reg_rb_data(reg_rb_data),
 		.mem_read_data(DM_out),
 		.alu_output(alu_result),
 		.imm_5bit(imm_5bit),
@@ -167,9 +167,9 @@ module top(
 		.sub_op_ls(sub_op_ls),
 		.sub_op_sv(sub_op_sv),
 
-		.read_reg_addr1(read_reg_addr1),
-		.read_reg_addr2(read_reg_addr2),
-		.write_addr(write_addr),
+		.reg_ra_addr(reg_ra_addr),
+		.reg_rb_addr(reg_rb_addr),
+		.reg_rt_addr(reg_rt_addr),
 
 		.imm_5bit(imm_5bit),
 		.imm_14bit(imm_14bit),
