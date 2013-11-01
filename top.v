@@ -60,6 +60,9 @@ module top(
 	wire enable_execute;
 
 	//controller to pc
+	wire enable_pc;
+
+	//controller to im
 	wire enable_fetch;
 
 	// regfile to alu
@@ -157,6 +160,7 @@ module top(
 		.enable_decode(enable_decode),
 		.enable_memaccess(DM_enable),
 		.enable_writeback(enable_writeback),
+		.enable_pc(enable_pc),
 
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
@@ -188,7 +192,7 @@ module top(
 	pc PC(
 		.clock(clk),
 		.reset(rst),
-		.enable_pc(enable_fetch),
+		.enable_pc(enable_pc),
 		.pc_in(pc_in),
 		.pc_out(pc_out)
 	);
