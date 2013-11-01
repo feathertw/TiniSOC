@@ -47,6 +47,7 @@ module top(
 	wire [4:0] write_addr;
 
 	//controller to muxs
+	wire [1:0] pc_select;
 	wire [1:0] imm_reg_select;
 	wire [1:0] imm_extend_select;
 	wire [1:0] write_reg_select;
@@ -70,8 +71,10 @@ module top(
 	//regfile to muxs
 	wire [31:0] read_reg_data2;
 	wire [4:0] imm_5bit;
+	wire [13:0] imm_14bit;
 	wire [14:0] imm_15bit;
 	wire [19:0] imm_20bit;
+	wire [23:0] imm_24bit;
 
 	//muxs to regfile
 	wire [31:0] write_reg_data;
@@ -79,8 +82,18 @@ module top(
 	//muxs to alu
 	wire [31:0] alu_src2;
 
+	//alu to controller
+	wire alu_zero;
+
+	//pc to muxs
+	wire [9:0] pc_out;
+
+	//muxs to pc
+	wire [9:0] pc_in;
+
 	wire IM_enable=enable_fetch;
 	wire [11:0] DM_address=alu_result[11:0];
+	wire [9:0] IM_address=pc_out[9:0];
 
 	alu ALU(
 		.reset(rst),
@@ -92,7 +105,8 @@ module top(
 		.sub_op_ls(sub_op_ls),
 
 		.alu_result(alu_result),
-		.alu_overflow(alu_overflow)
+		.alu_overflow(alu_overflow),
+		.alu_zero(alu_zero)
 	);
 	
 	regfile REGFILE(
@@ -117,15 +131,20 @@ module top(
 		.mem_read_data(DM_out),
 		.alu_output(alu_result),
 		.imm_5bit(imm_5bit),
+		.imm_14bit(imm_14bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
+		.imm_24bit(imm_24bit),
 
+		.pc_select(pc_select),
 		.imm_reg_select(imm_reg_select),
 		.imm_extend_select(imm_extend_select),
 		.write_reg_select(write_reg_select),
 
 		.output_imm_reg_mux(alu_src2),
-		.write_reg_data(write_reg_data)
+		.write_reg_data(write_reg_data),
+		.pc_from(pc_out),
+		.pc_to(pc_in)
 	);
 	
 	controller CONTROLLER(
@@ -149,8 +168,11 @@ module top(
 		.write_addr(write_addr),
 
 		.imm_5bit(imm_5bit),
+		.imm_14bit(imm_14bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
+		.imm_24bit(imm_24bit),
+		.pc_select(pc_select),
 		.imm_reg_select(imm_reg_select),
 		.imm_extend_select(imm_extend_select),
 		.write_reg_select(write_reg_select),
@@ -159,12 +181,15 @@ module top(
 		.IM_write(IM_write),
 		.DM_read(DM_read),
 		.DM_write(DM_write),
-		.do_reg_write(do_reg_write)
+		.do_reg_write(do_reg_write),
+
+		.alu_zero(alu_zero)
 	);
 	pc PC(
 		.clock(clk),
 		.reset(rst),
 		.enable_pc(enable_fetch),
-		.pc(IM_address)
+		.pc_in(pc_in),
+		.pc_out(pc_out)
 	);
 endmodule

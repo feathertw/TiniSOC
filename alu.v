@@ -11,6 +11,7 @@ module alu(
 
 	alu_result,
 	alu_overflow,
+	alu_zero,
 );
 
     input reset;
@@ -23,10 +24,13 @@ module alu(
 
     output reg [31:0] alu_result;
     output reg alu_overflow;
+    output alu_zero;
     
     reg [63:0] rotate;
     reg a;
     reg b;
+
+    assign alu_zero=(alu_result==32'b0)?1'b1:1'b0;
 
     always @(*) begin
         if(reset) begin
@@ -142,6 +146,14 @@ module alu(
 					alu_overflow=1'bx;
 				end
 			endcase
+		end
+		`TY_B:begin
+                            alu_result=src1&src2;
+                            alu_overflow=1'b0;
+		end
+		`JJ:begin
+			alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
+			alu_overflow=1'bx;
 		end
                 default:
                 begin

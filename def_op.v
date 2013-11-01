@@ -20,3 +20,9 @@
 `define TY_LS	6'b011100
 `define LW	8'b00000010
 `define SW	8'b00001010
+
+`define TY_B	6'b100110
+`define BEQ	1'b0
+`define BNE	1'b1
+
+`define JJ	6'b100100

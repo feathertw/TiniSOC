@@ -1,38 +1,63 @@
 module muxs(
+
+	pc_from,
 	sub_op_sv,
 	read_reg_data2,
 	mem_read_data,
 	alu_output,
 	imm_5bit,
+	imm_14bit,
 	imm_15bit,
 	imm_20bit,
+	imm_24bit,
 
+	pc_select,
 	imm_reg_select,
 	imm_extend_select,
 	write_reg_select,
 
+	pc_to,
 	output_imm_reg_mux,
 	write_reg_data,
 );
 
 	parameter DataSize = 32;
 
+	input [9:0] pc_from;
 	input [1:0] sub_op_sv;
 	input [DataSize-1:0] read_reg_data2;
 	input [DataSize-1:0] mem_read_data;
 	input [DataSize-1:0] alu_output;
 	input [4:0] imm_5bit;
+	input [13:0] imm_14bit;
 	input [14:0] imm_15bit;
 	input [19:0] imm_20bit;
+	input [23:0] imm_24bit;
 
+	input [1:0] pc_select;
 	input [1:0] imm_extend_select;
 	input [1:0] write_reg_select;
 	input [1:0] imm_reg_select;
 
+	output reg [9:0] pc_to;
 	output reg [DataSize-1:0] output_imm_reg_mux;
 	output reg [DataSize-1:0] write_reg_data;
 	
 	reg [DataSize-1:0] imm;
+
+	always @(*) begin
+		case(pc_select)
+			2'b00:begin
+				pc_to=pc_from+4;
+			end
+			2'b01:begin
+				pc_to=pc_from+({ {18{imm_14bit[13]}},imm_14bit}<<1);
+			end
+			2'b10:begin
+				pc_to=pc_from+({ {8{imm_24bit[23]}},imm_24bit}<<1);
+			end
+		endcase
+	end
 
 	always @(*) begin
 		case(imm_extend_select)

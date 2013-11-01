@@ -3,6 +3,7 @@
 `define OPCODE instruction[30:25]
 `define SUBOP_BASE instruction[4:0]
 `define SUBOP_LS instruction[7:0]
+`define SUBOP_B instruction[14]
 `define SV instruction[9:8]
 
 module controller(
@@ -26,8 +27,11 @@ module controller(
 	write_addr,
 
 	imm_5bit,
+	imm_14bit,
 	imm_15bit,
 	imm_20bit,
+	imm_24bit,
+	pc_select,
 	imm_reg_select,
 	imm_extend_select,
 	write_reg_select,
@@ -37,6 +41,8 @@ module controller(
 	DM_read,
 	DM_write,
 	do_reg_write,
+
+	alu_zero,
 );
 	
 	input clock;
@@ -59,8 +65,11 @@ module controller(
 	output [4:0] write_addr;
 
 	output [4:0] imm_5bit;
+	output [13:0] imm_14bit;
 	output [14:0] imm_15bit;
 	output [19:0] imm_20bit;
+	output [23:0] imm_24bit;
+	output reg [1:0] pc_select;
 	output reg [1:0] imm_reg_select;
 	output reg [1:0] imm_extend_select;
 	output reg [1:0] write_reg_select;
@@ -70,6 +79,8 @@ module controller(
 	output reg DM_read;
 	output reg DM_write;
 	output reg do_reg_write;
+
+	input alu_zero;
 
 	reg [2:0] current_state;
 	reg [2:0] next_state;
@@ -85,8 +96,10 @@ module controller(
 	wire [4:0] write_addr=instruction[24:20];
 
 	wire [4:0] imm_5bit=instruction[14:10];
+	wire [13:0] imm_14bit=instruction[13:0];
 	wire [14:0] imm_15bit=instruction[14:0];
 	wire [19:0] imm_20bit=instruction[19:0];
+	wire [23:0] imm_24bit=instruction[23:0];
 
 	assign IM_read=1'b1;
 	assign IM_write=1'b0;
@@ -104,6 +117,22 @@ module controller(
 		else begin
 			current_state<= next_state;
 		end
+	end
+
+	always@(*) begin
+		case(`OPCODE)
+			`TY_B:begin
+				if(      (`SUBOP_B==`BEQ)&&( alu_zero) ) pc_select=2'b01;
+				else if( (`SUBOP_B==`BNE)&&(!alu_zero) ) pc_select=2'b01;
+				else					 pc_select=2'b00;
+			end
+			`JJ:begin
+				pc_select=2'b10;
+			end
+			default:begin
+				pc_select=2'b00;
+			end
+		endcase
 	end
 
 	always@(*) begin
@@ -267,6 +296,42 @@ module controller(
 						do_reg_write=1'b0;
 					end
 				endcase
+			end
+			`TY_B:begin
+				case(`SUBOP_B)
+					`BEQ:begin
+						imm_reg_select=2'b00;
+						imm_extend_select=2'bxx;
+						write_reg_select=2'bxx;
+						DM_read=1'b0;
+						DM_write=1'b0;
+						do_reg_write=1'b0;
+					end
+					`BNE:begin
+						imm_reg_select=2'b00;
+						imm_extend_select=2'bxx;
+						write_reg_select=2'bxx;
+						DM_read=1'b0;
+						DM_write=1'b0;
+						do_reg_write=1'b0;
+					end
+					default:begin
+						imm_reg_select=2'bxx;
+						imm_extend_select=2'bxx;
+						write_reg_select=2'bxx;
+						DM_read=1'b0;
+						DM_write=1'b0;
+						do_reg_write=1'b0;
+					end
+				endcase
+			end
+			`JJ:begin
+				imm_reg_select=2'bxx;
+				imm_extend_select=2'bxx;
+				write_reg_select=2'bxx;
+				DM_read=1'b0;
+				DM_write=1'b0;
+				do_reg_write=1'b0;
 			end
 			default:begin
 				imm_reg_select=2'b00;
