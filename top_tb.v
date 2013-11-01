@@ -89,10 +89,12 @@ module top_tb;
 		#10 rst=1'b0;
 
 `ifdef PROG
+		$display("PROG\n");
 		$readmemb("mins/mins.prog",IM.mem_data); //machine code for fig.2-2
 		#(`DELAY*100)
 `endif
 `ifdef PROG1
+		$display("PROG1\n");
 		$readmemb("mins/mins1.prog",IM.mem_data); //machine code for fig.2-2
 		#(`DELAY) `DEBUG_REG("ADDI  ",1,9)
 		#(`DELAY) `DEBUG_REG("XORI  ",1,3)
@@ -117,6 +119,7 @@ module top_tb;
 		#(`DELAY) `DEBUG_REG("ROTRI ",2,12)
 `endif
 `ifdef PROG2
+		$display("PROG2\n");
 		$readmemb("mins/mins2.prog",IM.mem_data);
 		#(`DELAY) `DEBUG_REG("MOVI  ",0,9)
 		#(`DELAY) `DEBUG_REG("MOVI  ",1,7)
@@ -138,6 +141,7 @@ module top_tb;
 		#(`DELAY) `DEBUG_LWX("LWI   ",4,4)
 `endif
 `ifdef PROG3
+		$display("PROG3\n");
 		$readmemb("mins/mins3.prog",IM.mem_data);
 		#(`DELAY) `DEBUG_REG("MOVI  ",0,10)
 		#(`DELAY) `DEBUG_REG("ADDI  ",1,21)
