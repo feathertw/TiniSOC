@@ -48,7 +48,7 @@ module top(
 
 	//controller to muxs
 	wire [1:0] pc_select;
-	wire [1:0] imm_reg_select;
+	wire [2:0] alu_src2_select;
 	wire [1:0] imm_extend_select;
 	wire [1:0] write_reg_select;
 
@@ -140,7 +140,7 @@ module top(
 		.imm_24bit(imm_24bit),
 
 		.pc_select(pc_select),
-		.imm_reg_select(imm_reg_select),
+		.alu_src2_select(alu_src2_select),
 		.imm_extend_select(imm_extend_select),
 		.write_reg_select(write_reg_select),
 
@@ -177,7 +177,7 @@ module top(
 		.imm_20bit(imm_20bit),
 		.imm_24bit(imm_24bit),
 		.pc_select(pc_select),
-		.imm_reg_select(imm_reg_select),
+		.alu_src2_select(alu_src2_select),
 		.imm_extend_select(imm_extend_select),
 		.write_reg_select(write_reg_select),
 

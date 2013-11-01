@@ -33,7 +33,7 @@ module controller(
 	imm_20bit,
 	imm_24bit,
 	pc_select,
-	imm_reg_select,
+	alu_src2_select,
 	imm_extend_select,
 	write_reg_select,
 
@@ -72,7 +72,7 @@ module controller(
 	output [19:0] imm_20bit;
 	output [23:0] imm_24bit;
 	output reg [1:0] pc_select;
-	output reg [1:0] imm_reg_select;
+	output reg [2:0] alu_src2_select;
 	output reg [1:0] imm_extend_select;
 	output reg [1:0] write_reg_select;
 
@@ -143,14 +143,14 @@ module controller(
 			`TY_BASE: begin
 				case(`SUBOP_BASE)
 					//`NOP:begin
-					//	imm_reg_select=2'b00;
+					//	alu_src2_select=3'b000;
 					//	imm_extend_select=2'b00;
 					//	write_reg_select=2'b00;
 					//	DM_read=1'b0;
 					//	DM_write=1'b0;
 					//end
 					`ADD:begin
-						imm_reg_select=2'b00;
+						alu_src2_select=3'b000;
 						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
@@ -158,7 +158,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`SUB:begin
-						imm_reg_select=2'b00;
+						alu_src2_select=3'b000;
 						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
@@ -166,7 +166,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`AND:begin
-						imm_reg_select=2'b00;
+						alu_src2_select=3'b000;
 						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
@@ -174,7 +174,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`OR :begin
-						imm_reg_select=2'b00;
+						alu_src2_select=3'b000;
 						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
@@ -182,7 +182,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`XOR:begin
-						imm_reg_select=2'b00;
+						alu_src2_select=3'b000;
 						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
@@ -191,7 +191,7 @@ module controller(
 					end
 					//Immediate
 					`SRLI:begin
-						imm_reg_select=2'b01;
+						alu_src2_select=3'b001;
 						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
@@ -199,7 +199,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`SLLI:begin
-						imm_reg_select=2'b01;
+						alu_src2_select=3'b001;
 						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
@@ -207,7 +207,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`ROTRI:begin
-						imm_reg_select=2'b01;
+						alu_src2_select=3'b001;
 						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
@@ -215,7 +215,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					default:begin
-						imm_reg_select=2'b00;
+						alu_src2_select=3'b000;
 						imm_extend_select=2'b00;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
@@ -225,7 +225,7 @@ module controller(
 				endcase	
 			end
 			`ADDI:begin
-				imm_reg_select=2'b01;
+				alu_src2_select=3'b001;
 				imm_extend_select=2'b01;
 				write_reg_select=2'b00;
 				DM_read=1'b0;
@@ -233,7 +233,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`ORI:begin
-				imm_reg_select=2'b01;
+				alu_src2_select=3'b001;
 				imm_extend_select=2'b10;
 				write_reg_select=2'b00;
 				DM_read=1'b0;
@@ -241,7 +241,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`XORI:begin
-				imm_reg_select=2'b01;
+				alu_src2_select=3'b001;
 				imm_extend_select=2'b10;
 				write_reg_select=2'b00;
 				DM_read=1'b0;
@@ -249,7 +249,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`MOVI:begin
-				imm_reg_select=2'b01;
+				alu_src2_select=3'b001;
 				imm_extend_select=2'b11;
 				write_reg_select=2'b01;
 				DM_read=1'b0;
@@ -257,7 +257,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`LWI:begin
-				imm_reg_select=2'b10;
+				alu_src2_select=3'b010;
 				imm_extend_select=2'bxx;
 				write_reg_select=2'b10;
 				DM_read=1'b1;
@@ -265,7 +265,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`SWI:begin
-				imm_reg_select=2'b10;
+				alu_src2_select=3'b010;
 				imm_extend_select=2'bxx;
 				write_reg_select=2'bxx;
 				DM_read=1'b0;
@@ -275,7 +275,7 @@ module controller(
 			`TY_LS:begin
 				case(`SUBOP_LS)
 					`LW:begin
-						imm_reg_select=2'b11;
+						alu_src2_select=3'b011;
 						imm_extend_select=2'bxx;
 						write_reg_select=2'b10;
 						DM_read=1'b1;
@@ -283,7 +283,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`SW:begin
-						imm_reg_select=2'b11;
+						alu_src2_select=3'b011;
 						imm_extend_select=2'bxx;
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
@@ -291,7 +291,7 @@ module controller(
 						do_reg_write=1'b0;
 					end
 					default:begin
-						imm_reg_select=2'bxx;
+						alu_src2_select=3'b0xx;
 						imm_extend_select=2'bxx;
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
@@ -303,7 +303,7 @@ module controller(
 			`TY_B:begin
 				case(`SUBOP_B)
 					`BEQ:begin
-						imm_reg_select=2'b00;
+						alu_src2_select=3'b000;
 						imm_extend_select=2'bxx;
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
@@ -311,7 +311,7 @@ module controller(
 						do_reg_write=1'b0;
 					end
 					`BNE:begin
-						imm_reg_select=2'b00;
+						alu_src2_select=3'b000;
 						imm_extend_select=2'bxx;
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
@@ -319,7 +319,7 @@ module controller(
 						do_reg_write=1'b0;
 					end
 					default:begin
-						imm_reg_select=2'bxx;
+						alu_src2_select=3'b0xx;
 						imm_extend_select=2'bxx;
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
@@ -329,7 +329,7 @@ module controller(
 				endcase
 			end
 			`JJ:begin
-				imm_reg_select=2'bxx;
+				alu_src2_select=3'b0xx;
 				imm_extend_select=2'bxx;
 				write_reg_select=2'bxx;
 				DM_read=1'b0;
@@ -337,7 +337,7 @@ module controller(
 				do_reg_write=1'b0;
 			end
 			default:begin
-				imm_reg_select=2'b00;
+				alu_src2_select=3'b000;
 				imm_extend_select=2'b00;
 				write_reg_select=2'b00;
 				DM_read=1'b0;
