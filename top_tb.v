@@ -96,79 +96,111 @@ module top_tb;
 `ifdef PROG1
 		$display("PROG1\n");
 		$readmemb("mins/mins1.prog",IM.mem_data); //machine code for fig.2-2
-		#(`DELAY) `DEBUG_REG("ADDI  ",1,9)
-		#(`DELAY) `DEBUG_REG("XORI  ",1,3)
 		#(`DELAY) `DEBUG_REG("MOVI  ",0,3)
-		#(`DELAY) `DEBUG_SWX("SW    ",0,0)
+		#(`DELAY) `DEBUG_SWX("SWI   ",0,12)
+		#(`DELAY) `DEBUG_LWX("LWI   ",1,12)
+		#(`DELAY) `DEBUG_REG("ADDI  ",1,12)
 		#(`DELAY) `DEBUG_REG("ORI   ",0,7)
-		#(`DELAY) `DEBUG_REG("AND   ",1,3)
-		#(`DELAY) `DEBUG_LWX("LW    ",0,0)
-		#(`DELAY)
-		#(`DELAY) `DEBUG_REG("ADD   ",1,6)
-		#(`DELAY) `DEBUG_REG("OR    ",1,7)
-		#(`DELAY) `DEBUG_REG("SUB   ",1,4)
+		#(`DELAY) `DEBUG_REG("XORI  ",1,6)
+		#(`DELAY) 
+		#(`DELAY) `DEBUG_REG("ADD   ",1,13)
+		#(`DELAY) `DEBUG_REG("SUB   ",1,6)
+		#(`DELAY) `DEBUG_REG("AND   ",1,6)
 		#(`DELAY) `DEBUG_SWX("SWI   ",1,76)
+		#(`DELAY) `DEBUG_LWX("LWI   ",2,76)
+		#(`DELAY) `DEBUG_REG("OR    ",2,7)
+		#(`DELAY) `DEBUG_REG("XOR   ",2,1)
 		#(`DELAY) `DEBUG_REG("SRLI  ",2,1)
-		#(`DELAY) `DEBUG_REG("SLLI  ",2,8)
-		#(`DELAY) `DEBUG_LWX("LWI   ",1,92)
-		#(`DELAY) `DEBUG_REG("AND   ",1,0)
-		#(`DELAY) `DEBUG_SWX("SWI   ",2,140)
-		#(`DELAY) `DEBUG_LWX("LWI   ",3,140)
-		#(`DELAY) `DEBUG_REG("SUB   ",3,5)
-		#(`DELAY) `DEBUG_REG("XOR   ",1,13)
-		#(`DELAY) `DEBUG_REG("ROTRI ",2,12)
+		#(`DELAY) `DEBUG_REG("SLLI  ",2,16)
+		#(`DELAY) `DEBUG_REG("ROTRI ",2,28)
+		#(`DELAY) `DEBUG_SWX("SWI   ",2,124)
+		#(`DELAY) `DEBUG_LWX("LWI   ",3,124)
+		#(`DELAY) `DEBUG_REG("SUB   ",3,21)
+		#(`DELAY) `DEBUG_REG("AND   ",1,4)
 `endif
 `ifdef PROG2
 		$display("PROG2\n");
 		$readmemb("mins/mins2.prog",IM.mem_data);
-		#(`DELAY) `DEBUG_REG("MOVI  ",0,9)
-		#(`DELAY) `DEBUG_REG("MOVI  ",1,7)
-		#(`DELAY) `DEBUG_REG("MOVI  ",2,2)
-		#(`DELAY) `DEBUG_REG("ADD   ",3,16)
-		#(`DELAY) `DEBUG_REG("SUB   ",4,7)
-		#(`DELAY) `DEBUG_REG("AND   ",0,0)
-		#(`DELAY) `DEBUG_REG("OR    ",1,18)
-		#(`DELAY) `DEBUG_REG("XOR   ",0,5)
-		#(`DELAY) `DEBUG_REG("SRLI  ",2,2)
-		#(`DELAY) `DEBUG_REG("SLLI  ",3,20)
-		#(`DELAY) `DEBUG_REG("ROTRI ",4,144)
-		#(`DELAY) `DEBUG_REG("ADDI  ",0,20)
-		#(`DELAY) `DEBUG_REG("ORI   ",1,18)
-		#(`DELAY) `DEBUG_REG("XORI  ",2,12)
-		#(`DELAY) `DEBUG_SWX("SWI   ",2,4)
-		#(`DELAY) `DEBUG_SWX("SW    ",1,96)
-		#(`DELAY) `DEBUG_LWX("LW    ",3,96)
-		#(`DELAY) `DEBUG_LWX("LWI   ",4,4)
+		#(`DELAY) `DEBUG_REG("MOVI  ",1,10)
+		#(`DELAY) `DEBUG_REG("MOVI  ",2,10)
+		#(`DELAY) `DEBUG_REG("MOVI  ",3,30)
+		#(`DELAY) `DEBUG_BXJ("BEQ   ",12,8)
+		#(`DELAY) `DEBUG_REG("MOVI  ",4,40)
+		#(`DELAY) `DEBUG_BXJ("BNE   ",24,8)
+		#(`DELAY) `DEBUG_REG("MOVI  ",5,50)
+		#(`DELAY) `DEBUG_BXJ("BEQ   ",36,4)
+		#(`DELAY) `DEBUG_REG("MOVI  ",6,60)
+		#(`DELAY) `DEBUG_BXJ("BNE   ",44,4)
+		#(`DELAY) `DEBUG_REG("MOVI  ",7,70)
+		#(`DELAY) `DEBUG_BXJ("J     ",52,8)
+		#(`DELAY*10)
 `endif
 `ifdef PROG3
 		$display("PROG3\n");
 		$readmemb("mins/mins3.prog",IM.mem_data);
-		#(`DELAY) `DEBUG_REG("MOVI  ",0,10)
-		#(`DELAY) `DEBUG_REG("ADDI  ",1,21)
-		#(`DELAY) `DEBUG_REG("ADDI  ",2,15)
-		#(`DELAY) `DEBUG_REG("ORI   ",3,15)
-		#(`DELAY) `DEBUG_REG("ORI   ",4,15)
-		#(`DELAY) `DEBUG_REG("XORI  ",1,0)
-		#(`DELAY) `DEBUG_REG("XORI  ",2,7)
-		#(`DELAY) `DEBUG_SWX("SWI   ",1,8)
-		#(`DELAY) `DEBUG_SWX("SW    ",2,0)
-		#(`DELAY) `DEBUG_SWX("SW    ",3,56)
-		#(`DELAY) `DEBUG_LWX("LW    ",2,0)
-		#(`DELAY) `DEBUG_LWX("LW    ",3,56)
-		#(`DELAY) `DEBUG_LWX("LWI   ",4,8)
-		#(`DELAY) `DEBUG_REG("ADD   ",1,25)
-		#(`DELAY) `DEBUG_REG("SUB   ",2,-5)
-		#(`DELAY) `DEBUG_REG("AND   ",3,8)
-		#(`DELAY) `DEBUG_REG("OR    ",4,27)
-		#(`DELAY) `DEBUG_REG("XOR   ",1,-32)
-		#(`DELAY) `DEBUG_REG("SRLI  ",2,2)
-		#(`DELAY) `DEBUG_REG("SLLI  ",3,80)
-		#(`DELAY) `DEBUG_REG("ROTRI ",4,-993)
+		#(`DELAY) `DEBUG_REG("MOVI  ",0,130)
+		#(`DELAY) `DEBUG_REG("ADDI  ",0,890)
+`endif
+`ifdef PROG4
+		$display("PROG4\n");
+		$readmemb("mins/mins4.prog",IM.mem_data);
+		#(`DELAY) `DEBUG_REG("MOVI  ",0,1)
+		#(`DELAY) `DEBUG_REG("MOVI  ",1,65536)
+		#(`DELAY) `DEBUG_REG("SUB   ",0,-65535)
+`endif
+`ifdef PROG5
+		$display("PROG5\n");
+		$readmemb("mins/mins5.prog",IM.mem_data);
+		#(`DELAY) `DEBUG_REG("MOVI  ",0,-255)
+		#(`DELAY) `DEBUG_REG("SLLI  ",0,-2040)
+		#(`DELAY) `DEBUG_REG("ADDI  ",0,-2033)
+`endif
+`ifdef PROG6
+		$display("PROG6\n");
+		$readmemb("mins/mins6.prog",IM.mem_data);
+		#(`DELAY) `DEBUG_REG("MOVI  ",0,40)
+		#(`DELAY) `DEBUG_REG("SLLI  ",0,80)
+		#(`DELAY) `DEBUG_REG("MOVI  ",1,160)
+		#(`DELAY) `DEBUG_REG("SRLI  ",1,40)
+		#(`DELAY) `DEBUG_REG("ADD   ",0,120)
+`endif
+`ifdef PROG7
+		$display("PROG7\n");
+		$readmemb("mins/mins7.prog",IM.mem_data);
+		$readmemb("mins/mdat7.prog",DM.mem_data);
+		#(`DELAY) `DEBUG_LWX("LWI   ",0,0)
+		#(`DELAY) `DEBUG_LWX("LWI   ",1,4)
+		#(`DELAY) `DEBUG_LWX("LWI   ",2,8)
+		#(`DELAY) `DEBUG_LWX("LWI   ",3,12)
+		#(`DELAY) `DEBUG_LWX("LWI   ",4,16)
+		#(`DELAY*500)
+`endif
+`ifdef PROG8
+		$display("PROG8\n");
+		$readmemb("mins/mins7.prog",IM.mem_data);
+		$readmemb("mins/mdat8.prog",DM.mem_data);
+		#(`DELAY) `DEBUG_LWX("LWI   ",0,0)
+		#(`DELAY) `DEBUG_LWX("LWI   ",1,4)
+		#(`DELAY) `DEBUG_LWX("LWI   ",2,8)
+		#(`DELAY) `DEBUG_LWX("LWI   ",3,12)
+		#(`DELAY) `DEBUG_LWX("LWI   ",4,16)
+		#(`DELAY*500)
+`endif
+`ifdef PROG9
+		$display("PROG9\n");
+		$readmemb("mins/mins7.prog",IM.mem_data);
+		$readmemb("mins/mdat9.prog",DM.mem_data);
+		#(`DELAY) `DEBUG_LWX("LWI   ",0,0)
+		#(`DELAY) `DEBUG_LWX("LWI   ",1,4)
+		#(`DELAY) `DEBUG_LWX("LWI   ",2,8)
+		#(`DELAY) `DEBUG_LWX("LWI   ",3,12)
+		#(`DELAY) `DEBUG_LWX("LWI   ",4,16)
+		#(`DELAY*500)
 `endif
 		#10
 		//for( i=0;i<3;i=i+1 ) $display( "IM[%4d]=%b",i*4,IM.mem_data[i] ); 
 		for( i=0;i<5;i=i+1 ) $display( "register[%d]=%d",i,TOP.REGFILE.rw_reg[i] );
-		//for( i=0;i<5;i=i+1 ) $display( "DM[%4d]=%d",i*4,DM.mem_data[i] );
+		for( i=0;i<5;i=i+1 ) $display( "DM[%4d]=%d",i*4,DM.mem_data[i] );
   		$display("____________________FINISH____________________\n");
 		$finish;
 	end
