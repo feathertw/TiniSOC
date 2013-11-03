@@ -59,9 +59,6 @@ module top(
 	wire [1:0] sub_op_sv;
 	wire enable_execute;
 
-	//controller to pc
-	wire enable_pc;
-
 	//controller to im
 	wire enable_fetch;
 
@@ -163,7 +160,6 @@ module top(
 		.enable_decode(enable_decode),
 		.enable_memaccess(DM_enable),
 		.enable_writeback(enable_writeback),
-		.enable_pc(enable_pc),
 
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
@@ -195,7 +191,7 @@ module top(
 	pc PC(
 		.clock(clk),
 		.reset(rst),
-		.enable_pc(enable_pc),
+		.enable_pc(enable_execute),
 		.next_pc(next_pc),
 		.current_pc(current_pc)
 	);

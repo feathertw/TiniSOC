@@ -16,7 +16,6 @@ module controller(
 	enable_decode,
 	enable_memaccess,
 	enable_writeback,
-	enable_pc,
 
 	opcode,
 	sub_op_base,
@@ -55,7 +54,6 @@ module controller(
 	output reg enable_decode;
 	output reg enable_memaccess;
 	output reg enable_writeback;
-	output reg enable_pc;
 
 	output [5:0] opcode;
 	output [4:0] sub_op_base;
@@ -111,7 +109,6 @@ module controller(
 	parameter S2=3'b010;
 	parameter S3=3'b011;
 	parameter S4=3'b100;
-	parameter S5=3'b101;
 
 	always@(posedge clock) begin
 		if(reset)begin 
@@ -356,7 +353,6 @@ module controller(
 				enable_execute=1'b0;
 				enable_memaccess=1'b0;
 				enable_writeback=1'b0;
-				enable_pc=1'b0;
 			end
 			S1: begin
 				next_state=S2;
@@ -365,7 +361,6 @@ module controller(
 				enable_execute=1'b0;
 				enable_memaccess=1'b0;
 				enable_writeback=1'b0;
-				enable_pc=1'b0;
 			end
 			S2: begin
 				next_state=S3;
@@ -374,7 +369,6 @@ module controller(
 				enable_execute=1'b1;
 				enable_memaccess=1'b0;
 				enable_writeback=1'b0;
-				enable_pc=1'b0;
 			end
 			S3: begin
 				next_state=S4;
@@ -383,25 +377,14 @@ module controller(
 				enable_execute=1'b0;
 				enable_memaccess=1'b1;
 				enable_writeback=1'b0;
-				enable_pc=1'b0;
 			end
 			S4: begin
-				next_state=S5;
-				enable_fetch=1'b0;
-				enable_decode=1'b0;
-				enable_execute=1'b0;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b1;
-				enable_pc=1'b0;
-			end
-			S5: begin
 				next_state=S0;
 				enable_fetch=1'b0;
 				enable_decode=1'b0;
 				enable_execute=1'b0;
 				enable_memaccess=1'b0;
-				enable_writeback=1'b0;
-				enable_pc=1'b1;
+				enable_writeback=1'b1;
 			end
 			default: begin
 				next_state=S0;

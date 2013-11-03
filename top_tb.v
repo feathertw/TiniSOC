@@ -4,7 +4,7 @@
 `include "mem/dm.v"
 `include "top.v"
 
-`define DELAY 60
+`define DELAY 50
 
 module top_tb;
 
