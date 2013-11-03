@@ -1,8 +1,8 @@
-`include "alu.v"
-`include "regfile.v" 
-`include "muxs.v"
-`include "controller.v"
-`include "pc.v"
+`include "src/alu.v"
+`include "src/regfile.v"
+`include "src/muxs.v"
+`include "src/controller.v"
+`include "src/pc.v"
 module top(
 	clk,
 	rst,
