@@ -90,14 +90,14 @@ module top(
 	wire alu_zero;
 
 	//pc to muxs
-	wire [9:0] pc_out;
+	wire [9:0] current_pc;
 
 	//muxs to pc
-	wire [9:0] pc_in;
+	wire [9:0] next_pc;
 
 	wire IM_enable=enable_fetch;
 	wire [11:0] DM_address=alu_result[11:0];
-	wire [9:0] IM_address=pc_out[9:0];
+	wire [9:0] IM_address=current_pc[9:0];
 	wire [31:0] DM_in=reg_rt_data[31:0];
 
 	alu ALU(
@@ -149,8 +149,8 @@ module top(
 
 		.output_imm_reg_mux(alu_src2),
 		.write_reg_data(write_reg_data),
-		.pc_from(pc_out),
-		.pc_to(pc_in)
+		.current_pc(current_pc),
+		.next_pc(next_pc)
 	);
 	
 	controller CONTROLLER(
@@ -196,7 +196,7 @@ module top(
 		.clock(clk),
 		.reset(rst),
 		.enable_pc(enable_pc),
-		.pc_in(pc_in),
-		.pc_out(pc_out)
+		.next_pc(next_pc),
+		.current_pc(current_pc)
 	);
 endmodule

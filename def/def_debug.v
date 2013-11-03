@@ -10,13 +10,13 @@
 	end
 
 `define DEBUG_BXJ(IR,IPC,OFFSET) \
-	if(TOP.PC.pc_out==((IPC)+(OFFSET)) )	begin \
+	if(TOP.PC.current_pc==((IPC)+(OFFSET)) )	begin \
 		$display("_%s PC    \t=%6d \t\tTEST PASS",(IR),((IPC)+(OFFSET)) ); \
 	end \
 	else begin \
 		$write("%c[1;31m",27); \
 		$display("*****%s PC=%-2d!=%2d TEST FALSE*****" \
-			,(IR),TOP.PC.pc_out,((IPC)+(OFFSET)) ); \
+			,(IR),TOP.PC.current_pc,((IPC)+(OFFSET)) ); \
 		$write("%c[0m",27); \
 	end
 

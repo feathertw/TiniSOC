@@ -1,6 +1,6 @@
 module muxs(
 
-	pc_from,
+	current_pc,
 	sub_op_sv,
 	reg_rb_data,
 	reg_rt_data,
@@ -17,14 +17,14 @@ module muxs(
 	imm_extend_select,
 	write_reg_select,
 
-	pc_to,
+	next_pc,
 	output_imm_reg_mux,
 	write_reg_data,
 );
 
 	parameter DataSize = 32;
 
-	input [9:0] pc_from;
+	input [9:0] current_pc;
 	input [1:0] sub_op_sv;
 	input [DataSize-1:0] reg_rb_data;
 	input [DataSize-1:0] reg_rt_data;
@@ -41,7 +41,7 @@ module muxs(
 	input [1:0] write_reg_select;
 	input [2:0] alu_src2_select;
 
-	output reg [9:0] pc_to;
+	output reg [9:0] next_pc;
 	output reg [DataSize-1:0] output_imm_reg_mux;
 	output reg [DataSize-1:0] write_reg_data;
 	
@@ -50,13 +50,13 @@ module muxs(
 	always @(*) begin
 		case(pc_select)
 			2'b00:begin
-				pc_to=pc_from+4;
+				next_pc=current_pc+4;
 			end
 			2'b01:begin
-				pc_to=pc_from+({ {18{imm_14bit[13]}},imm_14bit}<<1);
+				next_pc=current_pc+({ {18{imm_14bit[13]}},imm_14bit}<<1);
 			end
 			2'b10:begin
-				pc_to=pc_from+({ {8{imm_24bit[23]}},imm_24bit}<<1);
+				next_pc=current_pc+({ {8{imm_24bit[23]}},imm_24bit}<<1);
 			end
 		endcase
 	end
