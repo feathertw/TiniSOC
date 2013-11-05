@@ -3,7 +3,7 @@ module pc(
 	reset,
 	enable_pc,
 	next_pc,
-	current_pc,
+	current_pc
 );
 	input clock;
 	input reset;

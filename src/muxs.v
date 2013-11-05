@@ -19,7 +19,7 @@ module muxs(
 
 	next_pc,
 	output_imm_reg_mux,
-	write_reg_data,
+	write_reg_data
 );
 
 	parameter DataSize = 32;

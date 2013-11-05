@@ -12,7 +12,7 @@ module regfile(
 
 	reg_ra_data,
 	reg_rb_data,
-	reg_rt_data,
+	reg_rt_data
 );
 
 	parameter DataSize = 32;

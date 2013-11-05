@@ -19,7 +19,7 @@ module top(
 	DM_enable,
 	DM_address,
 	DM_in,
-	DM_out,
+	DM_out
 );
 	input clk;
 	input rst;

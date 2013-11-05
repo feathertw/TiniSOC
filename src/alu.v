@@ -11,7 +11,7 @@ module alu(
 
 	alu_result,
 	alu_overflow,
-	alu_zero,
+	alu_zero
 );
 
     input reset;

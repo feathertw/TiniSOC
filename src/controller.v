@@ -42,7 +42,7 @@ module controller(
 	DM_write,
 	do_reg_write,
 
-	alu_zero,
+	alu_zero
 );
 	
 	input clock;
