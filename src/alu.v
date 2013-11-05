@@ -1,4 +1,4 @@
-`include "def_op.v"
+`include "def_opcode.v"
  
 module alu(
 	reset,

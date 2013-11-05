@@ -1,4 +1,4 @@
-`include "def_op.v"
+`include "def_opcode.v"
 
 `define OPCODE instruction[30:25]
 `define SUBOP_BASE instruction[4:0]
