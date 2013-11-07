@@ -19,7 +19,9 @@ module im(
 	input IM_enable;
 	input [mem_size_bit-1:0] IM_address;
 	input [data_size-1:0] IMin;
-	output reg [data_size-1:0] IMout;
+	output [data_size-1:0] IMout;
+
+	reg [data_size-1:0] IMout;
 
 	reg [data_size-1:0] mem_data[mem_size-1:0];
 

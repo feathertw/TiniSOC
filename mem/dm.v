@@ -19,7 +19,9 @@ module dm(
 	input DM_enable;
 	input [mem_size_bit-1:0] DM_address;
 	input [data_size-1:0] DMin;
-	output reg [data_size-1:0] DMout;
+	output [data_size-1:0] DMout;
+
+	reg [data_size-1:0] DMout;
 
 	reg [data_size-1:0] mem_data[mem_size-1:0];
 

@@ -22,10 +22,13 @@ module alu(
     input [4:0]  sub_op_base;
     input [7:0]  sub_op_ls;
 
-    output reg [31:0] alu_result;
-    output reg alu_overflow;
+    output [31:0] alu_result;
+    output alu_overflow;
     output alu_zero;
     
+    reg [31:0] alu_result;
+    reg alu_overflow;
+
     reg [63:0] rotate;
     reg a;
     reg b;

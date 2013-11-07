@@ -49,11 +49,11 @@ module controller(
 	input reset;
 	input [31:0] instruction;
 	
-	output reg enable_fetch;
-	output reg enable_execute;
-	output reg enable_decode;
-	output reg enable_memaccess;
-	output reg enable_writeback;
+	output enable_fetch;
+	output enable_execute;
+	output enable_decode;
+	output enable_memaccess;
+	output enable_writeback;
 
 	output [5:0] opcode;
 	output [4:0] sub_op_base;
@@ -69,18 +69,33 @@ module controller(
 	output [14:0] imm_15bit;
 	output [19:0] imm_20bit;
 	output [23:0] imm_24bit;
-	output reg [1:0] pc_select;
-	output reg [2:0] alu_src2_select;
-	output reg [1:0] imm_extend_select;
-	output reg [1:0] write_reg_select;
+	output [1:0] pc_select;
+	output [2:0] alu_src2_select;
+	output [1:0] imm_extend_select;
+	output [1:0] write_reg_select;
 
 	output IM_read;
 	output IM_write;
-	output reg DM_read;
-	output reg DM_write;
-	output reg do_reg_write;
+	output DM_read;
+	output DM_write;
+	output do_reg_write;
 
 	input alu_zero;
+
+	reg enable_fetch;
+	reg enable_execute;
+	reg enable_decode;
+	reg enable_memaccess;
+	reg enable_writeback;
+
+	reg [1:0] pc_select;
+	reg [2:0] alu_src2_select;
+	reg [1:0] imm_extend_select;
+	reg [1:0] write_reg_select;
+
+	reg DM_read;
+	reg DM_write;
+	reg do_reg_write;
 
 	reg [2:0] current_state;
 	reg [2:0] next_state;

@@ -9,7 +9,9 @@ module pc(
 	input reset;
 	input enable_pc;
 	input [9:0] next_pc;
-	output reg [9:0] current_pc;
+	output [9:0] current_pc;
+
+	reg [9:0] current_pc;
 
 	always@(posedge clock) begin
 		if(reset) 	   current_pc<=0;

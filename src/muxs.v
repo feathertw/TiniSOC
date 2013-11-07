@@ -41,10 +41,14 @@ module muxs(
 	input [1:0] write_reg_select;
 	input [2:0] alu_src2_select;
 
-	output reg [9:0] next_pc;
-	output reg [DataSize-1:0] output_imm_reg_mux;
-	output reg [DataSize-1:0] write_reg_data;
+	output [9:0] next_pc;
+	output [DataSize-1:0] output_imm_reg_mux;
+	output [DataSize-1:0] write_reg_data;
 	
+	reg [9:0] next_pc;
+	reg [DataSize-1:0] output_imm_reg_mux;
+	reg [DataSize-1:0] write_reg_data;
+
 	reg [DataSize-1:0] imm;
 
 	always @(*) begin

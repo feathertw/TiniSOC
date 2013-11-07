@@ -29,9 +29,12 @@ module regfile(
 	input [DataSize-1:0] write_reg_data;
 	input do_reg_write;
 
-	output reg [DataSize-1:0] reg_ra_data;
-	output reg [DataSize-1:0] reg_rb_data;
+	output [DataSize-1:0] reg_ra_data;
+	output [DataSize-1:0] reg_rb_data;
 	output [DataSize-1:0] reg_rt_data;
+
+	reg [DataSize-1:0] reg_ra_data;
+	reg [DataSize-1:0] reg_rb_data;
 
 	reg [DataSize-1:0] rw_reg [31:0];
 	integer i;
