@@ -93,6 +93,8 @@ module controller(
 	reg [1:0] imm_extend_select;
 	reg [1:0] write_reg_select;
 
+	reg IM_read;
+	reg IM_write;
 	reg DM_read;
 	reg DM_write;
 	reg do_reg_write;
@@ -116,9 +118,6 @@ module controller(
 	wire [19:0] imm_20bit=instruction[19:0];
 	wire [23:0] imm_24bit=instruction[23:0];
 
-	assign IM_read=1'b1;
-	assign IM_write=1'b0;
-
 	parameter S0=3'b000;
 	parameter S1=3'b001;
 	parameter S2=3'b010;
@@ -131,6 +130,16 @@ module controller(
 		end
 		else begin
 			current_state<= next_state;
+		end
+	end
+	always@(reset) begin
+		if(reset)begin
+			IM_read=1'b0;
+			IM_write=1'b0;
+		end
+		else begin
+			IM_read=1'b1;
+			IM_write=1'b0;
 		end
 	end
 
