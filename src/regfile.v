@@ -41,7 +41,7 @@ module regfile(
 
 	assign reg_rt_data = rw_reg[reg_rt_addr];
 
-	always @(posedge clock, posedge reset) begin
+	always @(posedge clock or posedge reset) begin
 		if(reset) begin
 			for(i=0;i<32;i=i+1)
 				rw_reg[i]<=32'b0;
