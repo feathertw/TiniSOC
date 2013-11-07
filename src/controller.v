@@ -134,7 +134,7 @@ module controller(
 		end
 	end
 
-	always@(*) begin
+	always@(`OPCODE or `SUBOP_B or alu_zero) begin
 		case(`OPCODE)
 			`TY_B:begin
 				if(      (`SUBOP_B==`BEQ)&&( alu_zero) ) pc_select=2'b01;
@@ -150,7 +150,7 @@ module controller(
 		endcase
 	end
 
-	always@(*) begin
+	always@(`OPCODE or `SUBOP_BASE or `SUBOP_LS or `SUBOP_B) begin
 		case(`OPCODE)
 			`TY_BASE: begin
 				case(`SUBOP_BASE)

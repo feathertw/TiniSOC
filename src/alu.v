@@ -35,7 +35,7 @@ module alu(
 
     assign alu_zero=(alu_result==32'b0)?1'b1:1'b0;
 
-    always @(*) begin
+    always @(reset or enable_execute or opcode or sub_op_base or sub_op_ls or src1 or src2) begin
         if(reset) begin
             alu_result=32'b0;
             alu_overflow=1'b0;

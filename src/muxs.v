@@ -51,7 +51,7 @@ module muxs(
 
 	reg [DataSize-1:0] imm;
 
-	always @(*) begin
+	always @(pc_select or current_pc or imm_14bit or imm_24bit) begin
 		case(pc_select)
 			2'b00:begin
 				next_pc=current_pc+4;
@@ -65,7 +65,7 @@ module muxs(
 		endcase
 	end
 
-	always @(*) begin
+	always @(imm_extend_select or imm_5bit or imm_15bit or imm_20bit) begin
 		case(imm_extend_select)
 			2'b00: begin //5bit ZE
 				imm={ {27{1'b0}}, imm_5bit };
@@ -82,7 +82,7 @@ module muxs(
 		endcase
 	end
 
-	always @(*) begin
+	always @(alu_src2_select or reg_rb_data or imm or imm_15bit or sub_op_sv or reg_rt_data) begin
 		case(alu_src2_select)
 			3'b000: begin
 				output_imm_reg_mux = reg_rb_data;
@@ -102,7 +102,7 @@ module muxs(
 		endcase
 	end
 
-	always @(*) begin
+	always @(write_reg_select or alu_output or output_imm_reg_mux or mem_read_data) begin
 		case(write_reg_select)
 			2'b00: begin
 				write_reg_data = alu_output;
