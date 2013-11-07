@@ -57,10 +57,10 @@ module muxs(
 				next_pc=current_pc+4;
 			end
 			2'b01:begin
-				next_pc=current_pc+({ {18{imm_14bit[13]}},imm_14bit}<<1);
+				next_pc=current_pc+({imm_14bit[13],(imm_14bit[8:0]<<1)});//*
 			end
 			2'b10:begin
-				next_pc=current_pc+({ {8{imm_24bit[23]}},imm_24bit}<<1);
+				next_pc=current_pc+({imm_24bit[23],(imm_24bit[8:0]<<1)});//*
 			end
 		endcase
 	end
