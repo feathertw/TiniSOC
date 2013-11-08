@@ -92,10 +92,16 @@ module top(
 	//muxs to pc
 	wire [9:0] next_pc;
 
+	reg [31:0] reg_alu_result; //*
+
 	wire IM_enable=enable_fetch;
-	wire [11:0] DM_address=alu_result[11:0];
+	wire [11:0] DM_address=reg_alu_result[11:0];
 	wire [9:0] IM_address=current_pc[9:0];
 	wire [31:0] DM_in=reg_rt_data[31:0];
+
+	always@(posedge DM_enable) begin
+		reg_alu_result<=alu_result;
+	end
 
 	alu ALU(
 		.reset(rst),
@@ -132,7 +138,7 @@ module top(
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(reg_rt_data),
 		.mem_read_data(DM_out),
-		.alu_output(alu_result),
+		.alu_output(reg_alu_result),
 		.imm_5bit(imm_5bit),
 		.imm_14bit(imm_14bit),
 		.imm_15bit(imm_15bit),
