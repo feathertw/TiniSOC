@@ -36,10 +36,10 @@ module dm(
 		end
 		else if(DM_enable)begin
 			if(DM_read)begin
-				DMout<=mem_data[DM_address];
+				DMout<=mem_data[(DM_address/4)];
 			end
 			else if(DM_write)begin
-				mem_data[DM_address] <= DMin;
+				mem_data[(DM_address/4)] <= DMin;
 			end
 		end
 	end

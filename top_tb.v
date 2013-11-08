@@ -1,7 +1,8 @@
 `timescale 1ns/10ps
-`include "def/def_debug.v"
 `include "mem/im.v"
 `include "mem/dm.v"
+
+`include "def/def_debug.v"
 `include "top.v"
 
 `define DELAY 50
@@ -16,19 +17,14 @@ module top_tb;
 	wire IM_write; 
 	wire IM_enable;
 	wire [9:0] IM_address;
-	wire [9:0] xIM_address;
 	wire [31:0] IM_out;
 
 	wire DM_read;
 	wire DM_write;
 	wire DM_enable;
 	wire [11:0] DM_address;
-	wire [11:0] xDM_address;
 	wire [31:0] DM_in;
 	wire [31:0] DM_out;
-
-	assign xIM_address=IM_address/4;
-	assign xDM_address=DM_address/4;
 
 	integer i;
 
@@ -57,7 +53,7 @@ module top_tb;
 		.IM_read(IM_read),
 		.IM_write(IM_write),
 		.IM_enable(IM_enable),
-		.IM_address(xIM_address),
+		.IM_address(IM_address),
 		.IMin(),
 		.IMout(IM_out)
 	); 
@@ -67,7 +63,7 @@ module top_tb;
 		.DM_read(DM_read),
 		.DM_write(DM_write),
 		.DM_enable(DM_enable),
-		.DM_address(xDM_address),
+		.DM_address(DM_address),
 		.DMin(DM_in),
 		.DMout(DM_out)
 	); 

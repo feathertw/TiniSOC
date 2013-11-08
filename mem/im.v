@@ -36,10 +36,10 @@ module im(
 		end
 		else if(IM_enable)begin
 			if(IM_read)begin
-				IMout<=mem_data[IM_address];
+				IMout<=mem_data[(IM_address/4)];
 			end
 			else if(IM_write)begin
-				mem_data[IM_address] <= IMin;
+				mem_data[(IM_address/4)] <= IMin;
 			end
 		end
 	end
