@@ -54,15 +54,3 @@
 			,(IR),(MEM),DM.mem_data[((MEM)/4)],(VALUE) ); \
 		$write("%c[0m",27); \
 	end
-/*
-`define DEBUG_SWX(IR,MEM,VALUE) \
-	if(DM.mem_data[((MEM)/4)]==(VALUE) )	begin \
-		$display("_%s DM[%4d]=%6d \t\tTEST PASS",(IR),(MEM),(VALUE) ); \
-	end \
-	else begin \
-		$write("%c[1;31m",27); \
-		$display("*****%s DM[%4d]=%-2d!=%2d TEST FALSE*****" \
-			,(IR),(MEM),DM.mem_data[((MEM)/4)],(VALUE) ); \
-		$write("%c[0m",27); \
-	end
-*/
