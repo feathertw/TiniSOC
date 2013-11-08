@@ -62,6 +62,9 @@ module top(
 	//controller to im
 	wire enable_fetch;
 
+	//controller to dm
+	wire enable_memaccess;
+
 	// regfile to alu
 	wire [31:0] reg_ra_data;
 
@@ -95,11 +98,12 @@ module top(
 	reg [31:0] reg_alu_result; //*
 
 	wire IM_enable=enable_fetch;
+	wire DM_enable=enable_memaccess;
 	wire [11:0] DM_address=reg_alu_result[11:0];
 	wire [9:0] IM_address=current_pc[9:0];
 	wire [31:0] DM_in=reg_rt_data[31:0];
 
-	always@(posedge DM_enable) begin
+	always@(posedge enable_memaccess) begin
 		reg_alu_result<=alu_result;
 	end
 
@@ -164,7 +168,7 @@ module top(
 		.enable_fetch(enable_fetch),
 		.enable_execute(enable_execute),
 		.enable_decode(enable_decode),
-		.enable_memaccess(DM_enable),
+		.enable_memaccess(enable_memaccess),
 		.enable_writeback(enable_writeback),
 
 		.opcode(opcode),
