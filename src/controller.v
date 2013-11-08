@@ -124,7 +124,7 @@ module controller(
 	parameter S3=3'b011;
 	parameter S4=3'b100;
 
-	always@(posedge clock) begin
+	always@(posedge clock or posedge reset) begin
 		if(reset)begin 
 			current_state<= S0;
 		end
