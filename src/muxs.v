@@ -57,10 +57,10 @@ module muxs(
 				next_pc=current_pc+4;
 			end
 			2'b01:begin
-				next_pc=current_pc+({imm_14bit[13],(imm_14bit[8:0]<<1)});//*
+				next_pc=current_pc+({imm_14bit[13],imm_14bit[7:0],1'b0});//*
 			end
 			2'b10:begin
-				next_pc=current_pc+({imm_24bit[23],(imm_24bit[8:0]<<1)});//*
+				next_pc=current_pc+({imm_24bit[23],imm_24bit[7:0],1'b0});//*
 			end
 			default:begin
 				next_pc=10'bxxxx_xxxx_xx;
@@ -97,7 +97,7 @@ module muxs(
 				output_imm_reg_mux = imm;
 			end
 			3'b010: begin
-				output_imm_reg_mux = imm_15bit<<2; 
+				output_imm_reg_mux = { {15{imm_15bit[14]}},imm_15bit,2'b00}; //*
 			end
 			3'b011: begin
 				output_imm_reg_mux = reg_rb_data<<sub_op_sv;
