@@ -1,4 +1,5 @@
 `include "def_opcode.v"
+`include "def_muxs.v"
 
 `define OPCODE instruction[30:25]
 `define SUBOP_BASE instruction[4:0]
@@ -195,15 +196,15 @@ module controller(
 	always@(`OPCODE or `SUBOP_B or alu_zero) begin
 		case(`OPCODE)
 			`TY_B:begin
-				if(      (`SUBOP_B==`BEQ)&&( alu_zero) ) pc_select=2'b01;
-				else if( (`SUBOP_B==`BNE)&&(!alu_zero) ) pc_select=2'b01;
-				else					 pc_select=2'b00;
+				if(      (`SUBOP_B==`BEQ)&&( alu_zero) ) pc_select=`PC_14BIT;
+				else if( (`SUBOP_B==`BNE)&&(!alu_zero) ) pc_select=`PC_14BIT;
+				else					 pc_select=`PC_4;
 			end
 			`JJ:begin
-				pc_select=2'b10;
+				pc_select=`PC_24BIT;
 			end
 			default:begin
-				pc_select=2'b00;
+				pc_select=`PC_4;
 			end
 		endcase
 	end
