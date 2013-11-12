@@ -214,14 +214,14 @@ module controller(
 				case(`SUBOP_BASE)
 					//`NOP:begin
 					//	alu_src2_select=3'b000;
-					//	imm_extend_select=2'b00;
+					//	imm_extend_select=2'bxx;
 					//	write_reg_select=2'b00;
 					//	DM_read=1'b0;
 					//	DM_write=1'b0;
 					//end
 					`ADD:begin
 						alu_src2_select=3'b000;
-						imm_extend_select=2'b00;
+						imm_extend_select=2'bxx;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -229,7 +229,7 @@ module controller(
 					end
 					`SUB:begin
 						alu_src2_select=3'b000;
-						imm_extend_select=2'b00;
+						imm_extend_select=2'bxx;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -237,7 +237,7 @@ module controller(
 					end
 					`AND:begin
 						alu_src2_select=3'b000;
-						imm_extend_select=2'b00;
+						imm_extend_select=2'bxx;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -245,7 +245,7 @@ module controller(
 					end
 					`OR :begin
 						alu_src2_select=3'b000;
-						imm_extend_select=2'b00;
+						imm_extend_select=2'bxx;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -253,7 +253,7 @@ module controller(
 					end
 					`XOR:begin
 						alu_src2_select=3'b000;
-						imm_extend_select=2'b00;
+						imm_extend_select=2'bxx;
 						write_reg_select=2'b00;
 						DM_read=1'b0;
 						DM_write=1'b0;
@@ -285,9 +285,9 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					default:begin
-						alu_src2_select=3'b000;
-						imm_extend_select=2'b00;
-						write_reg_select=2'b00;
+						alu_src2_select=3'bxxx;
+						imm_extend_select=2'bxx;
+						write_reg_select=2'bxx;
 						DM_read=1'b0;
 						DM_write=1'b0;
 						do_reg_write=1'b0;
@@ -361,7 +361,7 @@ module controller(
 						do_reg_write=1'b0;
 					end
 					default:begin
-						alu_src2_select=3'b0xx;
+						alu_src2_select=3'bxxx;
 						imm_extend_select=2'bxx;
 						write_reg_select=2'bxx;
 						DM_read=1'b0;
@@ -379,7 +379,7 @@ module controller(
 				do_reg_write=1'b0;
 			end
 			`JJ:begin
-				alu_src2_select=3'b0xx;
+				alu_src2_select=3'bxxx;
 				imm_extend_select=2'bxx;
 				write_reg_select=2'bxx;
 				DM_read=1'b0;
@@ -387,9 +387,9 @@ module controller(
 				do_reg_write=1'b0;
 			end
 			default:begin
-				alu_src2_select=3'b000;
-				imm_extend_select=2'b00;
-				write_reg_select=2'b00;
+				alu_src2_select=3'bxxx;
+				imm_extend_select=2'bxx;
+				write_reg_select=2'bxx;
 				DM_read=1'b0;
 				DM_write=1'b0;
 				do_reg_write=1'b0;
