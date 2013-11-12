@@ -93,8 +93,6 @@ module controller(
 	reg [1:0] imm_extend_select;
 	reg [1:0] write_reg_select;
 
-	reg IM_read;
-	reg IM_write;
 	reg DM_read;
 	reg DM_write;
 	reg do_reg_write;
@@ -123,6 +121,9 @@ module controller(
 	parameter S2=3'b010;
 	parameter S3=3'b011;
 	parameter S4=3'b100;
+
+	assign IM_read  = (reset)?1'b0:1'b1;
+	assign IM_write = (reset)?1'b0:1'b0;
 
 	always@(posedge clock or posedge reset) begin
 		if(reset) present_instruction<=0;
@@ -189,17 +190,6 @@ module controller(
 				enable_writeback=1'b0;
 			end
 		endcase
-	end
-
-	always@(reset) begin
-		if(reset)begin
-			IM_read=1'b0;
-			IM_write=1'b0;
-		end
-		else begin
-			IM_read=1'b1;
-			IM_write=1'b0;
-		end
 	end
 
 	always@(`OPCODE or `SUBOP_B or alu_zero) begin
