@@ -218,7 +218,7 @@ module controller(
 		endcase
 	end
 
-	always@(`OPCODE or `SUBOP_BASE or `SUBOP_LS or `SUBOP_B) begin
+	always@(`OPCODE or `SUBOP_BASE or `SUBOP_LS) begin
 		case(`OPCODE)
 			`TY_BASE: begin
 				case(`SUBOP_BASE)
@@ -381,32 +381,12 @@ module controller(
 				endcase
 			end
 			`TY_B:begin
-				case(`SUBOP_B)
-					`BEQ:begin
-						alu_src2_select=3'b100;
-						imm_extend_select=2'bxx;
-						write_reg_select=2'bxx;
-						DM_read=1'b0;
-						DM_write=1'b0;
-						do_reg_write=1'b0;
-					end
-					`BNE:begin
-						alu_src2_select=3'b100;
-						imm_extend_select=2'bxx;
-						write_reg_select=2'bxx;
-						DM_read=1'b0;
-						DM_write=1'b0;
-						do_reg_write=1'b0;
-					end
-					default:begin
-						alu_src2_select=3'b0xx;
-						imm_extend_select=2'bxx;
-						write_reg_select=2'bxx;
-						DM_read=1'b0;
-						DM_write=1'b0;
-						do_reg_write=1'b0;
-					end
-				endcase
+				alu_src2_select=3'b100;
+				imm_extend_select=2'bxx;
+				write_reg_select=2'bxx;
+				DM_read=1'b0;
+				DM_write=1'b0;
+				do_reg_write=1'b0;
 			end
 			`JJ:begin
 				alu_src2_select=3'b0xx;
