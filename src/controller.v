@@ -125,6 +125,11 @@ module controller(
 	parameter S4=3'b100;
 
 	always@(posedge clock or posedge reset) begin
+		if(reset) present_instruction<=0;
+		else	  present_instruction<=instruction;
+	end
+
+	always@(posedge clock or posedge reset) begin
 		if(reset)begin 
 			current_state<= S0;
 		end
@@ -132,6 +137,60 @@ module controller(
 			current_state<= next_state;
 		end
 	end
+
+	always@(current_state) begin
+		case(current_state)
+			S0: begin
+				next_state=S1;
+				enable_fetch=1'b1;
+				enable_decode=1'b0;
+				enable_execute=1'b0;
+				enable_memaccess=1'b0;
+				enable_writeback=1'b0;
+			end
+			S1: begin
+				next_state=S2;
+				enable_fetch=1'b0;
+				enable_decode=1'b1;
+				enable_execute=1'b0;
+				enable_memaccess=1'b0;
+				enable_writeback=1'b0;
+			end
+			S2: begin
+				next_state=S3;
+				enable_fetch=1'b0;
+				enable_decode=1'b0;
+				enable_execute=1'b1;
+				enable_memaccess=1'b0;
+				enable_writeback=1'b0;
+			end
+			S3: begin
+				next_state=S4;
+				enable_fetch=1'b0;
+				enable_decode=1'b0;
+				enable_execute=1'b0;
+				enable_memaccess=1'b1;
+				enable_writeback=1'b0;
+			end
+			S4: begin
+				next_state=S0;
+				enable_fetch=1'b0;
+				enable_decode=1'b0;
+				enable_execute=1'b0;
+				enable_memaccess=1'b0;
+				enable_writeback=1'b1;
+			end
+			default: begin
+				next_state=S0;
+				enable_fetch=1'b0;
+				enable_decode=1'b0;
+				enable_execute=1'b0;
+				enable_memaccess=1'b0;
+				enable_writeback=1'b0;
+			end
+		endcase
+	end
+
 	always@(reset) begin
 		if(reset)begin
 			IM_read=1'b0;
@@ -366,64 +425,6 @@ module controller(
 				do_reg_write=1'b0;
 			end
 		endcase
-	end
-
-	always@(current_state) begin
-		case(current_state)
-			S0: begin
-				next_state=S1;
-				enable_fetch=1'b1;
-				enable_decode=1'b0;
-				enable_execute=1'b0;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b0;
-			end
-			S1: begin
-				next_state=S2;
-				enable_fetch=1'b0;
-				enable_decode=1'b1;
-				enable_execute=1'b0;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b0;
-			end
-			S2: begin
-				next_state=S3;
-				enable_fetch=1'b0;
-				enable_decode=1'b0;
-				enable_execute=1'b1;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b0;
-			end
-			S3: begin
-				next_state=S4;
-				enable_fetch=1'b0;
-				enable_decode=1'b0;
-				enable_execute=1'b0;
-				enable_memaccess=1'b1;
-				enable_writeback=1'b0;
-			end
-			S4: begin
-				next_state=S0;
-				enable_fetch=1'b0;
-				enable_decode=1'b0;
-				enable_execute=1'b0;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b1;
-			end
-			default: begin
-				next_state=S0;
-				enable_fetch=1'b0;
-				enable_decode=1'b0;
-				enable_execute=1'b0;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b0;
-			end
-		endcase
-	end
-	
-	always@(posedge clock or posedge reset) begin
-		if(reset) present_instruction<=0;
-		else	  present_instruction<=instruction;
 	end
 endmodule
 
