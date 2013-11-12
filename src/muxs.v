@@ -62,6 +62,9 @@ module muxs(
 			2'b10:begin
 				next_pc=current_pc+({imm_24bit[23],(imm_24bit[8:0]<<1)});//*
 			end
+			default:begin
+				next_pc=10'bxxxx_xxxx_xx;
+			end
 		endcase
 	end
 
@@ -78,6 +81,9 @@ module muxs(
 			end
 			2'b11: begin //20bit SE
 				imm={ {12{imm_20bit[19]}}, {imm_20bit} };
+			end
+			default: begin
+				imm=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
 			end
 		endcase
 	end
@@ -99,6 +105,9 @@ module muxs(
 			3'b100: begin
 				output_imm_reg_mux = reg_rt_data;
 			end
+			default: begin
+				output_imm_reg_mux = 32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
+			end
 		endcase
 	end
 
@@ -112,6 +121,9 @@ module muxs(
 			end
 			2'b10: begin
 				write_reg_data = mem_read_data;
+			end
+			default: begin
+				write_reg_data = 32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
 			end
 		endcase
 	end
