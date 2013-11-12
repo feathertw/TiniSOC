@@ -42,83 +42,69 @@ module alu(
         end
         else if(enable_execute)begin
             case(opcode)
-                `TY_BASE: //subopcode
+                `TY_BASE:
                 begin
                     case(sub_op_base)
-                        //NOP:
-                        //begin
+                        //NOP:begin
                         //  alu_result=32'b0;
                         //  alu_overflow=1'b0;
                         //end   
-                        `ADD:
-                        begin
+                        `ADD:begin
                             {a,alu_result[30:0]}=src1[30:0]+src2[30:0];
                             {b,alu_result[31]}=src1[31]+src2[31]+a;
                             alu_overflow=a^b;
                         end
-                        `SUB:
-                        begin
+                        `SUB:begin
                             {a,alu_result[30:0]}=src1[30:0]-src2[30:0];
                             {b,alu_result[31]}=src1[31]-src2[31]-a;
                             alu_overflow=a^b;
                         end
-                        `AND:
-                        begin
+                        `AND:begin
                             alu_result=src1&src2;
                             alu_overflow=1'b0;
                         end
-                        `OR :
-                        begin
+                        `OR :begin
                             alu_result=src1|src2;
                             alu_overflow=1'b0;
                         end
-                        `XOR:
-                        begin
+                        `XOR:begin
                             alu_result=src1^src2;
                             alu_overflow=1'b0;
                         end
-                        `SRLI:
-                        begin
+                        `SRLI:begin
                             alu_result=src1>>src2;
                             alu_overflow=1'b0;
                         end
-                        `SLLI:
-                        begin
+                        `SLLI:begin
                             alu_result=src1<<src2;
                             alu_overflow=1'b0;
                         end
-                        `ROTRI:
-                        begin
+                        `ROTRI:begin
                             rotate={src1,src1}>>src2;
                             alu_result=rotate[31:0];
                             alu_overflow=1'b0;
                         end
 
-                        default:
-                        begin
+                        default:begin
                             alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
                             alu_overflow=1'bx;
                         end
                     endcase
                 end
-                `ADDI: //ADDI
-                begin
+                `ADDI:begin
                     {a,alu_result[30:0]}=src1[30:0]+src2[30:0];
                     {b,alu_result[31]}=src1[31]+src2[31]+a;
                     alu_overflow=a^b;
                 end
-                `ORI: //ORI
-                begin
+                `ORI:begin
                     alu_result=src1|src2;
                     alu_overflow=1'b0;
                 end
-                `XORI: //XORI
-                begin
+                `XORI:begin
                     alu_result=src1^src2;
                     alu_overflow=1'b0;
                 end
-                `MOVI: //MOVI
-                begin
+                `MOVI:begin
                     alu_result=src1;
                     alu_overflow=1'b0;
                 end
@@ -158,18 +144,15 @@ module alu(
 			alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
 			alu_overflow=1'bx;
 		end
-                default:
-                begin
+                default:begin
 			alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
 			alu_overflow=1'bx;
                 end
             endcase
         end
-        //else begin
-        //    alu_result=32'b0;
-        //    alu_overflow=1'b0;
-        //    //alu_result=alu_result;
-        //    //alu_overflow=alu_overflow;
-        //end
+	else begin
+		alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
+		alu_overflow=1'bx;
+	end
     end
 endmodule

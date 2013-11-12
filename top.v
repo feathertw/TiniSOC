@@ -95,7 +95,11 @@ module top(
 	//muxs to pc
 	wire [9:0] next_pc;
 
+	//alu to reg
+	wire tmp_alu_overflow;
+
 	reg [31:0] reg_alu_result; //*
+	reg reg_alu_overflow; //*
 
 	wire IM_enable=enable_fetch;
 	wire DM_enable=enable_memaccess;
@@ -103,8 +107,11 @@ module top(
 	wire [9:0] IM_address=current_pc[9:0];
 	wire [31:0] DM_in=reg_rt_data[31:0];
 
+	wire alu_overflow=reg_alu_overflow;
+
 	always@(posedge enable_memaccess) begin
 		reg_alu_result<=alu_result;
+		reg_alu_overflow<=tmp_alu_overflow;
 	end
 
 	alu ALU(
@@ -117,7 +124,7 @@ module top(
 		.sub_op_ls(sub_op_ls),
 
 		.alu_result(alu_result),
-		.alu_overflow(alu_overflow),
+		.alu_overflow(tmp_alu_overflow),
 		.alu_zero(alu_zero)
 	);
 	
