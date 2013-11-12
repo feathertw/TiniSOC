@@ -96,8 +96,8 @@ module alu(
 
                         default:
                         begin
-                            alu_result=32'b0;
-                            alu_overflow=1'b0;
+                            alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
+                            alu_overflow=1'bx;
                         end
                     endcase
                 end
@@ -160,8 +160,8 @@ module alu(
 		end
                 default:
                 begin
-                    alu_result=32'b0;
-                    alu_overflow=1'b0;
+			alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
+			alu_overflow=1'bx;
                 end
             endcase
         end
