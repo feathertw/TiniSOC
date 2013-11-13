@@ -32,7 +32,7 @@ module controller(
 	imm_15bit,
 	imm_20bit,
 	imm_24bit,
-	pc_select,
+	select_pc,
 	alu_src2_select,
 	imm_extend_select,
 	write_reg_select,
@@ -70,7 +70,7 @@ module controller(
 	output [14:0] imm_15bit;
 	output [19:0] imm_20bit;
 	output [23:0] imm_24bit;
-	output [1:0] pc_select;
+	output [1:0] select_pc;
 	output [2:0] alu_src2_select;
 	output [1:0] imm_extend_select;
 	output [1:0] write_reg_select;
@@ -89,7 +89,7 @@ module controller(
 	reg enable_memaccess;
 	reg enable_writeback;
 
-	reg [1:0] pc_select;
+	reg [1:0] select_pc;
 	reg [2:0] alu_src2_select;
 	reg [1:0] imm_extend_select;
 	reg [1:0] write_reg_select;
@@ -196,15 +196,15 @@ module controller(
 	always@(`OPCODE or `SUBOP_B or alu_zero) begin
 		case(`OPCODE)
 			`TY_B:begin
-				if(      (`SUBOP_B==`BEQ)&&( alu_zero) ) pc_select=`PC_14BIT;
-				else if( (`SUBOP_B==`BNE)&&(!alu_zero) ) pc_select=`PC_14BIT;
-				else					 pc_select=`PC_4;
+				if(      (`SUBOP_B==`BEQ)&&( alu_zero) ) select_pc=`PC_14BIT;
+				else if( (`SUBOP_B==`BNE)&&(!alu_zero) ) select_pc=`PC_14BIT;
+				else					 select_pc=`PC_4;
 			end
 			`JJ:begin
-				pc_select=`PC_24BIT;
+				select_pc=`PC_24BIT;
 			end
 			default:begin
-				pc_select=`PC_4;
+				select_pc=`PC_4;
 			end
 		endcase
 	end

@@ -12,7 +12,7 @@ module muxs(
 	imm_20bit,
 	imm_24bit,
 
-	pc_select,
+	select_pc,
 	alu_src2_select,
 	imm_extend_select,
 	write_reg_select,
@@ -36,7 +36,7 @@ module muxs(
 	input [19:0] imm_20bit;
 	input [23:0] imm_24bit;
 
-	input [1:0] pc_select;
+	input [1:0] select_pc;
 	input [1:0] imm_extend_select;
 	input [1:0] write_reg_select;
 	input [2:0] alu_src2_select;
@@ -51,8 +51,8 @@ module muxs(
 
 	reg [DataSize-1:0] imm;
 
-	always @(pc_select or current_pc or imm_14bit or imm_24bit) begin
-		case(pc_select)
+	always @(select_pc or current_pc or imm_14bit or imm_24bit) begin
+		case(select_pc)
 			2'b00:begin
 				next_pc=current_pc+4;
 			end
