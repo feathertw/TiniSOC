@@ -50,7 +50,7 @@ module top(
 	wire [1:0] select_pc;
 	wire [2:0] select_alu_src2;
 	wire [1:0] select_imm_extend;
-	wire [1:0] write_reg_select;
+	wire [1:0] select_write_reg;
 
 	//controller to alu
 	wire [5:0] opcode;
@@ -159,7 +159,7 @@ module top(
 		.select_pc(select_pc),
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
-		.write_reg_select(write_reg_select),
+		.select_write_reg(select_write_reg),
 
 		.output_imm_reg_mux(alu_src2),
 		.write_reg_data(write_reg_data),
@@ -195,7 +195,7 @@ module top(
 		.select_pc(select_pc),
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
-		.write_reg_select(write_reg_select),
+		.select_write_reg(select_write_reg),
 
 		.IM_read(IM_read),
 		.IM_write(IM_write),

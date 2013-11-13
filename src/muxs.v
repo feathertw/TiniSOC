@@ -15,7 +15,7 @@ module muxs(
 	select_pc,
 	select_alu_src2,
 	select_imm_extend,
-	write_reg_select,
+	select_write_reg,
 
 	next_pc,
 	output_imm_reg_mux,
@@ -38,7 +38,7 @@ module muxs(
 
 	input [1:0] select_pc;
 	input [1:0] select_imm_extend;
-	input [1:0] write_reg_select;
+	input [1:0] select_write_reg;
 	input [2:0] select_alu_src2;
 
 	output [9:0] next_pc;
@@ -111,8 +111,8 @@ module muxs(
 		endcase
 	end
 
-	always @(write_reg_select or alu_output or output_imm_reg_mux or mem_read_data) begin
-		case(write_reg_select)
+	always @(select_write_reg or alu_output or output_imm_reg_mux or mem_read_data) begin
+		case(select_write_reg)
 			2'b00: begin
 				write_reg_data = alu_output;
 			end
