@@ -13,7 +13,7 @@ module muxs(
 	imm_24bit,
 
 	select_pc,
-	alu_src2_select,
+	select_alu_src2,
 	select_imm_extend,
 	write_reg_select,
 
@@ -39,7 +39,7 @@ module muxs(
 	input [1:0] select_pc;
 	input [1:0] select_imm_extend;
 	input [1:0] write_reg_select;
-	input [2:0] alu_src2_select;
+	input [2:0] select_alu_src2;
 
 	output [9:0] next_pc;
 	output [DataSize-1:0] output_imm_reg_mux;
@@ -88,8 +88,8 @@ module muxs(
 		endcase
 	end
 
-	always @(alu_src2_select or reg_rb_data or imm or imm_15bit or sub_op_sv or reg_rt_data) begin
-		case(alu_src2_select)
+	always @(select_alu_src2 or reg_rb_data or imm or imm_15bit or sub_op_sv or reg_rt_data) begin
+		case(select_alu_src2)
 			3'b000: begin
 				output_imm_reg_mux = reg_rb_data;
 			end

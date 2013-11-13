@@ -33,7 +33,7 @@ module controller(
 	imm_20bit,
 	imm_24bit,
 	select_pc,
-	alu_src2_select,
+	select_alu_src2,
 	select_imm_extend,
 	write_reg_select,
 
@@ -71,7 +71,7 @@ module controller(
 	output [19:0] imm_20bit;
 	output [23:0] imm_24bit;
 	output [1:0] select_pc;
-	output [2:0] alu_src2_select;
+	output [2:0] select_alu_src2;
 	output [1:0] select_imm_extend;
 	output [1:0] write_reg_select;
 
@@ -90,7 +90,7 @@ module controller(
 	reg enable_writeback;
 
 	reg [1:0] select_pc;
-	reg [2:0] alu_src2_select;
+	reg [2:0] select_alu_src2;
 	reg [1:0] select_imm_extend;
 	reg [1:0] write_reg_select;
 
@@ -214,14 +214,14 @@ module controller(
 			`TY_BASE: begin
 				case(`SUBOP_BASE)
 					//`NOP:begin
-					//	alu_src2_select=`ALUSRC2_RBDATA;
+					//	select_alu_src2=`ALUSRC2_RBDATA;
 					//	select_imm_extend=`IMM_UNKOWN;
 					//	write_reg_select=`WRREG_ALURESULT;
 					//	DM_read=1'b0;
 					//	DM_write=1'b0;
 					//end
 					`ADD:begin
-						alu_src2_select=`ALUSRC2_RBDATA;
+						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
 						write_reg_select=`WRREG_ALURESULT;
 						DM_read=1'b0;
@@ -229,7 +229,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`SUB:begin
-						alu_src2_select=`ALUSRC2_RBDATA;
+						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
 						write_reg_select=`WRREG_ALURESULT;
 						DM_read=1'b0;
@@ -237,7 +237,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`AND:begin
-						alu_src2_select=`ALUSRC2_RBDATA;
+						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
 						write_reg_select=`WRREG_ALURESULT;
 						DM_read=1'b0;
@@ -245,7 +245,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`OR :begin
-						alu_src2_select=`ALUSRC2_RBDATA;
+						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
 						write_reg_select=`WRREG_ALURESULT;
 						DM_read=1'b0;
@@ -253,7 +253,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`XOR:begin
-						alu_src2_select=`ALUSRC2_RBDATA;
+						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
 						write_reg_select=`WRREG_ALURESULT;
 						DM_read=1'b0;
@@ -262,7 +262,7 @@ module controller(
 					end
 					//Immediate
 					`SRLI:begin
-						alu_src2_select=`ALUSRC2_IMM;
+						select_alu_src2=`ALUSRC2_IMM;
 						select_imm_extend=`IMM_5BIT_ZE;
 						write_reg_select=`WRREG_ALURESULT;
 						DM_read=1'b0;
@@ -270,7 +270,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`SLLI:begin
-						alu_src2_select=`ALUSRC2_IMM;
+						select_alu_src2=`ALUSRC2_IMM;
 						select_imm_extend=`IMM_5BIT_ZE;
 						write_reg_select=`WRREG_ALURESULT;
 						DM_read=1'b0;
@@ -278,7 +278,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`ROTRI:begin
-						alu_src2_select=`ALUSRC2_IMM;
+						select_alu_src2=`ALUSRC2_IMM;
 						select_imm_extend=`IMM_5BIT_ZE;
 						write_reg_select=`WRREG_ALURESULT;
 						DM_read=1'b0;
@@ -286,7 +286,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					default:begin
-						alu_src2_select=`ALUSRC2_UNKNOWN;
+						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;
 						write_reg_select=`WRREG_UNKOWN;
 						DM_read=1'b0;
@@ -296,7 +296,7 @@ module controller(
 				endcase	
 			end
 			`ADDI:begin
-				alu_src2_select=`ALUSRC2_IMM;
+				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_SE;
 				write_reg_select=`WRREG_ALURESULT;
 				DM_read=1'b0;
@@ -304,7 +304,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`ORI:begin
-				alu_src2_select=`ALUSRC2_IMM;
+				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_ZE;
 				write_reg_select=`WRREG_ALURESULT;
 				DM_read=1'b0;
@@ -312,7 +312,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`XORI:begin
-				alu_src2_select=`ALUSRC2_IMM;
+				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_ZE;
 				write_reg_select=`WRREG_ALURESULT;
 				DM_read=1'b0;
@@ -320,7 +320,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`MOVI:begin
-				alu_src2_select=`ALUSRC2_IMM;
+				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_20BIT_SE;
 				write_reg_select=`WRREG_IMMDATA;
 				DM_read=1'b0;
@@ -328,7 +328,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`LWI:begin
-				alu_src2_select=`ALUSRC2_LSWI;
+				select_alu_src2=`ALUSRC2_LSWI;
 				select_imm_extend=`IMM_UNKOWN;
 				write_reg_select=`WRREG_LWX;
 				DM_read=1'b1;
@@ -336,7 +336,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`SWI:begin
-				alu_src2_select=`ALUSRC2_LSWI;
+				select_alu_src2=`ALUSRC2_LSWI;
 				select_imm_extend=`IMM_UNKOWN;
 				write_reg_select=`WRREG_UNKOWN;
 				DM_read=1'b0;
@@ -346,7 +346,7 @@ module controller(
 			`TY_LS:begin
 				case(`SUBOP_LS)
 					`LW:begin
-						alu_src2_select=`ALUSRC2_LSW;
+						select_alu_src2=`ALUSRC2_LSW;
 						select_imm_extend=`IMM_UNKOWN;
 						write_reg_select=`WRREG_LWX;
 						DM_read=1'b1;
@@ -354,7 +354,7 @@ module controller(
 						do_reg_write=1'b1;
 					end
 					`SW:begin
-						alu_src2_select=`ALUSRC2_LSW;
+						select_alu_src2=`ALUSRC2_LSW;
 						select_imm_extend=`IMM_UNKOWN;
 						write_reg_select=`WRREG_UNKOWN;
 						DM_read=1'b0;
@@ -362,7 +362,7 @@ module controller(
 						do_reg_write=1'b0;
 					end
 					default:begin
-						alu_src2_select=`ALUSRC2_UNKNOWN;
+						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;
 						write_reg_select=`WRREG_UNKOWN;
 						DM_read=1'b0;
@@ -372,7 +372,7 @@ module controller(
 				endcase
 			end
 			`TY_B:begin
-				alu_src2_select=`ALUSRC2_BENX;
+				select_alu_src2=`ALUSRC2_BENX;
 				select_imm_extend=`IMM_UNKOWN;
 				write_reg_select=`WRREG_UNKOWN;
 				DM_read=1'b0;
@@ -380,7 +380,7 @@ module controller(
 				do_reg_write=1'b0;
 			end
 			`JJ:begin
-				alu_src2_select=`ALUSRC2_UNKNOWN;
+				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_UNKOWN;
 				write_reg_select=`WRREG_UNKOWN;
 				DM_read=1'b0;
@@ -388,7 +388,7 @@ module controller(
 				do_reg_write=1'b0;
 			end
 			default:begin
-				alu_src2_select=`ALUSRC2_UNKNOWN;
+				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_UNKOWN;
 				write_reg_select=`WRREG_UNKOWN;
 				DM_read=1'b0;
