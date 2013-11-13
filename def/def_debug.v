@@ -1,3 +1,14 @@
+`define DEBUG_OVE(OVER) \
+	if(TOP.alu_overflow==(OVER) ) begin \
+		$display("_OVERFLOW\t=%6d\t\t\tTEST PASS",OVER); \
+	end \
+	else begin \
+		$write("%c[1;31m",27); \
+		$display("*****OVERFLOW =%2d !=%2d TEST FALSE*****" \
+			,TOP.alu_overflow,(OVER) ); \
+		$write("%c[0m",27); \
+	end
+
 `define DEBUG_REG(IR,REG,VALUE) \
 	if(TOP.REGFILE.rw_reg[(REG)]==(VALUE) )	begin \
 		$display("_%s R%-2d\t=%6d \t\tTEST PASS",(IR),(REG),(VALUE) ); \
