@@ -37,10 +37,10 @@ module controller(
 	select_imm_extend,
 	select_write_reg,
 
-	IM_read,
-	IM_write,
-	DM_read,
-	DM_write,
+	do_im_read,
+	do_im_write,
+	do_dm_read,
+	do_dm_write,
 	do_reg_write,
 
 	alu_zero
@@ -75,10 +75,10 @@ module controller(
 	output [1:0] select_imm_extend;
 	output [1:0] select_write_reg;
 
-	output IM_read;
-	output IM_write;
-	output DM_read;
-	output DM_write;
+	output do_im_read;
+	output do_im_write;
+	output do_dm_read;
+	output do_dm_write;
 	output do_reg_write;
 
 	input alu_zero;
@@ -94,8 +94,8 @@ module controller(
 	reg [1:0] select_imm_extend;
 	reg [1:0] select_write_reg;
 
-	reg DM_read;
-	reg DM_write;
+	reg do_dm_read;
+	reg do_dm_write;
 	reg do_reg_write;
 
 	reg [2:0] current_state;
@@ -123,8 +123,8 @@ module controller(
 	parameter S3=3'b011;
 	parameter S4=3'b100;
 
-	assign IM_read  = (reset)?1'b0:1'b1;
-	assign IM_write = (reset)?1'b0:1'b0;
+	assign do_im_read  = (reset)?1'b0:1'b1;
+	assign do_im_write = (reset)?1'b0:1'b0;
 
 	always@(posedge clock or posedge reset) begin
 		if(reset) present_instruction<=0;
@@ -217,47 +217,47 @@ module controller(
 					//	select_alu_src2=`ALUSRC2_RBDATA;
 					//	select_imm_extend=`IMM_UNKOWN;
 					//	select_write_reg=`WRREG_ALURESULT;
-					//	DM_read=1'b0;
-					//	DM_write=1'b0;
+					//	do_dm_read=1'b0;
+					//	do_dm_write=1'b0;
 					//end
 					`ADD:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
 						select_write_reg=`WRREG_ALURESULT;
-						DM_read=1'b0;
-						DM_write=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
 						do_reg_write=1'b1;
 					end
 					`SUB:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
 						select_write_reg=`WRREG_ALURESULT;
-						DM_read=1'b0;
-						DM_write=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
 						do_reg_write=1'b1;
 					end
 					`AND:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
 						select_write_reg=`WRREG_ALURESULT;
-						DM_read=1'b0;
-						DM_write=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
 						do_reg_write=1'b1;
 					end
 					`OR :begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
 						select_write_reg=`WRREG_ALURESULT;
-						DM_read=1'b0;
-						DM_write=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
 						do_reg_write=1'b1;
 					end
 					`XOR:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
 						select_write_reg=`WRREG_ALURESULT;
-						DM_read=1'b0;
-						DM_write=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
 						do_reg_write=1'b1;
 					end
 					//Immediate
@@ -265,32 +265,32 @@ module controller(
 						select_alu_src2=`ALUSRC2_IMM;
 						select_imm_extend=`IMM_5BIT_ZE;
 						select_write_reg=`WRREG_ALURESULT;
-						DM_read=1'b0;
-						DM_write=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
 						do_reg_write=1'b1;
 					end
 					`SLLI:begin
 						select_alu_src2=`ALUSRC2_IMM;
 						select_imm_extend=`IMM_5BIT_ZE;
 						select_write_reg=`WRREG_ALURESULT;
-						DM_read=1'b0;
-						DM_write=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
 						do_reg_write=1'b1;
 					end
 					`ROTRI:begin
 						select_alu_src2=`ALUSRC2_IMM;
 						select_imm_extend=`IMM_5BIT_ZE;
 						select_write_reg=`WRREG_ALURESULT;
-						DM_read=1'b0;
-						DM_write=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
 						do_reg_write=1'b1;
 					end
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
-						DM_read=1'b0;
-						DM_write=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
 						do_reg_write=1'b0;
 					end
 				endcase	
@@ -299,48 +299,48 @@ module controller(
 				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_SE;
 				select_write_reg=`WRREG_ALURESULT;
-				DM_read=1'b0;
-				DM_write=1'b0;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
 				do_reg_write=1'b1;
 			end
 			`ORI:begin
 				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_ZE;
 				select_write_reg=`WRREG_ALURESULT;
-				DM_read=1'b0;
-				DM_write=1'b0;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
 				do_reg_write=1'b1;
 			end
 			`XORI:begin
 				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_ZE;
 				select_write_reg=`WRREG_ALURESULT;
-				DM_read=1'b0;
-				DM_write=1'b0;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
 				do_reg_write=1'b1;
 			end
 			`MOVI:begin
 				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_20BIT_SE;
 				select_write_reg=`WRREG_IMMDATA;
-				DM_read=1'b0;
-				DM_write=1'b0;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
 				do_reg_write=1'b1;
 			end
 			`LWI:begin
 				select_alu_src2=`ALUSRC2_LSWI;
 				select_imm_extend=`IMM_UNKOWN;
 				select_write_reg=`WRREG_LWX;
-				DM_read=1'b1;
-				DM_write=1'b0;
+				do_dm_read=1'b1;
+				do_dm_write=1'b0;
 				do_reg_write=1'b1;
 			end
 			`SWI:begin
 				select_alu_src2=`ALUSRC2_LSWI;
 				select_imm_extend=`IMM_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
-				DM_read=1'b0;
-				DM_write=1'b1;
+				do_dm_read=1'b0;
+				do_dm_write=1'b1;
 				do_reg_write=1'b0;
 			end
 			`TY_LS:begin
@@ -349,24 +349,24 @@ module controller(
 						select_alu_src2=`ALUSRC2_LSW;
 						select_imm_extend=`IMM_UNKOWN;
 						select_write_reg=`WRREG_LWX;
-						DM_read=1'b1;
-						DM_write=1'b0;
+						do_dm_read=1'b1;
+						do_dm_write=1'b0;
 						do_reg_write=1'b1;
 					end
 					`SW:begin
 						select_alu_src2=`ALUSRC2_LSW;
 						select_imm_extend=`IMM_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
-						DM_read=1'b0;
-						DM_write=1'b1;
+						do_dm_read=1'b0;
+						do_dm_write=1'b1;
 						do_reg_write=1'b0;
 					end
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
-						DM_read=1'b0;
-						DM_write=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
 						do_reg_write=1'b0;
 					end
 				endcase
@@ -375,24 +375,24 @@ module controller(
 				select_alu_src2=`ALUSRC2_BENX;
 				select_imm_extend=`IMM_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
-				DM_read=1'b0;
-				DM_write=1'b0;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
 				do_reg_write=1'b0;
 			end
 			`JJ:begin
 				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
-				DM_read=1'b0;
-				DM_write=1'b0;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
 				do_reg_write=1'b0;
 			end
 			default:begin
 				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
-				DM_read=1'b0;
-				DM_write=1'b0;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
 				do_reg_write=1'b0;
 			end
 		endcase

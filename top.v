@@ -38,6 +38,12 @@ module top(
 	output [31:0] DM_in;
 	input [31:0] DM_out;
 
+	//controller to top
+	wire do_im_read;
+	wire do_im_write;
+	wire do_dm_read;
+	wire do_dm_write;
+
 	//controller to regfile
 	wire enable_decode;
 	wire enable_writeback;
@@ -100,6 +106,11 @@ module top(
 
 	reg [31:0] reg_alu_result; //*
 	reg reg_alu_overflow; //*
+
+	wire IM_read =do_im_read;
+	wire IM_write=do_im_write;
+	wire DM_read =do_dm_read;
+	wire DM_write=do_dm_write;
 
 	wire IM_enable=enable_fetch;
 	wire DM_enable=enable_memaccess;
@@ -197,10 +208,10 @@ module top(
 		.select_imm_extend(select_imm_extend),
 		.select_write_reg(select_write_reg),
 
-		.IM_read(IM_read),
-		.IM_write(IM_write),
-		.DM_read(DM_read),
-		.DM_write(DM_write),
+		.do_im_read(do_im_read),
+		.do_im_write(do_im_write),
+		.do_dm_read(do_dm_read),
+		.do_dm_write(do_dm_write),
 		.do_reg_write(do_reg_write),
 
 		.alu_zero(alu_zero)
