@@ -172,7 +172,7 @@ module top(
 		.select_imm_extend(select_imm_extend),
 		.select_write_reg(select_write_reg),
 
-		.output_imm_reg_mux(alu_src2),
+		.alu_src2(alu_src2),
 		.write_reg_data(write_reg_data),
 		.current_pc(current_pc),
 		.next_pc(next_pc)

@@ -18,7 +18,7 @@ module muxs(
 	select_write_reg,
 
 	next_pc,
-	output_imm_reg_mux,
+	alu_src2,
 	write_reg_data
 );
 
@@ -42,11 +42,11 @@ module muxs(
 	input [1:0] select_write_reg;
 
 	output [9:0] next_pc;
-	output [DataSize-1:0] output_imm_reg_mux;
+	output [DataSize-1:0] alu_src2;
 	output [DataSize-1:0] write_reg_data;
 	
 	reg [9:0] next_pc;
-	reg [DataSize-1:0] output_imm_reg_mux;
+	reg [DataSize-1:0] alu_src2;
 	reg [DataSize-1:0] write_reg_data;
 
 	reg [DataSize-1:0] imm;
@@ -91,33 +91,33 @@ module muxs(
 	always @(select_alu_src2 or reg_rb_data or imm or imm_15bit or sub_op_sv or reg_rt_data) begin
 		case(select_alu_src2)
 			3'b000: begin
-				output_imm_reg_mux = reg_rb_data;
+				alu_src2 = reg_rb_data;
 			end
 			3'b001: begin
-				output_imm_reg_mux = imm;
+				alu_src2 = imm;
 			end
 			3'b010: begin
-				output_imm_reg_mux = { {15{imm_15bit[14]}},imm_15bit,2'b00}; //*
+				alu_src2 = { {15{imm_15bit[14]}},imm_15bit,2'b00}; //*
 			end
 			3'b011: begin
-				output_imm_reg_mux = reg_rb_data<<sub_op_sv;
+				alu_src2 = reg_rb_data<<sub_op_sv;
 			end
 			3'b100: begin
-				output_imm_reg_mux = reg_rt_data;
+				alu_src2 = reg_rt_data;
 			end
 			default: begin
-				output_imm_reg_mux = 32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
+				alu_src2 = 32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
 			end
 		endcase
 	end
 
-	always @(select_write_reg or alu_output or output_imm_reg_mux or mem_read_data) begin
+	always @(select_write_reg or alu_output or alu_src2 or mem_read_data) begin
 		case(select_write_reg)
 			2'b00: begin
 				write_reg_data = alu_output;
 			end
 			2'b01: begin
-				write_reg_data = output_imm_reg_mux;
+				write_reg_data = alu_src2;
 			end
 			2'b10: begin
 				write_reg_data = mem_read_data;
