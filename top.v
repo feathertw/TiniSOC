@@ -128,8 +128,8 @@ module top(
 	alu ALU(
 		.reset(rst),
 		.enable_execute(enable_execute),
-		.src1(reg_ra_data),
-		.src2(alu_src2),
+		.alu_src1(reg_ra_data),
+		.alu_src2(alu_src2),
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
 		.sub_op_ls(sub_op_ls),
