@@ -37,9 +37,9 @@ module muxs(
 	input [23:0] imm_24bit;
 
 	input [1:0] select_pc;
+	input [2:0] select_alu_src2;
 	input [1:0] select_imm_extend;
 	input [1:0] select_write_reg;
-	input [2:0] select_alu_src2;
 
 	output [9:0] next_pc;
 	output [DataSize-1:0] output_imm_reg_mux;
