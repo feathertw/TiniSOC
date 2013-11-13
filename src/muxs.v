@@ -14,7 +14,7 @@ module muxs(
 
 	select_pc,
 	alu_src2_select,
-	imm_extend_select,
+	select_imm_extend,
 	write_reg_select,
 
 	next_pc,
@@ -37,7 +37,7 @@ module muxs(
 	input [23:0] imm_24bit;
 
 	input [1:0] select_pc;
-	input [1:0] imm_extend_select;
+	input [1:0] select_imm_extend;
 	input [1:0] write_reg_select;
 	input [2:0] alu_src2_select;
 
@@ -68,8 +68,8 @@ module muxs(
 		endcase
 	end
 
-	always @(imm_extend_select or imm_5bit or imm_15bit or imm_20bit) begin
-		case(imm_extend_select)
+	always @(select_imm_extend or imm_5bit or imm_15bit or imm_20bit) begin
+		case(select_imm_extend)
 			2'b00: begin //5bit ZE
 				imm={ {27{1'b0}}, imm_5bit };
 			end
