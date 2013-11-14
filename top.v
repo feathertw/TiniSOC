@@ -102,28 +102,34 @@ module top(
 	//muxs to pc
 	wire [9:0] next_pc;
 
+	//mem to muxs
+	wire [31:0] mem_read_data;
+
 	//alu to reg
 	wire tmp_alu_overflow;
 
 	reg [31:0] reg_alu_result; //*
 	reg reg_alu_overflow; //*
 
-	wire IM_read =do_im_read;
-	wire IM_write=do_im_write;
-	wire DM_read =do_dm_read;
-	wire DM_write=do_dm_write;
-
-	wire IM_enable=enable_fetch;
-	wire DM_enable=enable_memaccess;
-	wire [11:0] DM_address=reg_alu_result[11:0];
-	wire [9:0] IM_address=current_pc[9:0];
-	wire [31:0] DM_in=reg_rt_data[31:0];
-
-	wire alu_overflow=reg_alu_overflow;
-
+	//REGWALL
 	wire [31:0] iREG1_instruction;
 	wire [31:0] oREG1_instruction;
+
+	//top input output
 	assign iREG1_instruction=instruction;
+	assign alu_overflow=reg_alu_overflow;
+
+	assign IM_read =do_im_read;
+	assign IM_write=do_im_write;
+	assign IM_enable=enable_fetch;
+	assign IM_address=current_pc;
+
+	assign DM_read =do_dm_read;
+	assign DM_write=do_dm_write;
+	assign DM_enable=enable_memaccess;
+	assign DM_address=reg_alu_result[11:0];
+	assign DM_in=reg_rt_data;
+	assign mem_read_data=DM_out;
 
 	always@(posedge enable_memaccess) begin
 		reg_alu_result<=alu_result;
@@ -164,7 +170,7 @@ module top(
 		.sub_op_sv(sub_op_sv),
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(reg_rt_data),
-		.mem_read_data(DM_out),
+		.mem_read_data(mem_read_data),
 		.alu_output(reg_alu_result),
 		.imm_5bit(imm_5bit),
 		.imm_14bit(imm_14bit),
