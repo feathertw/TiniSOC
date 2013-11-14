@@ -3,6 +3,7 @@
 `include "src/muxs.v"
 `include "src/controller.v"
 `include "src/pc.v"
+`include "src/regwalls.v"
 module top(
 	clk,
 	rst,
@@ -120,6 +121,10 @@ module top(
 
 	wire alu_overflow=reg_alu_overflow;
 
+	wire [31:0] iREG1_instruction;
+	wire [31:0] oREG1_instruction;
+	assign iREG1_instruction=instruction;
+
 	always@(posedge enable_memaccess) begin
 		reg_alu_result<=alu_result;
 		reg_alu_overflow<=tmp_alu_overflow;
@@ -181,7 +186,7 @@ module top(
 	controller CONTROLLER(
 		.clock(clk),
 		.reset(rst),
-		.instruction(instruction),
+		.instruction(oREG1_instruction),
 
 		.enable_fetch(enable_fetch),
 		.enable_execute(enable_execute),
@@ -222,5 +227,10 @@ module top(
 		.enable_pc(enable_execute),
 		.next_pc(next_pc),
 		.current_pc(current_pc)
+	);
+	regwalls REGWALLS(
+		.clock(clk),
+		.iREG1_instruction(iREG1_instruction),
+		.oREG1_instruction(oREG1_instruction)
 	);
 endmodule
