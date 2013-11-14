@@ -115,6 +115,13 @@ module top(
 	wire [31:0] iREG1_instruction;
 	wire [31:0] oREG1_instruction;
 
+	wire [31:0] iREG2_reg_ra_data;
+	wire [31:0] iREG2_reg_rb_data;
+	wire [31:0] iREG2_reg_rt_data;
+	wire [31:0] oREG2_reg_ra_data;
+	wire [31:0] oREG2_reg_rb_data;
+	wire [31:0] oREG2_reg_rt_data;
+
 	//top input output
 	assign iREG1_instruction=instruction;
 	assign alu_overflow=reg_alu_overflow;
@@ -128,7 +135,7 @@ module top(
 	assign DM_write=do_dm_write;
 	assign DM_enable=enable_memaccess;
 	assign DM_address=reg_alu_result[11:0];
-	assign DM_in=reg_rt_data;
+	assign DM_in=oREG2_reg_rt_data;//*
 	assign mem_read_data=DM_out;
 
 	always@(posedge enable_memaccess) begin
@@ -139,7 +146,7 @@ module top(
 	alu ALU(
 		.reset(rst),
 		.enable_execute(enable_execute),
-		.alu_src1(reg_ra_data),
+		.alu_src1(oREG2_reg_ra_data),
 		.alu_src2(alu_src2),
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
@@ -161,15 +168,15 @@ module top(
 		.write_reg_data(write_reg_data),
 		.do_reg_write(do_reg_write),
 
-		.reg_ra_data(reg_ra_data),
-		.reg_rb_data(reg_rb_data),
-		.reg_rt_data(reg_rt_data)
+		.reg_ra_data(iREG2_reg_ra_data),
+		.reg_rb_data(iREG2_reg_rb_data),
+		.reg_rt_data(iREG2_reg_rt_data)
 	);
 
 	muxs MUXS(
 		.sub_op_sv(sub_op_sv),
-		.reg_rb_data(reg_rb_data),
-		.reg_rt_data(reg_rt_data),
+		.reg_rb_data(oREG2_reg_rb_data),
+		.reg_rt_data(oREG2_reg_rt_data),
 		.mem_read_data(mem_read_data),
 		.alu_output(reg_alu_result),
 		.imm_5bit(imm_5bit),
@@ -237,6 +244,12 @@ module top(
 	regwalls REGWALLS(
 		.clock(clk),
 		.iREG1_instruction(iREG1_instruction),
-		.oREG1_instruction(oREG1_instruction)
+		.oREG1_instruction(oREG1_instruction),
+		.iREG2_reg_ra_data(iREG2_reg_ra_data),
+		.iREG2_reg_rb_data(iREG2_reg_rb_data),
+		.iREG2_reg_rt_data(iREG2_reg_rt_data),
+		.oREG2_reg_ra_data(oREG2_reg_ra_data),
+		.oREG2_reg_rb_data(oREG2_reg_rb_data),
+		.oREG2_reg_rt_data(oREG2_reg_rt_data)
 	);
 endmodule
