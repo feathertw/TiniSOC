@@ -122,6 +122,13 @@ module top(
 	wire [31:0] oREG2_reg_rb_data;
 	wire [31:0] oREG2_reg_rt_data;
 
+	wire [ 5:0] iREG2_opcode;
+	wire [ 4:0] iREG2_sub_op_base;
+	wire [ 7:0] iREG2_sub_op_ls;
+	wire [ 5:0] oREG2_opcode;
+	wire [ 4:0] oREG2_sub_op_base;
+	wire [ 7:0] oREG2_sub_op_ls;
+
 	//top input output
 	assign iREG1_instruction=instruction;
 	assign alu_overflow=reg_alu_overflow;
@@ -148,9 +155,9 @@ module top(
 		.enable_execute(enable_execute),
 		.alu_src1(oREG2_reg_ra_data),
 		.alu_src2(alu_src2),
-		.opcode(opcode),
-		.sub_op_base(sub_op_base),
-		.sub_op_ls(sub_op_ls),
+		.opcode(oREG2_opcode),
+		.sub_op_base(oREG2_sub_op_base),
+		.sub_op_ls(oREG2_sub_op_ls),
 
 		.alu_result(alu_result),
 		.alu_overflow(tmp_alu_overflow),
@@ -207,9 +214,9 @@ module top(
 		.enable_memaccess(enable_memaccess),
 		.enable_writeback(enable_writeback),
 
-		.opcode(opcode),
-		.sub_op_base(sub_op_base),
-		.sub_op_ls(sub_op_ls),
+		.opcode(iREG2_opcode),
+		.sub_op_base(iREG2_sub_op_base),
+		.sub_op_ls(iREG2_sub_op_ls),
 		.sub_op_sv(sub_op_sv),
 
 		.reg_ra_addr(reg_ra_addr),
@@ -250,6 +257,13 @@ module top(
 		.iREG2_reg_rt_data(iREG2_reg_rt_data),
 		.oREG2_reg_ra_data(oREG2_reg_ra_data),
 		.oREG2_reg_rb_data(oREG2_reg_rb_data),
-		.oREG2_reg_rt_data(oREG2_reg_rt_data)
+		.oREG2_reg_rt_data(oREG2_reg_rt_data),
+
+		.iREG2_opcode(iREG2_opcode),
+		.iREG2_sub_op_base(iREG2_sub_op_base),
+		.iREG2_sub_op_ls(iREG2_sub_op_ls),
+		.oREG2_opcode(oREG2_opcode),
+		.oREG2_sub_op_base(oREG2_sub_op_base),
+		.oREG2_sub_op_ls(oREG2_sub_op_ls)
 	);
 endmodule
