@@ -130,13 +130,9 @@ module top(
 	wire [23:0] oREG2_imm_24bit;
 	wire [ 1:0] oREG2_select_write_reg;
 
-	wire iREG2_do_im_read;
-	wire iREG2_do_im_write;
 	wire iREG2_do_dm_read;
 	wire iREG2_do_dm_write;
 	wire iREG2_do_reg_write;
-	wire oREG2_do_im_read;
-	wire oREG2_do_im_write;
 	wire oREG2_do_dm_read;
 	wire oREG2_do_dm_write;
 	wire oREG2_do_reg_write;
@@ -157,8 +153,8 @@ module top(
 	assign iREG1_instruction=instruction;
 	assign alu_overflow=reg_alu_overflow;
 
-	assign IM_read =oREG2_do_im_read;
-	assign IM_write=oREG2_do_im_write;
+	assign IM_read =do_im_read;
+	assign IM_write=do_im_write;
 	assign IM_enable=enable_fetch;
 	assign IM_address=current_pc;
 
@@ -247,8 +243,8 @@ module top(
 		.select_imm_extend(select_imm_extend),
 		.select_write_reg(iREG2_select_write_reg),
 
-		.do_im_read(iREG2_do_im_read),
-		.do_im_write(iREG2_do_im_write),
+		.do_im_read(do_im_read),
+		.do_im_write(do_im_write),
 		.do_dm_read(iREG2_do_dm_read),
 		.do_dm_write(iREG2_do_dm_write),
 		.do_reg_write(iREG2_do_reg_write)
@@ -289,13 +285,9 @@ module top(
 		.oREG2_imm_24bit(oREG2_imm_24bit),
 		.oREG2_select_write_reg(oREG2_select_write_reg),
 
-		.iREG2_do_im_read(iREG2_do_im_read),
-		.iREG2_do_im_write(iREG2_do_im_write),
 		.iREG2_do_dm_read(iREG2_do_dm_read),
 		.iREG2_do_dm_write(iREG2_do_dm_write),
 		.iREG2_do_reg_write(iREG2_do_reg_write),
-		.oREG2_do_im_read(oREG2_do_im_read),
-		.oREG2_do_im_write(oREG2_do_im_write),
 		.oREG2_do_dm_read(oREG2_do_dm_read),
 		.oREG2_do_dm_write(oREG2_do_dm_write),
 		.oREG2_do_reg_write(oREG2_do_reg_write),

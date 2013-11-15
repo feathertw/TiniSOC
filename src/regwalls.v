@@ -22,13 +22,9 @@ module regwalls(
 	oREG2_imm_24bit,
 	oREG2_select_write_reg,
 
-	iREG2_do_im_read,
-	iREG2_do_im_write,
 	iREG2_do_dm_read,
 	iREG2_do_dm_write,
 	iREG2_do_reg_write,
-	oREG2_do_im_read,
-	oREG2_do_im_write,
 	oREG2_do_dm_read,
 	oREG2_do_dm_write,
 	oREG2_do_reg_write,
@@ -80,18 +76,12 @@ module regwalls(
 	reg    [23:0] oREG2_imm_24bit;
 	reg    [ 1:0] oREG2_select_write_reg;
 
-	input  iREG2_do_im_read;
-	input  iREG2_do_im_write;
 	input  iREG2_do_dm_read;
 	input  iREG2_do_dm_write;
 	input  iREG2_do_reg_write;
-	output oREG2_do_im_read;
-	output oREG2_do_im_write;
 	output oREG2_do_dm_read;
 	output oREG2_do_dm_write;
 	output oREG2_do_reg_write;
-	reg    oREG2_do_im_read;
-	reg    oREG2_do_im_write;
 	reg    oREG2_do_dm_read;
 	reg    oREG2_do_dm_write;
 	reg    oREG2_do_reg_write;
@@ -128,8 +118,6 @@ module regwalls(
 		oREG2_imm_24bit       <=iREG2_imm_24bit;
 		oREG2_select_write_reg<=iREG2_select_write_reg;
 
-		oREG2_do_im_read      <=iREG2_do_im_read;
-		oREG2_do_im_write     <=iREG2_do_im_write;
 		oREG2_do_dm_read      <=iREG2_do_dm_read;
 		oREG2_do_dm_write     <=iREG2_do_dm_write;
 		oREG2_do_reg_write    <=iREG2_do_reg_write;
