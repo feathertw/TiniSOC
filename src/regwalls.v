@@ -34,7 +34,16 @@ module regwalls(
 	oREG2_do_reg_write,
 
 	iREG2_alu_src2,
-	oREG2_alu_src2
+	oREG2_alu_src2,
+
+	iREG3_alu_result,
+	oREG3_alu_result,
+
+	iREG3_alu_overflow,
+	oREG3_alu_overflow,
+
+	iREG4_write_reg_data,
+	oREG4_write_reg_data
 );
 	input  clock;
 
@@ -92,6 +101,20 @@ module regwalls(
 	output [31:0] oREG2_alu_src2;
 	reg    [31:0] oREG2_alu_src2;
 
+	//alu
+	input  [31:0] iREG3_alu_result;
+	output [31:0] oREG3_alu_result;
+	reg    [31:0] oREG3_alu_result;
+
+	input  iREG3_alu_overflow;
+	output oREG3_alu_overflow;
+	reg    oREG3_alu_overflow;
+
+	//muxs
+	input  [31:0] iREG4_write_reg_data;
+	output [31:0] oREG4_write_reg_data;
+	reg    [31:0] oREG4_write_reg_data;
+
 	always@(negedge clock)begin
 		oREG1_instruction<=iREG1_instruction;
 
@@ -112,5 +135,10 @@ module regwalls(
 		oREG2_do_reg_write    <=iREG2_do_reg_write;
 
 		oREG2_alu_src2        <=iREG2_alu_src2;
+
+		oREG3_alu_result  <=iREG3_alu_result;
+		oREG3_alu_overflow<=iREG3_alu_overflow;
+
+		oREG4_write_reg_data<=iREG4_write_reg_data;
 	end
 endmodule

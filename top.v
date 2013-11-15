@@ -105,7 +105,6 @@ module top(
 	//alu to reg
 	wire tmp_alu_overflow;
 
-	reg [31:0] reg_alu_result; //*
 	reg reg_alu_overflow; //*
 
 	//REGWALL
@@ -145,6 +144,15 @@ module top(
 	wire [31:0] iREG2_alu_src2;
 	wire [31:0] oREG2_alu_src2;
 
+	wire [31:0] iREG3_alu_result;
+	wire [31:0] oREG3_alu_result;
+
+	wire iREG3_alu_overflow;
+	wire oREG3_alu_overflow;
+
+	wire [31:0] iREG4_write_reg_data;
+	wire [31:0] oREG4_write_reg_data;
+
 	//top input output
 	assign iREG1_instruction=instruction;
 	assign alu_overflow=reg_alu_overflow;
@@ -157,14 +165,9 @@ module top(
 	assign DM_read =oREG2_do_dm_read;
 	assign DM_write=oREG2_do_dm_write;
 	assign DM_enable=enable_memaccess;
-	assign DM_address=reg_alu_result[11:0];
+	assign DM_address=oREG3_alu_result[11:0];
 	assign DM_in=oREG2_reg_rt_data;//*
 	assign mem_read_data=DM_out;
-
-	always@(posedge enable_memaccess) begin
-		reg_alu_result<=alu_result;
-		reg_alu_overflow<=tmp_alu_overflow;
-	end
 
 	alu ALU(
 		.reset(rst),
@@ -175,7 +178,7 @@ module top(
 		.sub_op_base(oREG2_sub_op_base),
 		.sub_op_ls(oREG2_sub_op_ls),
 
-		.alu_result(alu_result),
+		.alu_result(iREG3_alu_result),
 		.alu_overflow(tmp_alu_overflow),
 		.alu_zero(alu_zero)
 	);
@@ -188,7 +191,7 @@ module top(
 		.reg_ra_addr(reg_ra_addr),
 		.reg_rb_addr(reg_rb_addr),
 		.reg_rt_addr(reg_rt_addr),
-		.write_reg_data(write_reg_data),
+		.write_reg_data(oREG4_write_reg_data),
 		.do_reg_write(oREG2_do_reg_write),
 
 		.reg_ra_data(iREG2_reg_ra_data),
@@ -201,7 +204,7 @@ module top(
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(oREG2_reg_rt_data),
 		.mem_read_data(mem_read_data),
-		.alu_output(reg_alu_result),
+		.alu_output(oREG3_alu_result),//*
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
@@ -211,7 +214,7 @@ module top(
 		.select_write_reg(oREG2_select_write_reg),
 
 		.alu_src2(iREG2_alu_src2),
-		.write_reg_data(write_reg_data)
+		.write_reg_data(iREG4_write_reg_data)
 	);
 	
 	controller CONTROLLER(
@@ -298,6 +301,15 @@ module top(
 		.oREG2_do_reg_write(oREG2_do_reg_write),
 
 		.iREG2_alu_src2(iREG2_alu_src2),
-		.oREG2_alu_src2(oREG2_alu_src2)
+		.oREG2_alu_src2(oREG2_alu_src2),
+
+		.iREG3_alu_result(iREG3_alu_result),
+		.oREG3_alu_result(oREG3_alu_result),
+
+		.iREG3_alu_overflow(iREG3_alu_overflow),
+		.oREG3_alu_overflow(oREG3_alu_overflow),
+
+		.iREG4_write_reg_data(iREG4_write_reg_data),
+		.oREG4_write_reg_data(oREG4_write_reg_data)
 	);
 endmodule
