@@ -21,6 +21,7 @@ module controller(
 	sub_op_base,
 	sub_op_ls,
 	sub_op_sv,
+	sub_op_b,
 
 	reg_ra_addr,
 	reg_rb_addr,
@@ -31,7 +32,6 @@ module controller(
 	imm_15bit,
 	imm_20bit,
 	imm_24bit,
-	select_pc,
 	select_alu_src2,
 	select_imm_extend,
 	select_write_reg,
@@ -41,8 +41,6 @@ module controller(
 	do_dm_read,
 	do_dm_write,
 	do_reg_write,
-
-	alu_zero
 );
 	
 	input clock;
@@ -59,6 +57,7 @@ module controller(
 	output [4:0] sub_op_base;
 	output [7:0] sub_op_ls;
 	output [1:0] sub_op_sv;
+	output sub_op_b;
 
 	output [4:0] reg_ra_addr;
 	output [4:0] reg_rb_addr;
@@ -69,7 +68,6 @@ module controller(
 	output [14:0] imm_15bit;
 	output [19:0] imm_20bit;
 	output [23:0] imm_24bit;
-	output [1:0] select_pc;
 	output [2:0] select_alu_src2;
 	output [1:0] select_imm_extend;
 	output [1:0] select_write_reg;
@@ -80,15 +78,12 @@ module controller(
 	output do_dm_write;
 	output do_reg_write;
 
-	input alu_zero;
-
 	reg enable_fetch;
 	reg enable_execute;
 	reg enable_decode;
 	reg enable_memaccess;
 	reg enable_writeback;
 
-	reg [1:0] select_pc;
 	reg [2:0] select_alu_src2;
 	reg [1:0] select_imm_extend;
 	reg [1:0] select_write_reg;
@@ -105,6 +100,7 @@ module controller(
 	wire [4:0] sub_op_base=instruction[4:0];
 	wire [7:0] sub_op_ls=instruction[7:0];
 	wire [1:0] sub_op_sv=instruction[9:8];
+	wire sub_op_b=instruction[14];
 
 	wire [4:0] reg_ra_addr=instruction[19:15];
 	wire [4:0] reg_rb_addr=instruction[14:10];
@@ -188,22 +184,6 @@ module controller(
 				enable_execute=1'b0;
 				enable_memaccess=1'b0;
 				enable_writeback=1'b0;
-			end
-		endcase
-	end
-
-	always@(`OPCODE or `SUBOP_B or alu_zero) begin
-		case(`OPCODE)
-			`TY_B:begin
-				if(      (`SUBOP_B==`BEQ)&&( alu_zero) ) select_pc=`PC_14BIT;
-				else if( (`SUBOP_B==`BNE)&&(!alu_zero) ) select_pc=`PC_14BIT;
-				else					 select_pc=`PC_4;
-			end
-			`JJ:begin
-				select_pc=`PC_24BIT;
-			end
-			default:begin
-				select_pc=`PC_4;
 			end
 		endcase
 	end

@@ -64,6 +64,7 @@ module top(
 	wire [4:0] sub_op_base;
 	wire [7:0] sub_op_ls;
 	wire [1:0] sub_op_sv;
+	wire sub_op_b;
 	wire enable_execute;
 
 	//controller to im
@@ -237,6 +238,7 @@ module top(
 		.sub_op_base(iREG2_sub_op_base),
 		.sub_op_ls(iREG2_sub_op_ls),
 		.sub_op_sv(sub_op_sv),
+		.sub_op_b(sub_op_b),
 
 		.reg_ra_addr(reg_ra_addr),
 		.reg_rb_addr(reg_rb_addr),
@@ -247,7 +249,6 @@ module top(
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
 		.imm_24bit(iREG2_imm_24bit),
-		.select_pc(select_pc),
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
 		.select_write_reg(iREG2_select_write_reg),
@@ -256,16 +257,19 @@ module top(
 		.do_im_write(iREG2_do_im_write),
 		.do_dm_read(iREG2_do_dm_read),
 		.do_dm_write(iREG2_do_dm_write),
-		.do_reg_write(iREG2_do_reg_write),
-
-		.alu_zero(alu_zero)
+		.do_reg_write(iREG2_do_reg_write)
 	);
 	pc PC(
 		.clock(clk),
 		.reset(rst),
 		.enable_pc(enable_execute),
 		.next_pc(next_pc),
-		.current_pc(current_pc)
+		.current_pc(current_pc),
+
+		.opcode(iREG2_opcode),
+		.sub_op_b(sub_op_b),
+		.alu_zero(alu_zero),
+		.select_pc(select_pc)
 	);
 	regwalls REGWALLS(
 		.clock(clk),
