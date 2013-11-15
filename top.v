@@ -133,9 +133,9 @@ module top(
 	wire iREG2_do_dm_read;
 	wire iREG2_do_dm_write;
 	wire iREG2_do_reg_write;
-	wire oREG2_do_dm_read;
-	wire oREG2_do_dm_write;
-	wire oREG2_do_reg_write;
+	wire oREG3_do_dm_read;
+	wire oREG3_do_dm_write;
+	wire oREG4_do_reg_write;
 
 	wire [31:0] iREG2_alu_src2;
 	wire [31:0] oREG2_alu_src2;
@@ -158,8 +158,8 @@ module top(
 	assign IM_enable=enable_fetch;
 	assign IM_address=current_pc;
 
-	assign DM_read =oREG2_do_dm_read;
-	assign DM_write=oREG2_do_dm_write;
+	assign DM_read =oREG3_do_dm_read;
+	assign DM_write=oREG3_do_dm_write;
 	assign DM_enable=enable_memaccess;
 	assign DM_address=oREG3_alu_result[11:0];
 	assign DM_in=oREG2_reg_rt_data;//*
@@ -188,7 +188,7 @@ module top(
 		.reg_rb_addr(reg_rb_addr),
 		.reg_rt_addr(reg_rt_addr),
 		.write_reg_data(oREG4_write_reg_data),
-		.do_reg_write(oREG2_do_reg_write),
+		.do_reg_write(oREG4_do_reg_write),
 
 		.reg_ra_data(iREG2_reg_ra_data),
 		.reg_rb_data(reg_rb_data),
@@ -288,9 +288,9 @@ module top(
 		.iREG2_do_dm_read(iREG2_do_dm_read),
 		.iREG2_do_dm_write(iREG2_do_dm_write),
 		.iREG2_do_reg_write(iREG2_do_reg_write),
-		.oREG2_do_dm_read(oREG2_do_dm_read),
-		.oREG2_do_dm_write(oREG2_do_dm_write),
-		.oREG2_do_reg_write(oREG2_do_reg_write),
+		.oREG3_do_dm_read(oREG3_do_dm_read),
+		.oREG3_do_dm_write(oREG3_do_dm_write),
+		.oREG4_do_reg_write(oREG4_do_reg_write),
 
 		.iREG2_alu_src2(iREG2_alu_src2),
 		.oREG2_alu_src2(oREG2_alu_src2),
