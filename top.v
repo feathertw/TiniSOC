@@ -216,7 +216,7 @@ module top(
 		.select_pc(select_pc),
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
-		.select_write_reg(select_write_reg),
+		.select_write_reg(oREG2_select_write_reg),
 
 		.alu_src2(iREG2_alu_src2),
 		.write_reg_data(write_reg_data),
@@ -252,7 +252,7 @@ module top(
 		.select_pc(select_pc),
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
-		.select_write_reg(select_write_reg),
+		.select_write_reg(iREG2_select_write_reg),
 
 		.do_im_read(iREG2_do_im_read),
 		.do_im_write(iREG2_do_im_write),
