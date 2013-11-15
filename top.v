@@ -129,6 +129,15 @@ module top(
 	wire [ 4:0] oREG2_sub_op_base;
 	wire [ 7:0] oREG2_sub_op_ls;
 
+	wire [13:0] iREG2_imm_14bit;
+	wire [23:0] iREG2_imm_24bit;
+	wire [ 1:0] iREG2_select_pc;
+	wire [ 1:0] iREG2_select_write_reg;
+	wire [13:0] oREG2_imm_14bit;
+	wire [23:0] oREG2_imm_24bit;
+	wire [ 1:0] oREG2_select_pc;
+	wire [ 1:0] oREG2_select_write_reg;
+
 	//top input output
 	assign iREG1_instruction=instruction;
 	assign alu_overflow=reg_alu_overflow;
@@ -187,10 +196,10 @@ module top(
 		.mem_read_data(mem_read_data),
 		.alu_output(reg_alu_result),
 		.imm_5bit(imm_5bit),
-		.imm_14bit(imm_14bit),
+		.imm_14bit(oREG2_imm_14bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
-		.imm_24bit(imm_24bit),
+		.imm_24bit(oREG2_imm_24bit),
 
 		.select_pc(select_pc),
 		.select_alu_src2(select_alu_src2),
@@ -224,10 +233,10 @@ module top(
 		.reg_rt_addr(reg_rt_addr),
 
 		.imm_5bit(imm_5bit),
-		.imm_14bit(imm_14bit),
+		.imm_14bit(iREG2_imm_14bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
-		.imm_24bit(imm_24bit),
+		.imm_24bit(iREG2_imm_24bit),
 		.select_pc(select_pc),
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
@@ -264,6 +273,15 @@ module top(
 		.iREG2_sub_op_ls(iREG2_sub_op_ls),
 		.oREG2_opcode(oREG2_opcode),
 		.oREG2_sub_op_base(oREG2_sub_op_base),
-		.oREG2_sub_op_ls(oREG2_sub_op_ls)
+		.oREG2_sub_op_ls(oREG2_sub_op_ls),
+
+		.iREG2_imm_14bit(iREG2_imm_14bit),
+		.iREG2_imm_24bit(iREG2_imm_24bit),
+		.iREG2_select_pc(iREG2_select_pc),
+		.iREG2_select_write_reg(iREG2_select_write_reg),
+		.oREG2_imm_14bit(oREG2_imm_14bit),
+		.oREG2_imm_24bit(oREG2_imm_24bit),
+		.oREG2_select_pc(oREG2_select_pc),
+		.oREG2_select_write_reg(oREG2_select_write_reg)
 	);
 endmodule
