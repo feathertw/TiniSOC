@@ -134,13 +134,6 @@ module top_tb;
 		#(`DELAY) `DEBUG_REG("MOVI  ",2,4)
 		#(`DELAY) `DEBUG_SWX("SW    ",0,36)
 		#(`DELAY) `DEBUG_LWX("LW    ",1,36)
-
-		//#(`DELAY) `DEBUG_BXJ("J     ",52,8)
-		//#(`DELAY) `DEBUG_REG("XORI  ",2,12)
-		//#(`DELAY) `DEBUG_SWX("SWI   ",2,4)
-		//#(`DELAY) `DEBUG_SWX("SW    ",1,96)
-		//#(`DELAY) `DEBUG_LWX("LW    ",3,96)
-		//#(`DELAY) `DEBUG_LWX("LWI   ",4,4)
 `endif
 		#10
 		//for( i=0;i<3;i=i+1 ) $display( "IM[%4d]=%b",i*4,IM.mem_data[i] ); 
