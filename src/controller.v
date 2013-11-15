@@ -5,7 +5,6 @@
 `define SUBOP_BASE instruction[4:0]
 `define SUBOP_LS instruction[7:0]
 `define SUBOP_B instruction[14]
-`define SV instruction[9:8]
 
 module controller(
 	clock,
