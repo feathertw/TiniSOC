@@ -1,72 +1,44 @@
 module muxs(
 
-	current_pc,
 	sub_op_sv,
 	reg_rb_data,
 	reg_rt_data,
 	mem_read_data,
 	alu_output,
 	imm_5bit,
-	imm_14bit,
 	imm_15bit,
 	imm_20bit,
-	imm_24bit,
 
-	select_pc,
 	select_alu_src2,
 	select_imm_extend,
 	select_write_reg,
 
-	next_pc,
 	alu_src2,
 	write_reg_data
 );
 
 	parameter DataSize = 32;
 
-	input [9:0] current_pc;
 	input [1:0] sub_op_sv;
 	input [DataSize-1:0] reg_rb_data;
 	input [DataSize-1:0] reg_rt_data;
 	input [DataSize-1:0] mem_read_data;
 	input [DataSize-1:0] alu_output;
 	input [4:0] imm_5bit;
-	input [13:0] imm_14bit;
 	input [14:0] imm_15bit;
 	input [19:0] imm_20bit;
-	input [23:0] imm_24bit;
 
-	input [1:0] select_pc;
 	input [2:0] select_alu_src2;
 	input [1:0] select_imm_extend;
 	input [1:0] select_write_reg;
 
-	output [9:0] next_pc;
 	output [DataSize-1:0] alu_src2;
 	output [DataSize-1:0] write_reg_data;
 	
-	reg [9:0] next_pc;
 	reg [DataSize-1:0] alu_src2;
 	reg [DataSize-1:0] write_reg_data;
 
 	reg [DataSize-1:0] imm;
-
-	always @(select_pc or current_pc or imm_14bit or imm_24bit) begin
-		case(select_pc)
-			2'b00:begin
-				next_pc=current_pc+4;
-			end
-			2'b01:begin
-				next_pc=current_pc+({imm_14bit[13],imm_14bit[7:0],1'b0});//*
-			end
-			2'b10:begin
-				next_pc=current_pc+({imm_24bit[23],imm_24bit[7:0],1'b0});//*
-			end
-			default:begin
-				next_pc=10'bxxxx_xxxx_xx;
-			end
-		endcase
-	end
 
 	always @(select_imm_extend or imm_5bit or imm_15bit or imm_20bit) begin
 		case(select_imm_extend)

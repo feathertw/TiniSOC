@@ -54,7 +54,6 @@ module top(
 	wire [4:0] reg_rt_addr;
 
 	//controller to muxs
-	wire [1:0] select_pc;
 	wire [2:0] select_alu_src2;
 	wire [1:0] select_imm_extend;
 	wire [1:0] select_write_reg;
@@ -99,9 +98,6 @@ module top(
 
 	//pc to muxs
 	wire [9:0] current_pc;
-
-	//muxs to pc
-	wire [9:0] next_pc;
 
 	//mem to muxs
 	wire [31:0] mem_read_data;
@@ -207,20 +203,15 @@ module top(
 		.mem_read_data(mem_read_data),
 		.alu_output(reg_alu_result),
 		.imm_5bit(imm_5bit),
-		.imm_14bit(oREG2_imm_14bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
-		.imm_24bit(oREG2_imm_24bit),
 
-		.select_pc(select_pc),
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
 		.select_write_reg(oREG2_select_write_reg),
 
 		.alu_src2(iREG2_alu_src2),
-		.write_reg_data(write_reg_data),
-		.current_pc(current_pc),
-		.next_pc(next_pc)
+		.write_reg_data(write_reg_data)
 	);
 	
 	controller CONTROLLER(
@@ -263,13 +254,14 @@ module top(
 		.clock(clk),
 		.reset(rst),
 		.enable_pc(enable_execute),
-		.next_pc(next_pc),
 		.current_pc(current_pc),
 
 		.opcode(iREG2_opcode),
 		.sub_op_b(sub_op_b),
 		.alu_zero(alu_zero),
-		.select_pc(select_pc)
+
+		.imm_14bit(oREG2_imm_14bit),
+		.imm_24bit(oREG2_imm_24bit)
 	);
 	regwalls REGWALLS(
 		.clock(clk),
