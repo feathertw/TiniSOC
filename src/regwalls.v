@@ -17,11 +17,9 @@ module regwalls(
 
 	iREG2_imm_14bit,
 	iREG2_imm_24bit,
-	iREG2_select_pc,
 	iREG2_select_write_reg,
 	oREG2_imm_14bit,
 	oREG2_imm_24bit,
-	oREG2_select_pc,
 	oREG2_select_write_reg,
 
 	iREG2_do_im_read,
@@ -65,15 +63,12 @@ module regwalls(
 
 	input  [13:0] iREG2_imm_14bit;
 	input  [23:0] iREG2_imm_24bit;
-	input  [ 1:0] iREG2_select_pc;
 	input  [ 1:0] iREG2_select_write_reg;
 	output [13:0] oREG2_imm_14bit;
 	output [23:0] oREG2_imm_24bit;
-	output [ 1:0] oREG2_select_pc;
 	output [ 1:0] oREG2_select_write_reg;
 	reg    [13:0] oREG2_imm_14bit;
 	reg    [23:0] oREG2_imm_24bit;
-	reg    [ 1:0] oREG2_select_pc;
 	reg    [ 1:0] oREG2_select_write_reg;
 
 	input  iREG2_do_im_read;
@@ -108,7 +103,6 @@ module regwalls(
 
 		oREG2_imm_14bit       <=iREG2_imm_14bit;
 		oREG2_imm_24bit       <=iREG2_imm_24bit;
-		oREG2_select_pc       <=iREG2_select_pc;
 		oREG2_select_write_reg<=iREG2_select_write_reg;
 
 		oREG2_do_im_read      <=iREG2_do_im_read;

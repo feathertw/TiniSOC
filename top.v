@@ -129,11 +129,9 @@ module top(
 
 	wire [13:0] iREG2_imm_14bit;
 	wire [23:0] iREG2_imm_24bit;
-	wire [ 1:0] iREG2_select_pc;
 	wire [ 1:0] iREG2_select_write_reg;
 	wire [13:0] oREG2_imm_14bit;
 	wire [23:0] oREG2_imm_24bit;
-	wire [ 1:0] oREG2_select_pc;
 	wire [ 1:0] oREG2_select_write_reg;
 
 	wire iREG2_do_im_read;
@@ -287,11 +285,9 @@ module top(
 
 		.iREG2_imm_14bit(iREG2_imm_14bit),
 		.iREG2_imm_24bit(iREG2_imm_24bit),
-		.iREG2_select_pc(iREG2_select_pc),
 		.iREG2_select_write_reg(iREG2_select_write_reg),
 		.oREG2_imm_14bit(oREG2_imm_14bit),
 		.oREG2_imm_24bit(oREG2_imm_24bit),
-		.oREG2_select_pc(oREG2_select_pc),
 		.oREG2_select_write_reg(oREG2_select_write_reg),
 
 		.iREG2_do_im_read(iREG2_do_im_read),
