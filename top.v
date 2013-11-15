@@ -116,10 +116,8 @@ module top(
 	wire [31:0] oREG1_instruction;
 
 	wire [31:0] iREG2_reg_ra_data;
-	wire [31:0] iREG2_reg_rb_data;
 	wire [31:0] iREG2_reg_rt_data;
 	wire [31:0] oREG2_reg_ra_data;
-	wire [31:0] oREG2_reg_rb_data;
 	wire [31:0] oREG2_reg_rt_data;
 
 	wire [ 5:0] iREG2_opcode;
@@ -149,6 +147,9 @@ module top(
 	wire oREG2_do_dm_write;
 	wire oREG2_do_reg_write;
 
+	wire [31:0] iREG2_alu_src2;
+	wire [31:0] oREG2_alu_src2;
+
 	//top input output
 	assign iREG1_instruction=instruction;
 	assign alu_overflow=reg_alu_overflow;
@@ -174,7 +175,7 @@ module top(
 		.reset(rst),
 		.enable_execute(enable_execute),
 		.alu_src1(oREG2_reg_ra_data),
-		.alu_src2(alu_src2),
+		.alu_src2(oREG2_alu_src2),
 		.opcode(oREG2_opcode),
 		.sub_op_base(oREG2_sub_op_base),
 		.sub_op_ls(oREG2_sub_op_ls),
@@ -196,13 +197,13 @@ module top(
 		.do_reg_write(oREG2_do_reg_write),
 
 		.reg_ra_data(iREG2_reg_ra_data),
-		.reg_rb_data(iREG2_reg_rb_data),
+		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(iREG2_reg_rt_data)
 	);
 
 	muxs MUXS(
 		.sub_op_sv(sub_op_sv),
-		.reg_rb_data(oREG2_reg_rb_data),
+		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(oREG2_reg_rt_data),
 		.mem_read_data(mem_read_data),
 		.alu_output(reg_alu_result),
@@ -217,7 +218,7 @@ module top(
 		.select_imm_extend(select_imm_extend),
 		.select_write_reg(select_write_reg),
 
-		.alu_src2(alu_src2),
+		.alu_src2(iREG2_alu_src2),
 		.write_reg_data(write_reg_data),
 		.current_pc(current_pc),
 		.next_pc(next_pc)
@@ -273,10 +274,8 @@ module top(
 		.iREG1_instruction(iREG1_instruction),
 		.oREG1_instruction(oREG1_instruction),
 		.iREG2_reg_ra_data(iREG2_reg_ra_data),
-		.iREG2_reg_rb_data(iREG2_reg_rb_data),
 		.iREG2_reg_rt_data(iREG2_reg_rt_data),
 		.oREG2_reg_ra_data(oREG2_reg_ra_data),
-		.oREG2_reg_rb_data(oREG2_reg_rb_data),
 		.oREG2_reg_rt_data(oREG2_reg_rt_data),
 
 		.iREG2_opcode(iREG2_opcode),
@@ -304,6 +303,9 @@ module top(
 		.oREG2_do_im_write(oREG2_do_im_write),
 		.oREG2_do_dm_read(oREG2_do_dm_read),
 		.oREG2_do_dm_write(oREG2_do_dm_write),
-		.oREG2_do_reg_write(oREG2_do_reg_write)
+		.oREG2_do_reg_write(oREG2_do_reg_write),
+
+		.iREG2_alu_src2(iREG2_alu_src2),
+		.oREG2_alu_src2(oREG2_alu_src2)
 	);
 endmodule

@@ -4,10 +4,8 @@ module regwalls(
 	oREG1_instruction,
 
 	iREG2_reg_ra_data,
-	iREG2_reg_rb_data,
 	iREG2_reg_rt_data,
 	oREG2_reg_ra_data,
-	oREG2_reg_rb_data,
 	oREG2_reg_rt_data,
 
 	iREG2_opcode,
@@ -35,7 +33,10 @@ module regwalls(
 	oREG2_do_im_write,
 	oREG2_do_dm_read,
 	oREG2_do_dm_write,
-	oREG2_do_reg_write
+	oREG2_do_reg_write,
+
+	iREG2_alu_src2,
+	oREG2_alu_src2
 );
 	input  clock;
 
@@ -45,13 +46,10 @@ module regwalls(
 
 	//regfile
 	input  [31:0] iREG2_reg_ra_data;
-	input  [31:0] iREG2_reg_rb_data;
 	input  [31:0] iREG2_reg_rt_data;
 	output [31:0] oREG2_reg_ra_data;
-	output [31:0] oREG2_reg_rb_data;
 	output [31:0] oREG2_reg_rt_data;
 	reg    [31:0] oREG2_reg_ra_data;
-	reg    [31:0] oREG2_reg_rb_data;
 	reg    [31:0] oREG2_reg_rt_data;
 
 	//controller
@@ -94,11 +92,15 @@ module regwalls(
 	reg    oREG2_do_dm_write;
 	reg    oREG2_do_reg_write;
 
+	//muxs
+	input  [31:0] iREG2_alu_src2;
+	output [31:0] oREG2_alu_src2;
+	reg    [31:0] oREG2_alu_src2;
+
 	always@(negedge clock)begin
 		oREG1_instruction<=iREG1_instruction;
 
 		oREG2_reg_ra_data<=iREG2_reg_ra_data;
-		oREG2_reg_rb_data<=iREG2_reg_rb_data;
 		oREG2_reg_rt_data<=iREG2_reg_rt_data;
 		oREG2_opcode     <=iREG2_opcode;
 		oREG2_sub_op_base<=iREG2_sub_op_base;
@@ -114,5 +116,7 @@ module regwalls(
 		oREG2_do_dm_read      <=iREG2_do_dm_read;
 		oREG2_do_dm_write     <=iREG2_do_dm_write;
 		oREG2_do_reg_write    <=iREG2_do_reg_write;
+
+		oREG2_alu_src2        <=iREG2_alu_src2;
 	end
 endmodule
