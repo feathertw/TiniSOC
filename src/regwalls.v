@@ -46,7 +46,12 @@ module regwalls(
 	oREG3_alu_overflow,
 
 	iREG4_write_reg_data,
-	oREG4_write_reg_data
+	oREG4_write_reg_data,
+
+	do_flush_REG1,
+	do_flush_REG2,
+	do_flush_REG3,
+	do_flush_REG4
 );
 `ifdef BUGMODE
 	input  [ 9:0] iREG1_current_pc;
@@ -133,6 +138,11 @@ module regwalls(
 	output [31:0] oREG4_write_reg_data;
 	reg    [31:0] oREG4_write_reg_data;
 
+	input do_flush_REG1;
+	input do_flush_REG2;
+	input do_flush_REG3;
+	input do_flush_REG4;
+
 	always@(negedge clock)begin
 `ifdef BUGMODE
 		mREG1_current_pc <=iREG1_current_pc;
@@ -140,39 +150,82 @@ module regwalls(
 		mREG3_current_pc <=mREG2_current_pc;
 		mREG4_current_pc <=mREG3_current_pc;
 `endif
-		oREG1_instruction<=iREG1_instruction;
+		if(do_flush_REG1)begin
+			oREG1_instruction<=32'b0;
+		end
+		else begin
+			oREG1_instruction<=iREG1_instruction;
+		end
 
-		oREG2_reg_ra_data<=iREG2_reg_ra_data;
-		oREG2_reg_rt_data<=iREG2_reg_rt_data;
+		if(do_flush_REG2)begin
+			oREG2_reg_ra_data<=32'b0;
+			oREG2_reg_rt_data<=32'b0;
 
-		mREG2_write_reg_addr<=iREG2_write_reg_addr;
-		mREG3_write_reg_addr<=mREG2_write_reg_addr;
-		oREG4_write_reg_addr<=mREG3_write_reg_addr;
+			oREG2_opcode     <=6'b0;
+			oREG2_sub_op_base<=5'b0;
+			oREG2_sub_op_ls  <=8'b0;
 
-		oREG2_opcode     <=iREG2_opcode;
-		oREG2_sub_op_base<=iREG2_sub_op_base;
-		oREG2_sub_op_ls  <=iREG2_sub_op_ls;
+			oREG2_alu_src2   <=32'b0;
+			oREG2_imm_14bit  <=14'b0;
+			mREG2_imm_extend <=32'b0;
 
-		oREG2_imm_14bit       <=iREG2_imm_14bit;
+			mREG2_do_dm_read      <=1'b0;
+			mREG2_do_dm_write     <=1'b0;
+			mREG2_do_reg_write    <=1'b0;
+			mREG2_write_reg_addr  <=5'b0;
+			mREG2_select_write_reg<=2'b0;
+		end
+		else begin
+			oREG2_reg_ra_data<=iREG2_reg_ra_data;
+			oREG2_reg_rt_data<=iREG2_reg_rt_data;
 
-		mREG2_select_write_reg<=iREG2_select_write_reg;
-		oREG3_select_write_reg<=mREG2_select_write_reg;
+			oREG2_opcode     <=iREG2_opcode;
+			oREG2_sub_op_base<=iREG2_sub_op_base;
+			oREG2_sub_op_ls  <=iREG2_sub_op_ls;
 
-		mREG2_do_dm_read      <=iREG2_do_dm_read;
-		mREG2_do_dm_write     <=iREG2_do_dm_write;
-		mREG2_do_reg_write    <=iREG2_do_reg_write;
-		oREG3_do_dm_read      <=mREG2_do_dm_read;
-		oREG3_do_dm_write     <=mREG2_do_dm_write;
-		mREG3_do_reg_write    <=mREG2_do_reg_write;
-		oREG4_do_reg_write    <=mREG3_do_reg_write;
+			oREG2_alu_src2        <=iREG2_alu_src2;
+			oREG2_imm_14bit       <=iREG2_imm_14bit;
+			mREG2_imm_extend      <=iREG2_imm_extend;
 
-		oREG2_alu_src2        <=iREG2_alu_src2;
-		mREG2_imm_extend      <=iREG2_imm_extend;
-		oREG3_imm_extend      <=mREG2_imm_extend;
+			mREG2_do_dm_read      <=iREG2_do_dm_read;
+			mREG2_do_dm_write     <=iREG2_do_dm_write;
+			mREG2_do_reg_write    <=iREG2_do_reg_write;
+			mREG2_write_reg_addr  <=iREG2_write_reg_addr;
+			mREG2_select_write_reg<=iREG2_select_write_reg;
+		end
 
-		oREG3_alu_result  <=iREG3_alu_result;
-		oREG3_alu_overflow<=iREG3_alu_overflow;
+		if(do_flush_REG3)begin
+			oREG3_alu_result      <=32'b0;
+			oREG3_alu_overflow    <= 1'b0;
+			oREG3_imm_extend      <=32'b0;
 
-		oREG4_write_reg_data<=iREG4_write_reg_data;
+			oREG3_do_dm_read      <=1'b0;
+			oREG3_do_dm_write     <=1'b0;
+			mREG3_do_reg_write    <=1'b0;
+			mREG3_write_reg_addr  <=5'b0;
+			oREG3_select_write_reg<=2'b0;
+		end
+		else begin
+			oREG3_alu_result      <=iREG3_alu_result;
+			oREG3_alu_overflow    <=iREG3_alu_overflow;
+			oREG3_imm_extend      <=mREG2_imm_extend;
+
+			oREG3_do_dm_read      <=mREG2_do_dm_read;
+			oREG3_do_dm_write     <=mREG2_do_dm_write;
+			mREG3_do_reg_write    <=mREG2_do_reg_write;
+			mREG3_write_reg_addr  <=mREG2_write_reg_addr;
+			oREG3_select_write_reg<=mREG2_select_write_reg;
+		end
+
+		if(do_flush_REG4)begin
+			oREG4_do_reg_write  <= 1'b0;
+			oREG4_write_reg_addr<= 5'b0;
+			oREG4_write_reg_data<=32'b0;
+		end
+		else begin
+			oREG4_do_reg_write  <=mREG3_do_reg_write;
+			oREG4_write_reg_addr<=mREG3_write_reg_addr;
+			oREG4_write_reg_data<=iREG4_write_reg_data;
+		end
 	end
 endmodule

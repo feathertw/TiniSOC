@@ -154,6 +154,9 @@ module top(
 	//
 	assign iREG2_write_reg_addr=reg_rt_addr;
 
+	//
+	wire do_flush_REG1;
+
 	//top input output
 	assign iREG1_instruction=instruction;
 	assign alu_overflow=reg_alu_overflow;
@@ -277,7 +280,9 @@ module top(
 		.alu_zero(alu_zero),
 
 		.imm_14bit(oREG2_imm_14bit),
-		.imm_24bit(imm_24bit)
+		.imm_24bit(imm_24bit),
+
+		.do_flush_REG1(do_flush_REG1)
 	);
 	regwalls REGWALLS(
 `ifdef BUGMODE
@@ -324,6 +329,8 @@ module top(
 		.oREG3_alu_overflow(oREG3_alu_overflow),
 
 		.iREG4_write_reg_data(iREG4_write_reg_data),
-		.oREG4_write_reg_data(oREG4_write_reg_data)
+		.oREG4_write_reg_data(oREG4_write_reg_data),
+
+		.do_flush_REG1(do_flush_REG1)
 	);
 endmodule

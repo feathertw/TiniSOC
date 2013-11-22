@@ -11,7 +11,9 @@ module pc(
 	alu_zero,
 
 	imm_14bit,
-	imm_24bit
+	imm_24bit,
+
+	do_flush_REG1
 );
 	input clock;
 	input reset;
@@ -25,9 +27,13 @@ module pc(
 	input [13:0] imm_14bit;
 	input [23:0] imm_24bit;
 
+	output do_flush_REG1;
+
 	reg [9:0] current_pc;
 	reg [9:0] next_pc;
 	reg [1:0] select_pc;
+
+	reg do_flush_REG1;
 
 	always@(posedge clock) begin
 		if(reset) 	   current_pc<=0;
@@ -54,15 +60,19 @@ module pc(
 		case(select_pc)
 			`PC_4:begin
 				next_pc=current_pc+4;
+				do_flush_REG1=1'b0;
 			end
 			`PC_14BIT:begin
 				next_pc=current_pc+({imm_14bit[13],imm_14bit[7:0],1'b0});//*
+				do_flush_REG1=1'b0;
 			end
 			`PC_24BIT:begin
-				next_pc=current_pc+({imm_24bit[23],imm_24bit[7:0],1'b0});//*
+				next_pc=(current_pc-4)+({imm_24bit[23],imm_24bit[7:0],1'b0});//*
+				do_flush_REG1=1'b1;
 			end
 			default:begin
 				next_pc=10'bxxxx_xxxx_xx;
+				do_flush_REG1=1'b0;
 			end
 		endcase
 	end
