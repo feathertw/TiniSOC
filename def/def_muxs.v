@@ -17,5 +17,5 @@
 
 `define WRREG_ALURESULT 2'b00
 `define WRREG_IMMDATA 	2'b01
-`define WRREG_LWX	2'b10
+`define WRREG_MEM	2'b10
 `define WRREG_UNKOWN	2'bxx

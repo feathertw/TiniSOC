@@ -309,7 +309,7 @@ module controller(
 			`LWI:begin
 				select_alu_src2=`ALUSRC2_LSWI;
 				select_imm_extend=`IMM_UNKOWN;
-				select_write_reg=`WRREG_LWX;
+				select_write_reg=`WRREG_MEM;
 				do_dm_read=1'b1;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -327,7 +327,7 @@ module controller(
 					`LW:begin
 						select_alu_src2=`ALUSRC2_LSW;
 						select_imm_extend=`IMM_UNKOWN;
-						select_write_reg=`WRREG_LWX;
+						select_write_reg=`WRREG_MEM;
 						do_dm_read=1'b1;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;

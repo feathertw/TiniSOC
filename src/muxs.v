@@ -92,7 +92,7 @@ module muxs(
 			`WRREG_IMMDATA: begin
 				write_reg_data = alu_src2;
 			end
-			`WRREG_LWX: begin
+			`WRREG_MEM: begin
 				write_reg_data = mem_read_data;
 			end
 			default: begin
