@@ -52,13 +52,13 @@ module pc(
 
 	always @(select_pc or current_pc or imm_14bit or imm_24bit) begin
 		case(select_pc)
-			2'b00:begin
+			`PC_4:begin
 				next_pc=current_pc+4;
 			end
-			2'b01:begin
+			`PC_14BIT:begin
 				next_pc=current_pc+({imm_14bit[13],imm_14bit[7:0],1'b0});//*
 			end
-			2'b10:begin
+			`PC_24BIT:begin
 				next_pc=current_pc+({imm_24bit[23],imm_24bit[7:0],1'b0});//*
 			end
 			default:begin
