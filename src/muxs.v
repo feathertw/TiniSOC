@@ -63,19 +63,19 @@ module muxs(
 
 	always @(select_alu_src2 or reg_rb_data or imm or imm_15bit or sub_op_sv or reg_rt_data) begin
 		case(select_alu_src2)
-			3'b000: begin
+			`ALUSRC2_RBDATA: begin
 				alu_src2 = reg_rb_data;
 			end
-			3'b001: begin
+			`ALUSRC2_IMM: begin
 				alu_src2 = imm;
 			end
-			3'b010: begin
+			`ALUSRC2_LSWI: begin
 				alu_src2 = { {15{imm_15bit[14]}},imm_15bit,2'b00}; //*
 			end
-			3'b011: begin
+			`ALUSRC2_LSW: begin
 				alu_src2 = reg_rb_data<<sub_op_sv;
 			end
-			3'b100: begin
+			`ALUSRC2_BENX: begin
 				alu_src2 = reg_rt_data;
 			end
 			default: begin
