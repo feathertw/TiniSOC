@@ -1,3 +1,4 @@
+`include "def_muxs.v"
 module muxs(
 
 	sub_op_sv,
@@ -42,16 +43,16 @@ module muxs(
 
 	always @(select_imm_extend or imm_5bit or imm_15bit or imm_20bit) begin
 		case(select_imm_extend)
-			2'b00: begin //5bit ZE
+			`IMM_5BIT_ZE: begin
 				imm={ {27{1'b0}}, imm_5bit };
 			end
-			2'b01: begin //15bit SE
+			`IMM_15BIT_SE: begin
 				imm={ {17{imm_15bit[14]}}, {imm_15bit} };
 			end
-			2'b10: begin //15bit ZE
+			`IMM_15BIT_ZE: begin
 				imm={ {17{1'b0}}, {imm_15bit} };
 			end
-			2'b11: begin //20bit SE
+			`IMM_20BIT_SE: begin
 				imm={ {12{imm_20bit[19]}}, {imm_20bit} };
 			end
 			default: begin
