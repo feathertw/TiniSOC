@@ -124,10 +124,8 @@ module top(
 	wire [ 7:0] oREG2_sub_op_ls;
 
 	wire [13:0] iREG2_imm_14bit;
-	wire [23:0] iREG2_imm_24bit;
 	wire [ 1:0] iREG2_select_write_reg;
 	wire [13:0] oREG2_imm_14bit;
-	wire [23:0] oREG2_imm_24bit;
 	wire [ 1:0] oREG3_select_write_reg;
 
 	wire iREG2_do_dm_read;
@@ -257,7 +255,7 @@ module top(
 		.imm_14bit(iREG2_imm_14bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
-		.imm_24bit(iREG2_imm_24bit),
+		.imm_24bit(imm_24bit),
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
 		.select_write_reg(iREG2_select_write_reg),
@@ -279,7 +277,7 @@ module top(
 		.alu_zero(alu_zero),
 
 		.imm_14bit(oREG2_imm_14bit),
-		.imm_24bit(oREG2_imm_24bit)
+		.imm_24bit(imm_24bit)
 	);
 	regwalls REGWALLS(
 `ifdef BUGMODE
@@ -303,10 +301,8 @@ module top(
 		.oREG2_sub_op_ls(oREG2_sub_op_ls),
 
 		.iREG2_imm_14bit(iREG2_imm_14bit),
-		.iREG2_imm_24bit(iREG2_imm_24bit),
 		.iREG2_select_write_reg(iREG2_select_write_reg),
 		.oREG2_imm_14bit(oREG2_imm_14bit),
-		.oREG2_imm_24bit(oREG2_imm_24bit),
 		.oREG3_select_write_reg(oREG3_select_write_reg),
 
 		.iREG2_do_dm_read(iREG2_do_dm_read),

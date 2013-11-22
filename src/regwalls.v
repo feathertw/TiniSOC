@@ -22,9 +22,7 @@ module regwalls(
 	oREG2_sub_op_ls,
 
 	iREG2_imm_14bit,
-	iREG2_imm_24bit,
 	oREG2_imm_14bit,
-	oREG2_imm_24bit,
 
 	iREG2_select_write_reg,
 	oREG3_select_write_reg,
@@ -89,11 +87,8 @@ module regwalls(
 	reg    [ 7:0] oREG2_sub_op_ls;
 
 	input  [13:0] iREG2_imm_14bit;
-	input  [23:0] iREG2_imm_24bit;
 	output [13:0] oREG2_imm_14bit;
-	output [23:0] oREG2_imm_24bit;
 	reg    [13:0] oREG2_imm_14bit;
-	reg    [23:0] oREG2_imm_24bit;
 
 	input  [ 1:0] iREG2_select_write_reg;
 	output [ 1:0] oREG3_select_write_reg;
@@ -159,7 +154,6 @@ module regwalls(
 		oREG2_sub_op_ls  <=iREG2_sub_op_ls;
 
 		oREG2_imm_14bit       <=iREG2_imm_14bit;
-		oREG2_imm_24bit       <=iREG2_imm_24bit;
 
 		mREG2_select_write_reg<=iREG2_select_write_reg;
 		oREG3_select_write_reg<=mREG2_select_write_reg;
