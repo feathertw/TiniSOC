@@ -128,7 +128,7 @@ module top(
 	wire [ 1:0] iREG2_select_write_reg;
 	wire [13:0] oREG2_imm_14bit;
 	wire [23:0] oREG2_imm_24bit;
-	wire [ 1:0] oREG2_select_write_reg;
+	wire [ 1:0] oREG3_select_write_reg;
 
 	wire iREG2_do_dm_read;
 	wire iREG2_do_dm_write;
@@ -221,7 +221,7 @@ module top(
 
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
-		.select_write_reg(oREG2_select_write_reg),
+		.select_write_reg(oREG3_select_write_reg),
 
 		.imm_extend(iREG2_imm_extend),
 		.alu_src2(iREG2_alu_src2),
@@ -300,7 +300,7 @@ module top(
 		.iREG2_select_write_reg(iREG2_select_write_reg),
 		.oREG2_imm_14bit(oREG2_imm_14bit),
 		.oREG2_imm_24bit(oREG2_imm_24bit),
-		.oREG2_select_write_reg(oREG2_select_write_reg),
+		.oREG3_select_write_reg(oREG3_select_write_reg),
 
 		.iREG2_do_dm_read(iREG2_do_dm_read),
 		.iREG2_do_dm_write(iREG2_do_dm_write),
