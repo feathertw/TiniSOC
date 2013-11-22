@@ -139,6 +139,8 @@ module top(
 
 	wire [31:0] iREG2_alu_src2;
 	wire [31:0] oREG2_alu_src2;
+	wire [31:0] iREG2_imm_extend;
+	wire [31:0] oREG3_imm_extend;
 
 	wire [31:0] iREG3_alu_result;
 	wire [31:0] oREG3_alu_result;
@@ -208,6 +210,7 @@ module top(
 		.sub_op_sv(sub_op_sv),
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(oREG2_reg_rt_data),
+		.r_imm_extend(oREG3_imm_extend),
 		.mem_read_data(mem_read_data),
 		.alu_output(oREG3_alu_result),//*
 		.imm_5bit(imm_5bit),
@@ -218,6 +221,7 @@ module top(
 		.select_imm_extend(select_imm_extend),
 		.select_write_reg(oREG2_select_write_reg),
 
+		.imm_extend(iREG2_imm_extend),
 		.alu_src2(iREG2_alu_src2),
 		.write_reg_data(iREG4_write_reg_data)
 	);
@@ -305,6 +309,8 @@ module top(
 
 		.iREG2_alu_src2(iREG2_alu_src2),
 		.oREG2_alu_src2(oREG2_alu_src2),
+		.iREG2_imm_extend(iREG2_imm_extend),
+		.oREG3_imm_extend(oREG3_imm_extend),
 
 		.iREG3_alu_result(iREG3_alu_result),
 		.oREG3_alu_result(oREG3_alu_result),

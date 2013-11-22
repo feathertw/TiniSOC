@@ -34,6 +34,8 @@ module regwalls(
 
 	iREG2_alu_src2,
 	oREG2_alu_src2,
+	iREG2_imm_extend,
+	oREG3_imm_extend,
 
 	iREG3_alu_result,
 	oREG3_alu_result,
@@ -104,6 +106,11 @@ module regwalls(
 	output [31:0] oREG2_alu_src2;
 	reg    [31:0] oREG2_alu_src2;
 
+	input  [31:0] iREG2_imm_extend;
+	output [31:0] oREG3_imm_extend;
+	reg    [31:0] mREG2_imm_extend;
+	reg    [31:0] oREG3_imm_extend;
+
 	//alu
 	input  [31:0] iREG3_alu_result;
 	output [31:0] oREG3_alu_result;
@@ -145,6 +152,8 @@ module regwalls(
 		oREG4_do_reg_write    <=mREG3_do_reg_write;
 
 		oREG2_alu_src2        <=iREG2_alu_src2;
+		mREG2_imm_extend      <=iREG2_imm_extend;
+		oREG3_imm_extend      <=mREG2_imm_extend;
 
 		oREG3_alu_result  <=iREG3_alu_result;
 		oREG3_alu_overflow<=iREG3_alu_overflow;

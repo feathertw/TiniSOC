@@ -299,7 +299,7 @@ module controller(
 				do_reg_write=1'b1;
 			end
 			`MOVI:begin
-				select_alu_src2=`ALUSRC2_IMM;
+				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_20BIT_SE;
 				select_write_reg=`WRREG_IMMDATA;
 				do_dm_read=1'b0;
