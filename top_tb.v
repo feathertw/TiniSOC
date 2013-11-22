@@ -71,8 +71,8 @@ module top_tb;
 	initial begin
 		$dumpfile("wave/top.vcd");
 		$dumpvars;
-  		$fsdbDumpfile("wave/top.fsdb");
-  		$fsdbDumpvars();
+		//$fsdbDumpfile("wave/top.fsdb");
+		//$fsdbDumpvars();
 	end
 
 	//clock gen.
@@ -82,13 +82,13 @@ module top_tb;
   		$display("\n____________________TESTBENCH____________________");
 		clk=0;
 		rst=1'b1;
-		#10 rst=1'b0;
+		#12 rst=1'b0;
 
 `ifdef PROG
-		$display("PROG\n");
 		$readmemb("mem/mins.prog",IM.mem_data);
 		$readmemb("mem/mdat.prog",DM.mem_data);
 
+		$display("\n\nPROG\n");
 		#(`DELAY) `DEBUG_LWX("LWI   ",0,0)
 		#(`DELAY) `DEBUG_REG("ADDI  ",0,1<<31)		`DEBUG_OVE(1)
 		#(`DELAY) `DEBUG_LWX("LWI   ",0,4)
@@ -135,9 +135,18 @@ module top_tb;
 		#(`DELAY) `DEBUG_SWX("SW    ",0,36)
 		#(`DELAY) `DEBUG_LWX("LW    ",1,36)
 `endif
+`ifdef PROG1
+		$readmemb("mem/mins1.prog",IM.mem_data);
+		//$readmemb("mem/mdat.prog",DM.mem_data);
+
+		$display("\n\nPROG1\n");
+		#40
+		//#(`DELAY)
+		#60
+`endif
 		#10
-		//for( i=0;i<3;i=i+1 ) $display( "IM[%4d]=%b",i*4,IM.mem_data[i] ); 
-		//for( i=0;i<5;i=i+1 ) $display( "register[%d]=%d",i,TOP.REGFILE.rw_reg[i] );
+		for( i=0;i<3;i=i+1 ) $display( "IM[%4d]=%b",i*4,IM.mem_data[i] );
+		for( i=0;i<9;i=i+1 ) $display( "register[%d]=%d",i,TOP.REGFILE.rw_reg[i] );
 		//for( i=0;i<8;i=i+1 ) $display( "DM[%4d]=%d",i*4,DM.mem_data[i] );
   		$display("____________________FINISH____________________\n");
 		$finish;
