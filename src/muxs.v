@@ -86,13 +86,13 @@ module muxs(
 
 	always @(select_write_reg or alu_output or alu_src2 or mem_read_data) begin
 		case(select_write_reg)
-			2'b00: begin
+			`WRREG_ALURESULT: begin
 				write_reg_data = alu_output;
 			end
-			2'b01: begin
+			`WRREG_IMMDATA: begin
 				write_reg_data = alu_src2;
 			end
-			2'b10: begin
+			`WRREG_LWX: begin
 				write_reg_data = mem_read_data;
 			end
 			default: begin
