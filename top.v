@@ -175,6 +175,10 @@ module top(
 	wire enable_system;
 	assign enable_system=1'b1;
 
+`ifdef BUGMODE
+	wire [ 9:0] iREG1_current_pc;
+	assign iREG1_current_pc=current_pc;
+`endif
 	alu ALU(
 		.reset(rst),
 		.enable_execute(enable_system),
@@ -278,6 +282,9 @@ module top(
 		.imm_24bit(oREG2_imm_24bit)
 	);
 	regwalls REGWALLS(
+`ifdef BUGMODE
+		.iREG1_current_pc(iREG1_current_pc),
+`endif
 		.clock(clk),
 		.iREG1_instruction(iREG1_instruction),
 		.oREG1_instruction(oREG1_instruction),

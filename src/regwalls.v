@@ -1,4 +1,7 @@
 module regwalls(
+`ifdef BUGMODE
+	iREG1_current_pc,
+`endif
 	clock,
 	iREG1_instruction,
 	oREG1_instruction,
@@ -47,6 +50,13 @@ module regwalls(
 	iREG4_write_reg_data,
 	oREG4_write_reg_data
 );
+`ifdef BUGMODE
+	input  [ 9:0] iREG1_current_pc;
+	reg    [ 9:0] mREG1_current_pc;
+	reg    [ 9:0] mREG2_current_pc;
+	reg    [ 9:0] mREG3_current_pc;
+	reg    [ 9:0] mREG4_current_pc;
+`endif
 	input  clock;
 
 	input  [31:0] iREG1_instruction;
@@ -129,6 +139,12 @@ module regwalls(
 	reg    [31:0] oREG4_write_reg_data;
 
 	always@(negedge clock)begin
+`ifdef BUGMODE
+		mREG1_current_pc <=iREG1_current_pc;
+		mREG2_current_pc <=mREG1_current_pc;
+		mREG3_current_pc <=mREG2_current_pc;
+		mREG4_current_pc <=mREG3_current_pc;
+`endif
 		oREG1_instruction<=iREG1_instruction;
 
 		oREG2_reg_ra_data<=iREG2_reg_ra_data;
