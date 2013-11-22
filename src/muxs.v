@@ -39,35 +39,35 @@ module muxs(
 	reg [DataSize-1:0] alu_src2;
 	reg [DataSize-1:0] write_reg_data;
 
-	reg [DataSize-1:0] imm;
+	reg [DataSize-1:0] imm_extend;
 
 	always @(select_imm_extend or imm_5bit or imm_15bit or imm_20bit) begin
 		case(select_imm_extend)
 			`IMM_5BIT_ZE: begin
-				imm={ {27{1'b0}}, imm_5bit };
+				imm_extend={ {27{1'b0}}, imm_5bit };
 			end
 			`IMM_15BIT_SE: begin
-				imm={ {17{imm_15bit[14]}}, {imm_15bit} };
+				imm_extend={ {17{imm_15bit[14]}}, {imm_15bit} };
 			end
 			`IMM_15BIT_ZE: begin
-				imm={ {17{1'b0}}, {imm_15bit} };
+				imm_extend={ {17{1'b0}}, {imm_15bit} };
 			end
 			`IMM_20BIT_SE: begin
-				imm={ {12{imm_20bit[19]}}, {imm_20bit} };
+				imm_extend={ {12{imm_20bit[19]}}, {imm_20bit} };
 			end
 			default: begin
-				imm=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
+				imm_extend=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
 			end
 		endcase
 	end
 
-	always @(select_alu_src2 or reg_rb_data or imm or imm_15bit or sub_op_sv or reg_rt_data) begin
+	always @(select_alu_src2 or reg_rb_data or imm_extend or imm_15bit or sub_op_sv or reg_rt_data) begin
 		case(select_alu_src2)
 			`ALUSRC2_RBDATA: begin
 				alu_src2 = reg_rb_data;
 			end
 			`ALUSRC2_IMM: begin
-				alu_src2 = imm;
+				alu_src2 = imm_extend;
 			end
 			`ALUSRC2_LSWI: begin
 				alu_src2 = { {15{imm_15bit[14]}},imm_15bit,2'b00}; //*
