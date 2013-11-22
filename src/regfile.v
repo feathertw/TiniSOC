@@ -7,6 +7,7 @@ module regfile(
 	reg_ra_addr,
 	reg_rb_addr,
 	reg_rt_addr,
+	write_reg_addr,
 	write_reg_data,
 	do_reg_write,
 
@@ -26,6 +27,7 @@ module regfile(
 	input [AddrSize-1:0] reg_ra_addr;
 	input [AddrSize-1:0] reg_rb_addr;
 	input [AddrSize-1:0] reg_rt_addr;
+	input [AddrSize-1:0] write_reg_addr;
 	input [DataSize-1:0] write_reg_data;
 	input do_reg_write;
 
@@ -51,12 +53,8 @@ module regfile(
 				reg_ra_data <= rw_reg[reg_ra_addr];
 				reg_rb_data <= rw_reg[reg_rb_addr];
 			end
-			else if(enable_reg_write && do_reg_write) begin
-				rw_reg[reg_rt_addr] <= write_reg_data;
-			end
-			else begin
-				reg_ra_data <= 32'b0;
-				reg_rb_data <= 32'b0;
+			if(enable_reg_write && do_reg_write) begin
+				rw_reg[write_reg_addr] <= write_reg_data;
 			end
 		end
 	end

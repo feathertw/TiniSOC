@@ -8,6 +8,9 @@ module regwalls(
 	oREG2_reg_ra_data,
 	oREG2_reg_rt_data,
 
+	iREG2_write_reg_addr,
+	oREG4_write_reg_addr,
+
 	iREG2_opcode,
 	iREG2_sub_op_base,
 	iREG2_sub_op_ls,
@@ -54,6 +57,12 @@ module regwalls(
 	output [31:0] oREG2_reg_rt_data;
 	reg    [31:0] oREG2_reg_ra_data;
 	reg    [31:0] oREG2_reg_rt_data;
+
+	input  [ 4:0] iREG2_write_reg_addr;
+	output [ 4:0] oREG4_write_reg_addr;
+	reg    [ 4:0] mREG2_write_reg_addr;
+	reg    [ 4:0] mREG3_write_reg_addr;
+	reg    [ 4:0] oREG4_write_reg_addr;
 
 	//controller
 	input  [ 5:0] iREG2_opcode;
@@ -114,6 +123,11 @@ module regwalls(
 
 		oREG2_reg_ra_data<=iREG2_reg_ra_data;
 		oREG2_reg_rt_data<=iREG2_reg_rt_data;
+
+		mREG2_write_reg_addr<=iREG2_write_reg_addr;
+		mREG3_write_reg_addr<=mREG2_write_reg_addr;
+		oREG4_write_reg_addr<=mREG3_write_reg_addr;
+
 		oREG2_opcode     <=iREG2_opcode;
 		oREG2_sub_op_base<=iREG2_sub_op_base;
 		oREG2_sub_op_ls  <=iREG2_sub_op_ls;

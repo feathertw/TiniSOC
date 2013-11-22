@@ -146,8 +146,13 @@ module top(
 	wire iREG3_alu_overflow;
 	wire oREG3_alu_overflow;
 
+	wire [ 4:0] iREG2_write_reg_addr;
+	wire [ 4:0] oREG4_write_reg_addr;
 	wire [31:0] iREG4_write_reg_data;
 	wire [31:0] oREG4_write_reg_data;
+
+	//
+	assign iREG2_write_reg_addr=reg_rt_addr;
 
 	//top input output
 	assign iREG1_instruction=instruction;
@@ -155,19 +160,22 @@ module top(
 
 	assign IM_read =do_im_read;
 	assign IM_write=do_im_write;
-	assign IM_enable=enable_fetch;
+	assign IM_enable=enable_system;
 	assign IM_address=current_pc;
 
 	assign DM_read =oREG3_do_dm_read;
 	assign DM_write=oREG3_do_dm_write;
-	assign DM_enable=enable_memaccess;
+	assign DM_enable=enable_system;
 	assign DM_address=oREG3_alu_result[11:0];
 	assign DM_in=oREG2_reg_rt_data;//*
 	assign mem_read_data=DM_out;
 
+	wire enable_system;
+	assign enable_system=1'b1;
+
 	alu ALU(
 		.reset(rst),
-		.enable_execute(enable_execute),
+		.enable_execute(enable_system),
 		.alu_src1(oREG2_reg_ra_data),
 		.alu_src2(oREG2_alu_src2),
 		.opcode(oREG2_opcode),
@@ -182,11 +190,12 @@ module top(
 	regfile REGFILE(
 		.clock(clk),
 		.reset(rst),
-		.enable_reg_fetch(enable_decode),
-		.enable_reg_write(enable_writeback),
+		.enable_reg_fetch(enable_system),
+		.enable_reg_write(enable_system),
 		.reg_ra_addr(reg_ra_addr),
 		.reg_rb_addr(reg_rb_addr),
 		.reg_rt_addr(reg_rt_addr),
+		.write_reg_addr(oREG4_write_reg_addr),
 		.write_reg_data(oREG4_write_reg_data),
 		.do_reg_write(oREG4_do_reg_write),
 
@@ -252,7 +261,7 @@ module top(
 	pc PC(
 		.clock(clk),
 		.reset(rst),
-		.enable_pc(enable_execute),
+		.enable_pc(enable_system),
 		.current_pc(current_pc),
 
 		.opcode(iREG2_opcode),
@@ -270,6 +279,8 @@ module top(
 		.iREG2_reg_rt_data(iREG2_reg_rt_data),
 		.oREG2_reg_ra_data(oREG2_reg_ra_data),
 		.oREG2_reg_rt_data(oREG2_reg_rt_data),
+		.iREG2_write_reg_addr(iREG2_write_reg_addr),
+		.oREG4_write_reg_addr(oREG4_write_reg_addr),
 
 		.iREG2_opcode(iREG2_opcode),
 		.iREG2_sub_op_base(iREG2_sub_op_base),
