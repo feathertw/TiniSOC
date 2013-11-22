@@ -210,9 +210,11 @@ module top(
 		.sub_op_sv(sub_op_sv),
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(oREG2_reg_rt_data),
+
+		.alu_result(oREG3_alu_result),//*
 		.r_imm_extend(oREG3_imm_extend),
 		.mem_read_data(mem_read_data),
-		.alu_output(oREG3_alu_result),//*
+
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
