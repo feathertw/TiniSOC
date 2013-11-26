@@ -96,6 +96,9 @@ module top(
 	//alu to controller
 	wire alu_zero;
 
+	//regfile to pc
+	wire reg_rt_ra_equal;
+
 	//pc to muxs
 	wire [9:0] current_pc;
 
@@ -123,9 +126,7 @@ module top(
 	wire [ 4:0] oREG2_sub_op_base;
 	wire [ 7:0] oREG2_sub_op_ls;
 
-	wire [13:0] iREG2_imm_14bit;
 	wire [ 1:0] iREG2_select_write_reg;
-	wire [13:0] oREG2_imm_14bit;
 	wire [ 1:0] oREG3_select_write_reg;
 
 	wire iREG2_do_dm_read;
@@ -156,6 +157,9 @@ module top(
 
 	//
 	wire do_flush_REG1;
+	wire do_flush_REG2;
+	wire do_flush_REG3;
+	wire do_flush_REG4;
 
 	//top input output
 	assign iREG1_instruction=instruction;
@@ -175,6 +179,10 @@ module top(
 
 	wire enable_system;
 	assign enable_system=1'b1;
+
+	assign do_flush_REG2=1'b0;
+	assign do_flush_REG3=1'b0;
+	assign do_flush_REG4=1'b0;
 
 `ifdef BUGMODE
 	wire [ 9:0] iREG1_current_pc;
@@ -206,6 +214,7 @@ module top(
 		.write_reg_data(oREG4_write_reg_data),
 		.do_reg_write(oREG4_do_reg_write),
 
+		.reg_rt_ra_equal(reg_rt_ra_equal),
 		.reg_ra_data(iREG2_reg_ra_data),
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(iREG2_reg_rt_data)
@@ -255,7 +264,7 @@ module top(
 		.reg_rt_addr(reg_rt_addr),
 
 		.imm_5bit(imm_5bit),
-		.imm_14bit(iREG2_imm_14bit),
+		.imm_14bit(imm_14bit),
 		.imm_15bit(imm_15bit),
 		.imm_20bit(imm_20bit),
 		.imm_24bit(imm_24bit),
@@ -277,9 +286,9 @@ module top(
 
 		.opcode(iREG2_opcode),
 		.sub_op_b(sub_op_b),
-		.alu_zero(alu_zero),
+		.reg_rt_ra_equal(reg_rt_ra_equal),
 
-		.imm_14bit(oREG2_imm_14bit),
+		.imm_14bit(imm_14bit),
 		.imm_24bit(imm_24bit),
 
 		.do_flush_REG1(do_flush_REG1)
@@ -305,9 +314,7 @@ module top(
 		.oREG2_sub_op_base(oREG2_sub_op_base),
 		.oREG2_sub_op_ls(oREG2_sub_op_ls),
 
-		.iREG2_imm_14bit(iREG2_imm_14bit),
 		.iREG2_select_write_reg(iREG2_select_write_reg),
-		.oREG2_imm_14bit(oREG2_imm_14bit),
 		.oREG3_select_write_reg(oREG3_select_write_reg),
 
 		.iREG2_do_dm_read(iREG2_do_dm_read),
@@ -331,6 +338,9 @@ module top(
 		.iREG4_write_reg_data(iREG4_write_reg_data),
 		.oREG4_write_reg_data(oREG4_write_reg_data),
 
-		.do_flush_REG1(do_flush_REG1)
+		.do_flush_REG1(do_flush_REG1),
+		.do_flush_REG2(do_flush_REG2),
+		.do_flush_REG3(do_flush_REG3),
+		.do_flush_REG4(do_flush_REG4)
 	);
 endmodule

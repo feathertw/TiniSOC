@@ -143,6 +143,18 @@ module regwalls(
 	input do_flush_REG3;
 	input do_flush_REG4;
 
+	reg r_do_flush_REG1;
+	reg r_do_flush_REG2;
+	reg r_do_flush_REG3;
+	reg r_do_flush_REG4;
+
+	always@(posedge clock)begin
+		r_do_flush_REG1<=do_flush_REG1;
+		r_do_flush_REG2<=do_flush_REG2;
+		r_do_flush_REG3<=do_flush_REG3;
+		r_do_flush_REG4<=do_flush_REG4;
+	end
+
 	always@(negedge clock)begin
 `ifdef BUGMODE
 		mREG1_current_pc <=iREG1_current_pc;
@@ -150,14 +162,14 @@ module regwalls(
 		mREG3_current_pc <=mREG2_current_pc;
 		mREG4_current_pc <=mREG3_current_pc;
 `endif
-		if(do_flush_REG1)begin
+		if(r_do_flush_REG1)begin
 			oREG1_instruction<=32'b0;
 		end
 		else begin
 			oREG1_instruction<=iREG1_instruction;
 		end
 
-		if(do_flush_REG2)begin
+		if(r_do_flush_REG2)begin
 			oREG2_reg_ra_data<=32'b0;
 			oREG2_reg_rt_data<=32'b0;
 
@@ -194,7 +206,7 @@ module regwalls(
 			mREG2_select_write_reg<=iREG2_select_write_reg;
 		end
 
-		if(do_flush_REG3)begin
+		if(r_do_flush_REG3)begin
 			oREG3_alu_result      <=32'b0;
 			oREG3_alu_overflow    <= 1'b0;
 			oREG3_imm_extend      <=32'b0;
@@ -217,7 +229,7 @@ module regwalls(
 			oREG3_select_write_reg<=mREG2_select_write_reg;
 		end
 
-		if(do_flush_REG4)begin
+		if(r_do_flush_REG4)begin
 			oREG4_do_reg_write  <= 1'b0;
 			oREG4_write_reg_addr<= 5'b0;
 			oREG4_write_reg_data<=32'b0;

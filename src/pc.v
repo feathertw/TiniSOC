@@ -8,7 +8,7 @@ module pc(
 
 	opcode,
 	sub_op_b,
-	alu_zero,
+	reg_rt_ra_equal,
 
 	imm_14bit,
 	imm_24bit,
@@ -22,7 +22,7 @@ module pc(
 
 	input [5:0] opcode;
 	input sub_op_b;
-	input alu_zero;
+	input reg_rt_ra_equal;
 
 	input [13:0] imm_14bit;
 	input [23:0] imm_24bit;
@@ -40,12 +40,12 @@ module pc(
 		else if(enable_pc) current_pc<=next_pc;
 	end
 
-	always@(opcode or sub_op_b or alu_zero) begin
+	always@(opcode or sub_op_b or reg_rt_ra_equal) begin
 		case(opcode)
 			`TY_B:begin
-				if(      (sub_op_b==`BEQ)&&( alu_zero) ) select_pc=`PC_14BIT;
-				else if( (sub_op_b==`BNE)&&(!alu_zero) ) select_pc=`PC_14BIT;
-				else					 select_pc=`PC_4;
+				if(      (sub_op_b==`BEQ)&&( reg_rt_ra_equal) ) select_pc=`PC_14BIT;
+				else if( (sub_op_b==`BNE)&&(!reg_rt_ra_equal) ) select_pc=`PC_14BIT;
+				else					 	select_pc=`PC_4;
 			end
 			`JJ:begin
 				select_pc=`PC_24BIT;
@@ -63,8 +63,8 @@ module pc(
 				do_flush_REG1=1'b0;
 			end
 			`PC_14BIT:begin
-				next_pc=current_pc+({imm_14bit[13],imm_14bit[7:0],1'b0});//*
-				do_flush_REG1=1'b0;
+				next_pc=(current_pc-4)+({imm_14bit[13],imm_14bit[7:0],1'b0});//*
+				do_flush_REG1=1'b1;
 			end
 			`PC_24BIT:begin
 				next_pc=(current_pc-4)+({imm_24bit[23],imm_24bit[7:0],1'b0});//*

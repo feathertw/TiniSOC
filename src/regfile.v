@@ -11,6 +11,7 @@ module regfile(
 	write_reg_data,
 	do_reg_write,
 
+	reg_rt_ra_equal,
 	reg_ra_data,
 	reg_rb_data,
 	reg_rt_data
@@ -31,6 +32,7 @@ module regfile(
 	input [DataSize-1:0] write_reg_data;
 	input do_reg_write;
 
+	output reg_rt_ra_equal;
 	output [DataSize-1:0] reg_ra_data;
 	output [DataSize-1:0] reg_rb_data;
 	output [DataSize-1:0] reg_rt_data;
@@ -41,6 +43,7 @@ module regfile(
 	reg [DataSize-1:0] rw_reg [31:0];
 	integer i;
 
+	assign reg_rt_ra_equal=(reg_rt_data==reg_ra_data)?1'b1:1'b0;
 	assign reg_rt_data = rw_reg[reg_rt_addr];
 
 	always @(posedge clock or posedge reset) begin
