@@ -214,7 +214,6 @@ module top(
 		.write_reg_data(oREG4_write_reg_data),
 		.do_reg_write(oREG4_do_reg_write),
 
-		.reg_rt_ra_equal(reg_rt_ra_equal),
 		.reg_ra_data(iREG2_reg_ra_data),
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(iREG2_reg_rt_data)
@@ -276,7 +275,11 @@ module top(
 		.do_im_write(do_im_write),
 		.do_dm_read(iREG2_do_dm_read),
 		.do_dm_write(iREG2_do_dm_write),
-		.do_reg_write(iREG2_do_reg_write)
+		.do_reg_write(iREG2_do_reg_write),
+
+		.reg_rt_data(iREG2_reg_rt_data),
+		.reg_ra_data(iREG2_reg_ra_data),
+		.reg_rt_ra_equal(reg_rt_ra_equal)
 	);
 	pc PC(
 		.clock(clk),

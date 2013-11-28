@@ -41,6 +41,10 @@ module controller(
 	do_dm_read,
 	do_dm_write,
 	do_reg_write,
+
+	reg_rt_data,
+	reg_ra_data,
+	reg_rt_ra_equal
 );
 	
 	input clock;
@@ -77,6 +81,10 @@ module controller(
 	output do_dm_read;
 	output do_dm_write;
 	output do_reg_write;
+
+	input [31:0] reg_rt_data;
+	input [31:0] reg_ra_data;
+	output reg_rt_ra_equal;
 
 	reg enable_fetch;
 	reg enable_execute;
@@ -120,6 +128,8 @@ module controller(
 
 	assign do_im_read  = (reset)?1'b0:1'b1;
 	assign do_im_write = (reset)?1'b0:1'b0;
+
+	assign reg_rt_ra_equal=(reg_rt_data==reg_ra_data)?1'b1:1'b0;
 
 	always@(posedge clock or posedge reset) begin
 		if(reset) present_instruction<=0;
