@@ -87,7 +87,7 @@ module alu(
 
 		                default:begin
 		                    alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
-		                    alu_overflow=1'bx;
+		                    alu_overflow=1'b0;
 		                end
 		            endcase
 		        end
@@ -132,7 +132,7 @@ module alu(
 					end
 					default:begin
 						alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
-						alu_overflow=1'bx;
+						alu_overflow=1'b0;
 					end
 				endcase
 			end
@@ -142,17 +142,17 @@ module alu(
 			end
 			`JJ:begin
 				alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
-				alu_overflow=1'bx;
+				alu_overflow=1'b0;
 			end
 		        default:begin
 				alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
-				alu_overflow=1'bx;
+				alu_overflow=1'b0;
 		        end
 		    endcase
 		end
 		else begin
 			alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
-			alu_overflow=1'bx;
+			alu_overflow=1'b0;
 		end
 	end
 endmodule
