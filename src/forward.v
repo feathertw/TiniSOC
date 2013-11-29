@@ -1,16 +1,19 @@
 `include "def_muxs.v"
 module forward(
-	alu_result,
-	xREG2_imm_extend,
-
 	reg_ra_addr,
 	reg_rb_addr,
 	reg_rt_addr,
+
+	reg_ra_data,
+	reg_rb_data,
+	reg_rt_data,
 
 	xREG2_do_dm_read,
 	xREG2_do_reg_write,
 	xREG2_select_write_reg,
 	xREG2_write_reg_addr,
+	alu_result,
+	xREG2_imm_extend,
 
 	xREG3_do_reg_write,
 	xREG3_write_reg_addr,
@@ -20,45 +23,38 @@ module forward(
 	xREG4_write_reg_addr,
 	xREG4_write_reg_data,
 
-	reg_ra_data,
-	reg_rb_data,
-	reg_rt_data,
-
 	f_reg_ra_data,
 	f_reg_rb_data,
 	f_reg_rt_data
 );
-	input [31:0] alu_result;
-	input [31:0] xREG2_imm_extend;
-
-	input [4:0] reg_ra_addr;
-	input [4:0] reg_rb_addr;
-	input [4:0] reg_rt_addr;
-
-	input xREG2_do_dm_read;
-	input xREG2_do_reg_write;
-	input [1:0] xREG2_select_write_reg;
-	input [4:0] xREG2_write_reg_addr;
-
-	input xREG3_do_reg_write;
-	input [4:0] xREG3_write_reg_addr;
-	input [31:0] write_reg_data;
-
-	input xREG4_do_reg_write;
-	input [4:0] xREG4_write_reg_addr;
-	input [31:0] xREG4_write_reg_data;
-
+	input [ 4:0] reg_ra_addr;
+	input [ 4:0] reg_rb_addr;
+	input [ 4:0] reg_rt_addr;
 	input [31:0] reg_ra_data;
 	input [31:0] reg_rb_data;
 	input [31:0] reg_rt_data;
 
+	input xREG2_do_dm_read;
+	input xREG2_do_reg_write;
+	input [ 1:0] xREG2_select_write_reg;
+	input [ 4:0] xREG2_write_reg_addr;
+	input [31:0] alu_result;
+	input [31:0] xREG2_imm_extend;
+
+	input xREG3_do_reg_write;
+	input [ 4:0] xREG3_write_reg_addr;
+	input [31:0] write_reg_data;
+
+	input xREG4_do_reg_write;
+	input [ 4:0] xREG4_write_reg_addr;
+	input [31:0] xREG4_write_reg_data;
+
+	output [31:0] f_reg_rt_data;
 	output [31:0] f_reg_ra_data;
 	output [31:0] f_reg_rb_data;
-	output [31:0] f_reg_rt_data;
-
-	reg [31:0] f_reg_ra_data;
-	reg [31:0] f_reg_rb_data;
-	reg [31:0] f_reg_rt_data;
+	reg    [31:0] f_reg_rt_data;
+	reg    [31:0] f_reg_ra_data;
+	reg    [31:0] f_reg_rb_data;
 
 	always @(*) begin
 
@@ -88,7 +84,4 @@ module forward(
 			end
 		end
 	end
-
-
-
 endmodule
