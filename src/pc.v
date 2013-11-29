@@ -13,7 +13,8 @@ module pc(
 	imm_14bit,
 	imm_24bit,
 
-	do_flush_REG1
+	do_flush_REG1,
+	hazard
 );
 	input clock;
 	input reset;
@@ -28,6 +29,7 @@ module pc(
 	input [23:0] imm_24bit;
 
 	output do_flush_REG1;
+	input  hazard;
 
 	reg [9:0] current_pc;
 	reg [9:0] next_pc;
@@ -37,6 +39,7 @@ module pc(
 
 	always@(posedge clock) begin
 		if(reset) 	   current_pc<=0;
+		else if(hazard)    current_pc<=current_pc;
 		else if(enable_pc) current_pc<=next_pc;
 	end
 

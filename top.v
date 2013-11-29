@@ -113,6 +113,7 @@ module top(
 
 	//forward
 	wire [31:0] f_reg_rb_data;
+	wire hazard;
 
 	//REGWALL
 	wire [31:0] iREG1_instruction;
@@ -305,7 +306,8 @@ module top(
 		.imm_14bit(imm_14bit),
 		.imm_24bit(imm_24bit),
 
-		.do_flush_REG1(do_flush_REG1)
+		.do_flush_REG1(do_flush_REG1),
+		.hazard(hazard)
 	);
 	regwalls REGWALLS(
 `ifdef BUGMODE
@@ -362,7 +364,8 @@ module top(
 		.do_flush_REG1(do_flush_REG1),
 		.do_flush_REG2(do_flush_REG2),
 		.do_flush_REG3(do_flush_REG3),
-		.do_flush_REG4(do_flush_REG4)
+		.do_flush_REG4(do_flush_REG4),
+		.hazard(hazard)
 	);
 	forward FORWARD(
 		.alu_result(iREG3_alu_result),
@@ -391,6 +394,8 @@ module top(
 
 		.f_reg_ra_data(iREG2_reg_ra_data),
 		.f_reg_rb_data(f_reg_rb_data),
-		.f_reg_rt_data(iREG2_reg_rt_data)
+		.f_reg_rt_data(iREG2_reg_rt_data),
+
+		.hazard(hazard)
 	);
 endmodule
