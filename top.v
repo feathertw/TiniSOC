@@ -366,7 +366,6 @@ module top(
 	);
 	forward FORWARD(
 		.alu_result(iREG3_alu_result),
-		.r_write_reg_data(),
 		.xREG2_imm_extend(mREG2_imm_extend),
 
 		.reg_ra_addr(reg_ra_addr),
@@ -381,6 +380,10 @@ module top(
 		.xREG3_do_reg_write(mREG3_do_reg_write),
 		.xREG3_write_reg_addr(mREG3_write_reg_addr),
 		.write_reg_data(iREG4_write_reg_data),
+
+		.xREG4_do_reg_write(oREG4_do_reg_write),
+		.xREG4_write_reg_addr(oREG4_write_reg_addr),
+		.xREG4_write_reg_data(oREG4_write_reg_data),
 
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),

@@ -1,7 +1,6 @@
 `include "def_muxs.v"
 module forward(
 	alu_result,
-	r_write_reg_data,
 	xREG2_imm_extend,
 
 	reg_ra_addr,
@@ -17,6 +16,10 @@ module forward(
 	xREG3_write_reg_addr,
 	write_reg_data,
 
+	xREG4_do_reg_write,
+	xREG4_write_reg_addr,
+	xREG4_write_reg_data,
+
 	reg_ra_data,
 	reg_rb_data,
 	reg_rt_data,
@@ -26,7 +29,6 @@ module forward(
 	f_reg_rt_data
 );
 	input [31:0] alu_result;
-	input [31:0] r_write_reg_data;
 	input [31:0] xREG2_imm_extend;
 
 	input [4:0] reg_ra_addr;
@@ -41,6 +43,10 @@ module forward(
 	input xREG3_do_reg_write;
 	input [4:0] xREG3_write_reg_addr;
 	input [31:0] write_reg_data;
+
+	input xREG4_do_reg_write;
+	input [4:0] xREG4_write_reg_addr;
+	input [31:0] xREG4_write_reg_data;
 
 	input [31:0] reg_ra_data;
 	input [31:0] reg_rb_data;
@@ -59,6 +65,11 @@ module forward(
 		f_reg_rt_data=reg_rt_data;
 		f_reg_ra_data=reg_ra_data;
 		f_reg_rb_data=reg_rb_data;
+		if(xREG4_do_reg_write)begin
+			if(reg_rt_addr==xREG4_write_reg_addr) f_reg_rt_data=xREG4_write_reg_data;
+			if(reg_ra_addr==xREG4_write_reg_addr) f_reg_ra_data=xREG4_write_reg_data;
+			if(reg_rb_addr==xREG4_write_reg_addr) f_reg_rb_data=xREG4_write_reg_data;
+		end
 		if(xREG3_do_reg_write)begin
 			if(reg_rt_addr==xREG3_write_reg_addr) f_reg_rt_data=write_reg_data;
 			if(reg_ra_addr==xREG3_write_reg_addr) f_reg_ra_data=write_reg_data;
