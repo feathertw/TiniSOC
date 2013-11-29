@@ -141,6 +141,7 @@ module top(
 	wire mREG2_do_reg_write;
 	wire oREG3_do_dm_read;
 	wire oREG3_do_dm_write;
+	wire mREG3_do_reg_write;
 	wire oREG4_do_reg_write;
 
 	wire [31:0] iREG2_alu_src2;
@@ -157,6 +158,7 @@ module top(
 
 	wire [ 4:0] iREG2_write_reg_addr;
 	wire [ 4:0] mREG2_write_reg_addr;
+	wire [ 4:0] mREG3_write_reg_addr;
 	wire [ 4:0] oREG4_write_reg_addr;
 	wire [31:0] iREG4_write_reg_data;
 	wire [31:0] oREG4_write_reg_data;
@@ -318,6 +320,7 @@ module top(
 		.oREG3_reg_rt_data(oREG3_reg_rt_data),
 		.iREG2_write_reg_addr(iREG2_write_reg_addr),
 		.mREG2_write_reg_addr(mREG2_write_reg_addr),
+		.mREG3_write_reg_addr(mREG3_write_reg_addr),
 		.oREG4_write_reg_addr(oREG4_write_reg_addr),
 
 		.iREG2_opcode(iREG2_opcode),
@@ -338,6 +341,7 @@ module top(
 		.mREG2_do_reg_write(mREG2_do_reg_write),
 		.oREG3_do_dm_read(oREG3_do_dm_read),
 		.oREG3_do_dm_write(oREG3_do_dm_write),
+		.mREG3_do_reg_write(mREG3_do_reg_write),
 		.oREG4_do_reg_write(oREG4_do_reg_write),
 
 		.iREG2_alu_src2(iREG2_alu_src2),
@@ -362,7 +366,6 @@ module top(
 	);
 	forward FORWARD(
 		.alu_result(iREG3_alu_result),
-		.write_reg_data(),
 		.r_write_reg_data(),
 		.xREG2_imm_extend(mREG2_imm_extend),
 
@@ -374,6 +377,10 @@ module top(
 		.xREG2_do_reg_write(mREG2_do_reg_write),
 		.xREG2_select_write_reg(mREG2_select_write_reg),
 		.xREG2_write_reg_addr(mREG2_write_reg_addr),
+
+		.xREG3_do_reg_write(mREG3_do_reg_write),
+		.xREG3_write_reg_addr(mREG3_write_reg_addr),
+		.write_reg_data(iREG4_write_reg_data),
 
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
