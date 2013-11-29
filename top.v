@@ -4,6 +4,7 @@
 `include "src/controller.v"
 `include "src/pc.v"
 `include "src/regwalls.v"
+`include "src/forward.v"
 module top(
 	clk,
 	rst,
@@ -110,6 +111,9 @@ module top(
 
 	reg reg_alu_overflow; //*
 
+	//forward
+	wire [31:0] f_reg_rb_data;
+
 	//REGWALL
 	wire [31:0] iREG1_instruction;
 	wire [31:0] oREG1_instruction;
@@ -117,7 +121,7 @@ module top(
 	wire [31:0] iREG2_reg_ra_data;
 	wire [31:0] iREG2_reg_rt_data;
 	wire [31:0] oREG2_reg_ra_data;
-	wire [31:0] oREG2_reg_rt_data;
+	wire [31:0] oREG3_reg_rt_data;
 
 	wire [ 5:0] iREG2_opcode;
 	wire [ 4:0] iREG2_sub_op_base;
@@ -127,11 +131,14 @@ module top(
 	wire [ 7:0] oREG2_sub_op_ls;
 
 	wire [ 1:0] iREG2_select_write_reg;
+	wire [ 1:0] mREG2_select_write_reg;
 	wire [ 1:0] oREG3_select_write_reg;
 
 	wire iREG2_do_dm_read;
 	wire iREG2_do_dm_write;
 	wire iREG2_do_reg_write;
+	wire mREG2_do_dm_read;
+	wire mREG2_do_reg_write;
 	wire oREG3_do_dm_read;
 	wire oREG3_do_dm_write;
 	wire oREG4_do_reg_write;
@@ -139,6 +146,7 @@ module top(
 	wire [31:0] iREG2_alu_src2;
 	wire [31:0] oREG2_alu_src2;
 	wire [31:0] iREG2_imm_extend;
+	wire [31:0] mREG2_imm_extend;
 	wire [31:0] oREG3_imm_extend;
 
 	wire [31:0] iREG3_alu_result;
@@ -148,6 +156,7 @@ module top(
 	wire oREG3_alu_overflow;
 
 	wire [ 4:0] iREG2_write_reg_addr;
+	wire [ 4:0] mREG2_write_reg_addr;
 	wire [ 4:0] oREG4_write_reg_addr;
 	wire [31:0] iREG4_write_reg_data;
 	wire [31:0] oREG4_write_reg_data;
@@ -174,7 +183,7 @@ module top(
 	assign DM_write=oREG3_do_dm_write;
 	assign DM_enable=enable_system;
 	assign DM_address=oREG3_alu_result[11:0];
-	assign DM_in=oREG2_reg_rt_data;//*
+	assign DM_in=oREG3_reg_rt_data;//*
 	assign mem_read_data=DM_out;
 
 	wire enable_system;
@@ -214,15 +223,15 @@ module top(
 		.write_reg_data(oREG4_write_reg_data),
 		.do_reg_write(oREG4_do_reg_write),
 
-		.reg_ra_data(iREG2_reg_ra_data),
+		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
-		.reg_rt_data(iREG2_reg_rt_data)
+		.reg_rt_data(reg_rt_data)
 	);
 
 	muxs MUXS(
 		.sub_op_sv(sub_op_sv),
-		.reg_rb_data(reg_rb_data),
-		.reg_rt_data(oREG2_reg_rt_data),
+		.reg_rb_data(f_reg_rb_data),
+		.reg_rt_data(iREG2_reg_rt_data),
 
 		.alu_result(oREG3_alu_result),//*
 		.r_imm_extend(oREG3_imm_extend),
@@ -306,8 +315,9 @@ module top(
 		.iREG2_reg_ra_data(iREG2_reg_ra_data),
 		.iREG2_reg_rt_data(iREG2_reg_rt_data),
 		.oREG2_reg_ra_data(oREG2_reg_ra_data),
-		.oREG2_reg_rt_data(oREG2_reg_rt_data),
+		.oREG3_reg_rt_data(oREG3_reg_rt_data),
 		.iREG2_write_reg_addr(iREG2_write_reg_addr),
+		.mREG2_write_reg_addr(mREG2_write_reg_addr),
 		.oREG4_write_reg_addr(oREG4_write_reg_addr),
 
 		.iREG2_opcode(iREG2_opcode),
@@ -318,11 +328,14 @@ module top(
 		.oREG2_sub_op_ls(oREG2_sub_op_ls),
 
 		.iREG2_select_write_reg(iREG2_select_write_reg),
+		.mREG2_select_write_reg(mREG2_select_write_reg),
 		.oREG3_select_write_reg(oREG3_select_write_reg),
 
 		.iREG2_do_dm_read(iREG2_do_dm_read),
 		.iREG2_do_dm_write(iREG2_do_dm_write),
 		.iREG2_do_reg_write(iREG2_do_reg_write),
+		.mREG2_do_dm_read(mREG2_do_dm_read),
+		.mREG2_do_reg_write(mREG2_do_reg_write),
 		.oREG3_do_dm_read(oREG3_do_dm_read),
 		.oREG3_do_dm_write(oREG3_do_dm_write),
 		.oREG4_do_reg_write(oREG4_do_reg_write),
@@ -330,6 +343,7 @@ module top(
 		.iREG2_alu_src2(iREG2_alu_src2),
 		.oREG2_alu_src2(oREG2_alu_src2),
 		.iREG2_imm_extend(iREG2_imm_extend),
+		.mREG2_imm_extend(mREG2_imm_extend),
 		.oREG3_imm_extend(oREG3_imm_extend),
 
 		.iREG3_alu_result(iREG3_alu_result),
@@ -345,5 +359,28 @@ module top(
 		.do_flush_REG2(do_flush_REG2),
 		.do_flush_REG3(do_flush_REG3),
 		.do_flush_REG4(do_flush_REG4)
+	);
+	forward FORWARD(
+		.alu_result(iREG3_alu_result),
+		.write_reg_data(),
+		.r_write_reg_data(),
+		.xREG2_imm_extend(mREG2_imm_extend),
+
+		.reg_ra_addr(reg_ra_addr),
+		.reg_rb_addr(reg_rb_addr),
+		.reg_rt_addr(reg_rt_addr),
+
+		.xREG2_do_dm_read(mREG2_do_dm_read),
+		.xREG2_do_reg_write(mREG2_do_reg_write),
+		.xREG2_select_write_reg(mREG2_select_write_reg),
+		.xREG2_write_reg_addr(mREG2_write_reg_addr),
+
+		.reg_ra_data(reg_ra_data),
+		.reg_rb_data(reg_rb_data),
+		.reg_rt_data(reg_rt_data),
+
+		.f_reg_ra_data(iREG2_reg_ra_data),
+		.f_reg_rb_data(f_reg_rb_data),
+		.f_reg_rt_data(iREG2_reg_rt_data)
 	);
 endmodule

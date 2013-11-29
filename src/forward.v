@@ -1,0 +1,74 @@
+`include "def_muxs.v"
+module forward(
+	alu_result,
+	write_reg_data,
+	r_write_reg_data,
+	xREG2_imm_extend,
+
+	reg_ra_addr,
+	reg_rb_addr,
+	reg_rt_addr,
+
+	xREG2_do_dm_read,
+	xREG2_do_reg_write,
+	xREG2_select_write_reg,
+	xREG2_write_reg_addr,
+
+	reg_ra_data,
+	reg_rb_data,
+	reg_rt_data,
+
+	f_reg_ra_data,
+	f_reg_rb_data,
+	f_reg_rt_data
+);
+	input [31:0] alu_result;
+	input [31:0] write_reg_data;
+	input [31:0] r_write_reg_data;
+	input [31:0] xREG2_imm_extend;
+
+	input [4:0] reg_ra_addr;
+	input [4:0] reg_rb_addr;
+	input [4:0] reg_rt_addr;
+
+	input xREG2_do_dm_read;
+	input xREG2_do_reg_write;
+	input [1:0] xREG2_select_write_reg;
+	input [4:0] xREG2_write_reg_addr;
+
+	input [31:0] reg_ra_data;
+	input [31:0] reg_rb_data;
+	input [31:0] reg_rt_data;
+
+	output [31:0] f_reg_ra_data;
+	output [31:0] f_reg_rb_data;
+	output [31:0] f_reg_rt_data;
+
+	reg [31:0] f_reg_ra_data;
+	reg [31:0] f_reg_rb_data;
+	reg [31:0] f_reg_rt_data;
+
+	always @(*) begin
+
+		if(xREG2_do_reg_write&&(!xREG2_do_dm_read) )begin
+			if(xREG2_select_write_reg==`WRREG_IMMDATA)begin
+				if(reg_rt_addr==xREG2_write_reg_addr) f_reg_rt_data=xREG2_imm_extend;
+				if(reg_ra_addr==xREG2_write_reg_addr) f_reg_ra_data=xREG2_imm_extend;
+				if(reg_rb_addr==xREG2_write_reg_addr) f_reg_rb_data=xREG2_imm_extend;
+			end
+			else if(xREG2_select_write_reg==`WRREG_ALURESULT)begin
+				if(reg_rt_addr==xREG2_write_reg_addr) f_reg_rt_data=alu_result;
+				if(reg_ra_addr==xREG2_write_reg_addr) f_reg_ra_data=alu_result;
+				if(reg_rb_addr==xREG2_write_reg_addr) f_reg_rb_data=alu_result;
+			end
+		end
+		else begin
+			f_reg_rt_data=reg_rt_data;
+			f_reg_ra_data=reg_ra_data;
+			f_reg_rb_data=reg_rb_data;
+		end
+	end
+
+
+
+endmodule
