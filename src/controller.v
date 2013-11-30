@@ -368,7 +368,7 @@ module controller(
 				do_dm_write=1'b0;
 				do_reg_write=1'b0;
 			end
-			`JJ:begin
+			`TY_J:begin
 				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;

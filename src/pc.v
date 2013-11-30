@@ -50,7 +50,7 @@ module pc(
 				else if( (sub_op_b==`BNE)&&(!reg_rt_ra_equal) ) select_pc=`PC_14BIT;
 				else					 	select_pc=`PC_4;
 			end
-			`JJ:begin
+			`TY_J:begin
 				select_pc=`PC_24BIT;
 			end
 			default:begin

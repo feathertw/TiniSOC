@@ -140,7 +140,7 @@ module alu(
 		                    alu_result=alu_src1^alu_src2;
 		                    alu_overflow=1'b0;
 			end
-			`JJ:begin
+			`TY_J:begin
 				alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
 				alu_overflow=1'b0;
 			end

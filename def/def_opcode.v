@@ -25,4 +25,6 @@
 `define BEQ	1'b0
 `define BNE	1'b1
 
-`define JJ	6'b100100
+`define TY_J	6'b100100
+`define JJ	1'b0
+`define JAL	1'b1
