@@ -59,7 +59,7 @@ module regwalls(
 	do_flush_REG2,
 	do_flush_REG3,
 	do_flush_REG4,
-	hazard
+	do_hazard
 );
 `ifdef BUGMODE
 	input  [ 9:0] iREG1_current_pc;
@@ -159,7 +159,7 @@ module regwalls(
 	input do_flush_REG2;
 	input do_flush_REG3;
 	input do_flush_REG4;
-	input hazard;
+	input do_hazard;
 
 	reg r_do_flush_REG1;
 	reg r_do_flush_REG2;
@@ -187,7 +187,7 @@ module regwalls(
 			oREG1_instruction<=iREG1_instruction;
 		end
 
-		if(r_do_flush_REG2||hazard)begin
+		if(r_do_flush_REG2||do_hazard)begin
 			oREG2_reg_ra_data<=32'b0;
 			mREG2_reg_rt_data<=32'b0;
 

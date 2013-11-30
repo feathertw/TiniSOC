@@ -27,7 +27,7 @@ module forward(
 	f_reg_rb_data,
 	f_reg_rt_data,
 
-	hazard
+	do_hazard
 );
 	input [ 4:0] reg_ra_addr;
 	input [ 4:0] reg_rb_addr;
@@ -58,8 +58,8 @@ module forward(
 	reg    [31:0] f_reg_ra_data;
 	reg    [31:0] f_reg_rb_data;
 
-	output hazard;
-	reg    hazard;
+	output do_hazard;
+	reg    do_hazard;
 
 	always @(*) begin
 
@@ -95,13 +95,13 @@ module forward(
 			if(	   reg_rt_addr==xREG2_write_reg_addr
 				|| reg_ra_addr==xREG2_write_reg_addr
 				|| reg_rb_addr==xREG2_write_reg_addr)begin
-				hazard=1'b1;
+				do_hazard=1'b1;
 			end
 			else begin
-				hazard=1'b0;
+				do_hazard=1'b0;
 			end
 		end
 		else
-			hazard=1'b0;
+			do_hazard=1'b0;
 	end
 endmodule
