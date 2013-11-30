@@ -12,8 +12,8 @@ module forward(
 	xREG2_do_reg_write,
 	xREG2_select_write_reg,
 	xREG2_write_reg_addr,
-	alu_result,
 	xREG2_imm_extend,
+	alu_result,
 
 	xREG3_do_reg_write,
 	xREG3_write_reg_addr,
@@ -40,8 +40,8 @@ module forward(
 	input xREG2_do_reg_write;
 	input [ 1:0] xREG2_select_write_reg;
 	input [ 4:0] xREG2_write_reg_addr;
-	input [31:0] alu_result;
 	input [31:0] xREG2_imm_extend;
+	input [31:0] alu_result;
 
 	input xREG3_do_reg_write;
 	input [ 4:0] xREG3_write_reg_addr;
