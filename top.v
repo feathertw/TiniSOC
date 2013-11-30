@@ -314,6 +314,7 @@ module top(
 
 		.imm_14bit(imm_14bit),
 		.imm_24bit(imm_24bit),
+		.reg_rb_data(f_reg_rb_data),
 
 		.do_link(do_link),
 		.do_flush_REG1(do_flush_REG1),
