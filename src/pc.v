@@ -8,11 +8,13 @@ module pc(
 
 	opcode,
 	sub_op_b,
+	sub_op_j,
 	reg_rt_ra_equal,
 
 	imm_14bit,
 	imm_24bit,
 
+	do_link,
 	do_flush_REG1,
 	do_hazard
 );
@@ -23,11 +25,13 @@ module pc(
 
 	input [5:0] opcode;
 	input sub_op_b;
+	input sub_op_j;
 	input reg_rt_ra_equal;
 
 	input [13:0] imm_14bit;
 	input [23:0] imm_24bit;
 
+	output do_link;
 	output do_flush_REG1;
 	input  do_hazard;
 
@@ -35,6 +39,7 @@ module pc(
 	reg [9:0] next_pc;
 	reg [1:0] select_pc;
 
+	reg do_link;
 	reg do_flush_REG1;
 
 	always@(posedge clock) begin
@@ -49,12 +54,16 @@ module pc(
 				if(      (sub_op_b==`BEQ)&&( reg_rt_ra_equal) ) select_pc=`PC_14BIT;
 				else if( (sub_op_b==`BNE)&&(!reg_rt_ra_equal) ) select_pc=`PC_14BIT;
 				else					 	select_pc=`PC_4;
+				do_link=1'b0;
 			end
 			`TY_J:begin
 				select_pc=`PC_24BIT;
+				if(sub_op_j) do_link=1'b1;
+				else	     do_link=1'b0;
 			end
 			default:begin
 				select_pc=`PC_4;
+				do_link=1'b0;
 			end
 		endcase
 	end

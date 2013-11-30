@@ -22,6 +22,7 @@ module controller(
 	sub_op_ls,
 	sub_op_sv,
 	sub_op_b,
+	sub_op_j,
 
 	reg_ra_addr,
 	reg_rb_addr,
@@ -62,6 +63,7 @@ module controller(
 	output [7:0] sub_op_ls;
 	output [1:0] sub_op_sv;
 	output sub_op_b;
+	output sub_op_j;
 
 	output [4:0] reg_ra_addr;
 	output [4:0] reg_rb_addr;
@@ -109,6 +111,7 @@ module controller(
 	wire [7:0] sub_op_ls=instruction[7:0];
 	wire [1:0] sub_op_sv=instruction[9:8];
 	wire sub_op_b=instruction[14];
+	wire sub_op_j=instruction[24];
 
 	wire [4:0] reg_ra_addr=instruction[19:15];
 	wire [4:0] reg_rb_addr=instruction[14:10];

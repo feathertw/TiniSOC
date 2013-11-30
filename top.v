@@ -65,6 +65,7 @@ module top(
 	wire [7:0] sub_op_ls;
 	wire [1:0] sub_op_sv;
 	wire sub_op_b;
+	wire sub_op_j;
 	wire enable_execute;
 
 	//controller to im
@@ -102,6 +103,9 @@ module top(
 
 	//pc to muxs
 	wire [9:0] current_pc;
+
+	//pc to regfile
+	wire do_link;
 
 	//mem to muxs
 	wire [31:0] mem_read_data;
@@ -226,6 +230,9 @@ module top(
 		.write_reg_data(oREG4_write_reg_data),
 		.do_reg_write(oREG4_do_reg_write),
 
+		.current_pc(current_pc),
+		.do_link(do_link),
+
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(reg_rt_data)
@@ -269,6 +276,7 @@ module top(
 		.sub_op_ls(iREG2_sub_op_ls),
 		.sub_op_sv(sub_op_sv),
 		.sub_op_b(sub_op_b),
+		.sub_op_j(sub_op_j),
 
 		.reg_ra_addr(reg_ra_addr),
 		.reg_rb_addr(reg_rb_addr),
@@ -301,11 +309,13 @@ module top(
 
 		.opcode(iREG2_opcode),
 		.sub_op_b(sub_op_b),
+		.sub_op_j(sub_op_j),
 		.reg_rt_ra_equal(reg_rt_ra_equal),
 
 		.imm_14bit(imm_14bit),
 		.imm_24bit(imm_24bit),
 
+		.do_link(do_link),
 		.do_flush_REG1(do_flush_REG1),
 		.do_hazard(do_hazard)
 	);
