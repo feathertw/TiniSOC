@@ -180,14 +180,14 @@ module regwalls(
 		mREG3_current_pc <=mREG2_current_pc;
 		mREG4_current_pc <=mREG3_current_pc;
 `endif
-		if(r_do_flush_REG1)begin
+		if(do_flush_REG1)begin
 			oREG1_instruction<=32'b0;
 		end
 		else begin
 			oREG1_instruction<=iREG1_instruction;
 		end
 
-		if(r_do_flush_REG2||do_hazard)begin
+		if(do_flush_REG2||do_hazard)begin
 			oREG2_reg_ra_data<=32'b0;
 			mREG2_reg_rt_data<=32'b0;
 
@@ -224,7 +224,7 @@ module regwalls(
 			mREG2_select_write_reg<=iREG2_select_write_reg;
 		end
 
-		if(r_do_flush_REG3)begin
+		if(do_flush_REG3)begin
 			oREG3_reg_rt_data     <=32'b0;
 			oREG3_alu_result      <=32'b0;
 			oREG3_alu_overflow    <= 1'b0;
@@ -249,7 +249,7 @@ module regwalls(
 			oREG3_select_write_reg<=mREG2_select_write_reg;
 		end
 
-		if(r_do_flush_REG4)begin
+		if(do_flush_REG4)begin
 			oREG4_do_reg_write  <= 1'b0;
 			oREG4_write_reg_addr<= 5'b0;
 			oREG4_write_reg_data<=32'b0;
