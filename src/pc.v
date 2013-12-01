@@ -46,10 +46,6 @@ module pc(
 	reg do_flush_REG1;
 
 	always@(negedge clock) begin
-		if(do_jump_reg) current_pc<=reg_rb_data;
-	end
-
-	always@(posedge clock) begin
 		if(reset) 	   current_pc<=0;
 		else if(do_hazard) current_pc<=current_pc;
 		else if(enable_pc) current_pc<=next_pc;
@@ -80,7 +76,7 @@ module pc(
 		endcase
 	end
 
-	always @(select_pc or current_pc or imm_14bit or imm_24bit) begin
+	always @(select_pc or current_pc or imm_14bit or imm_24bit or reg_rb_data) begin
 		case(select_pc)
 			`PC_4:begin
 				next_pc=current_pc+4;
@@ -98,7 +94,7 @@ module pc(
 				do_jump_reg  =1'b0;
 			end
 			`PC_REGISTER:begin
-				next_pc=10'bxxxx_xxxx_xx;
+				next_pc=reg_rb_data;
 				do_flush_REG1=1'b1;
 				do_jump_reg  =1'b1;
 			end
