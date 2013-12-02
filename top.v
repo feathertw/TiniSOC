@@ -120,55 +120,36 @@ module top(
 	wire do_hazard;
 
 	//REGWALL
-	wire [31:0] iREG1_instruction;
-	wire [31:0] oREG1_instruction;
+	wire [31:0] xREG1_instruction;
 
-	wire [31:0] iREG2_reg_ra_data;
-	wire [31:0] iREG2_reg_rt_data;
-	wire [31:0] oREG2_reg_ra_data;
-	wire [31:0] oREG3_reg_rt_data;
+	wire [31:0] xREG2_reg_ra_data;
+	wire [31:0] xREG3_reg_rt_data;
 
-	wire [ 5:0] iREG2_opcode;
-	wire [ 4:0] iREG2_sub_op_base;
-	wire [ 7:0] iREG2_sub_op_ls;
-	wire [ 5:0] oREG2_opcode;
-	wire [ 4:0] oREG2_sub_op_base;
-	wire [ 7:0] oREG2_sub_op_ls;
+	wire [ 5:0] xREG2_opcode;
+	wire [ 4:0] xREG2_sub_op_base;
+	wire [ 7:0] xREG2_sub_op_ls;
 
-	wire [ 1:0] iREG2_select_write_reg;
-	wire [ 1:0] mREG2_select_write_reg;
-	wire [ 1:0] oREG3_select_write_reg;
+	wire [ 1:0] xREG2_select_write_reg;
+	wire [ 1:0] xREG3_select_write_reg;
 
-	wire iREG2_do_dm_read;
-	wire iREG2_do_dm_write;
-	wire iREG2_do_reg_write;
-	wire mREG2_do_dm_read;
-	wire mREG2_do_reg_write;
-	wire oREG3_do_dm_read;
-	wire oREG3_do_dm_write;
-	wire mREG3_do_reg_write;
-	wire oREG4_do_reg_write;
+	wire xREG2_do_dm_read;
+	wire xREG2_do_reg_write;
+	wire xREG3_do_dm_read;
+	wire xREG3_do_dm_write;
+	wire xREG3_do_reg_write;
+	wire xREG4_do_reg_write;
 
-	wire [31:0] iREG2_alu_src2;
-	wire [31:0] oREG2_alu_src2;
-	wire [31:0] iREG2_imm_extend;
-	wire [31:0] mREG2_imm_extend;
-	wire [31:0] oREG3_imm_extend;
+	wire [31:0] xREG2_alu_src2;
+	wire [31:0] xREG2_imm_extend;
+	wire [31:0] xREG3_imm_extend;
 
-	wire [31:0] iREG3_alu_result;
-	wire [31:0] oREG3_alu_result;
+	wire [31:0] xREG3_alu_result;
 
-	wire [ 4:0] iREG2_write_reg_addr;
-	wire [ 4:0] mREG2_write_reg_addr;
-	wire [ 4:0] mREG3_write_reg_addr;
-	wire [ 4:0] oREG4_write_reg_addr;
-	wire [31:0] iREG4_write_reg_data;
-	wire [31:0] oREG4_write_reg_data;
+	wire [ 4:0] xREG2_write_reg_addr;
+	wire [ 4:0] xREG3_write_reg_addr;
+	wire [ 4:0] xREG4_write_reg_addr;
+	wire [31:0] xREG4_write_reg_data;
 
-	//
-	//assign iREG2_write_reg_addr=reg_rt_addr;
-
-	//
 	wire do_flush_REG1;
 	wire do_flush_REG2;
 	wire do_flush_REG3;
@@ -179,11 +160,11 @@ module top(
 	assign IM_enable=enable_system;
 	assign IM_address=current_pc;
 
-	assign DM_read =oREG3_do_dm_read;
-	assign DM_write=oREG3_do_dm_write;
+	assign DM_read =xREG3_do_dm_read;
+	assign DM_write=xREG3_do_dm_write;
 	assign DM_enable=enable_system;
-	assign DM_address=oREG3_alu_result[11:0];
-	assign DM_in=oREG3_reg_rt_data;//*
+	assign DM_address=xREG3_alu_result[11:0];
+	assign DM_in=xREG3_reg_rt_data;//*
 	assign mem_read_data=DM_out;
 
 	wire enable_system;
@@ -196,11 +177,11 @@ module top(
 	alu ALU(
 		.reset(rst),
 		.enable_execute(enable_system),
-		.alu_src1(oREG2_reg_ra_data),
-		.alu_src2(oREG2_alu_src2),
-		.opcode(oREG2_opcode),
-		.sub_op_base(oREG2_sub_op_base),
-		.sub_op_ls(oREG2_sub_op_ls),
+		.alu_src1(xREG2_reg_ra_data),
+		.alu_src2(xREG2_alu_src2),
+		.opcode(xREG2_opcode),
+		.sub_op_base(xREG2_sub_op_base),
+		.sub_op_ls(xREG2_sub_op_ls),
 
 		.alu_result(alu_result),
 		.alu_overflow(alu_overflow),
@@ -215,9 +196,9 @@ module top(
 		.reg_ra_addr(reg_ra_addr),
 		.reg_rb_addr(reg_rb_addr),
 		.reg_rt_addr(reg_rt_addr),
-		.write_reg_addr(oREG4_write_reg_addr),
-		.write_reg_data(oREG4_write_reg_data),
-		.do_reg_write(oREG4_do_reg_write),
+		.write_reg_addr(xREG4_write_reg_addr),
+		.write_reg_data(xREG4_write_reg_data),
+		.do_reg_write(xREG4_do_reg_write),
 
 		.current_pc(current_pc),
 		.do_link(do_link),
@@ -232,8 +213,8 @@ module top(
 		.reg_rb_data(f_reg_rb_data),
 		.reg_rt_data(f_reg_rt_data),
 
-		.alu_result(oREG3_alu_result),//*
-		.xREG3_imm_extend(oREG3_imm_extend),
+		.alu_result(xREG3_alu_result),//*
+		.xREG3_imm_extend(xREG3_imm_extend),
 		.mem_read_data(mem_read_data),
 
 		.imm_5bit(imm_5bit),
@@ -242,7 +223,7 @@ module top(
 
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
-		.select_write_reg(oREG3_select_write_reg),
+		.select_write_reg(xREG3_select_write_reg),
 
 		.imm_extend(imm_extend),
 		.alu_src2(alu_src2),
@@ -252,7 +233,7 @@ module top(
 	controller CONTROLLER(
 		.clock(clk),
 		.reset(rst),
-		.instruction(oREG1_instruction),
+		.instruction(xREG1_instruction),
 
 		.enable_fetch(enable_fetch),
 		.enable_execute(enable_execute),
@@ -312,48 +293,48 @@ module top(
 	regwalls REGWALLS(
 		.clock(clk),
 		.iREG1_instruction(instruction),
-		.oREG1_instruction(oREG1_instruction),
+		.oREG1_instruction(xREG1_instruction),
 		.iREG2_reg_ra_data(f_reg_ra_data),
 		.iREG2_reg_rt_data(f_reg_rt_data),
-		.oREG2_reg_ra_data(oREG2_reg_ra_data),
-		.oREG3_reg_rt_data(oREG3_reg_rt_data),
+		.oREG2_reg_ra_data(xREG2_reg_ra_data),
+		.oREG3_reg_rt_data(xREG3_reg_rt_data),
 		.iREG2_write_reg_addr(reg_rt_addr),
-		.mREG2_write_reg_addr(mREG2_write_reg_addr),
-		.mREG3_write_reg_addr(mREG3_write_reg_addr),
-		.oREG4_write_reg_addr(oREG4_write_reg_addr),
+		.mREG2_write_reg_addr(xREG2_write_reg_addr),
+		.mREG3_write_reg_addr(xREG3_write_reg_addr),
+		.oREG4_write_reg_addr(xREG4_write_reg_addr),
 
 		.iREG2_opcode(opcode),
 		.iREG2_sub_op_base(sub_op_base),
 		.iREG2_sub_op_ls(sub_op_ls),
-		.oREG2_opcode(oREG2_opcode),
-		.oREG2_sub_op_base(oREG2_sub_op_base),
-		.oREG2_sub_op_ls(oREG2_sub_op_ls),
+		.oREG2_opcode(xREG2_opcode),
+		.oREG2_sub_op_base(xREG2_sub_op_base),
+		.oREG2_sub_op_ls(xREG2_sub_op_ls),
 
 		.iREG2_select_write_reg(select_write_reg),
-		.mREG2_select_write_reg(mREG2_select_write_reg),
-		.oREG3_select_write_reg(oREG3_select_write_reg),
+		.mREG2_select_write_reg(xREG2_select_write_reg),
+		.oREG3_select_write_reg(xREG3_select_write_reg),
 
 		.iREG2_do_dm_read(do_dm_read),
 		.iREG2_do_dm_write(do_dm_write),
 		.iREG2_do_reg_write(do_reg_write),
-		.mREG2_do_dm_read(mREG2_do_dm_read),
-		.mREG2_do_reg_write(mREG2_do_reg_write),
-		.oREG3_do_dm_read(oREG3_do_dm_read),
-		.oREG3_do_dm_write(oREG3_do_dm_write),
-		.mREG3_do_reg_write(mREG3_do_reg_write),
-		.oREG4_do_reg_write(oREG4_do_reg_write),
+		.mREG2_do_dm_read(xREG2_do_dm_read),
+		.mREG2_do_reg_write(xREG2_do_reg_write),
+		.oREG3_do_dm_read(xREG3_do_dm_read),
+		.oREG3_do_dm_write(xREG3_do_dm_write),
+		.mREG3_do_reg_write(xREG3_do_reg_write),
+		.oREG4_do_reg_write(xREG4_do_reg_write),
 
 		.iREG2_alu_src2(alu_src2),
-		.oREG2_alu_src2(oREG2_alu_src2),
+		.oREG2_alu_src2(xREG2_alu_src2),
 		.iREG2_imm_extend(imm_extend),
-		.mREG2_imm_extend(mREG2_imm_extend),
-		.oREG3_imm_extend(oREG3_imm_extend),
+		.mREG2_imm_extend(xREG2_imm_extend),
+		.oREG3_imm_extend(xREG3_imm_extend),
 
 		.iREG3_alu_result(alu_result),
-		.oREG3_alu_result(oREG3_alu_result),
+		.oREG3_alu_result(xREG3_alu_result),
 
 		.iREG4_write_reg_data(write_reg_data),
-		.oREG4_write_reg_data(oREG4_write_reg_data),
+		.oREG4_write_reg_data(xREG4_write_reg_data),
 
 		.do_flush_REG1(do_flush_REG1),
 		.do_flush_REG2(do_flush_REG2),
@@ -363,24 +344,24 @@ module top(
 	);
 	forward FORWARD(
 		.alu_result(alu_result),
-		.xREG2_imm_extend(mREG2_imm_extend),
+		.xREG2_imm_extend(xREG2_imm_extend),
 
 		.reg_ra_addr(reg_ra_addr),
 		.reg_rb_addr(reg_rb_addr),
 		.reg_rt_addr(reg_rt_addr),
 
-		.xREG2_do_dm_read(mREG2_do_dm_read),
-		.xREG2_do_reg_write(mREG2_do_reg_write),
-		.xREG2_select_write_reg(mREG2_select_write_reg),
-		.xREG2_write_reg_addr(mREG2_write_reg_addr),
+		.xREG2_do_dm_read(xREG2_do_dm_read),
+		.xREG2_do_reg_write(xREG2_do_reg_write),
+		.xREG2_select_write_reg(xREG2_select_write_reg),
+		.xREG2_write_reg_addr(xREG2_write_reg_addr),
 
-		.xREG3_do_reg_write(mREG3_do_reg_write),
-		.xREG3_write_reg_addr(mREG3_write_reg_addr),
+		.xREG3_do_reg_write(xREG3_do_reg_write),
+		.xREG3_write_reg_addr(xREG3_write_reg_addr),
 		.write_reg_data(write_reg_data),
 
-		.xREG4_do_reg_write(oREG4_do_reg_write),
-		.xREG4_write_reg_addr(oREG4_write_reg_addr),
-		.xREG4_write_reg_data(oREG4_write_reg_data),
+		.xREG4_do_reg_write(xREG4_do_reg_write),
+		.xREG4_write_reg_addr(xREG4_write_reg_addr),
+		.xREG4_write_reg_data(xREG4_write_reg_data),
 
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
