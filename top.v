@@ -48,9 +48,6 @@ module top(
 
 	//controller to regfile
 	wire do_reg_write;
-	wire [4:0] reg_ra_addr;
-	wire [4:0] reg_rb_addr;
-	wire [4:0] reg_rt_addr;
 
 	//controller to muxs
 	wire [2:0] select_alu_src2;
@@ -58,12 +55,22 @@ module top(
 	wire [1:0] select_write_reg;
 
 	//controller to alu
-	wire [5:0] opcode;
-	wire [4:0] sub_op_base;
-	wire [7:0] sub_op_ls;
-	wire [1:0] sub_op_sv;
-	wire sub_op_b;
-	wire sub_op_j;
+	wire [5:0] opcode	=xREG1_instruction[30:25];
+	wire [4:0] sub_op_base	=xREG1_instruction[4:0];
+	wire [7:0] sub_op_ls	=xREG1_instruction[7:0];
+	wire [1:0] sub_op_sv	=xREG1_instruction[9:8];
+	wire sub_op_b		=xREG1_instruction[14];
+	wire sub_op_j		=xREG1_instruction[24];
+
+	wire [4:0] reg_ra_addr  =xREG1_instruction[19:15];
+	wire [4:0] reg_rb_addr  =xREG1_instruction[14:10];
+	wire [4:0] reg_rt_addr  =xREG1_instruction[24:20];
+
+	wire [ 4:0] imm_5bit    =xREG1_instruction[14:10];
+	wire [13:0] imm_14bit   =xREG1_instruction[13:0];
+	wire [14:0] imm_15bit   =xREG1_instruction[14:0];
+	wire [19:0] imm_20bit   =xREG1_instruction[19:0];
+	wire [23:0] imm_24bit   =xREG1_instruction[23:0];
 
 	// regfile to alu
 	wire [31:0] reg_ra_data;
@@ -74,11 +81,7 @@ module top(
 	//regfile to muxs
 	wire [31:0] reg_rb_data;
 	wire [31:0] reg_rt_data;
-	wire [ 4:0] imm_5bit;
-	wire [13:0] imm_14bit;
-	wire [14:0] imm_15bit;
-	wire [19:0] imm_20bit;
-	wire [23:0] imm_24bit;
+
 
 	//muxs to regfile
 	wire [31:0] write_reg_data;
@@ -224,24 +227,11 @@ module top(
 	controller CONTROLLER(
 		.clock(clk),
 		.reset(rst),
-		.instruction(xREG1_instruction),
 
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
 		.sub_op_ls(sub_op_ls),
-		.sub_op_sv(sub_op_sv),
-		.sub_op_b(sub_op_b),
-		.sub_op_j(sub_op_j),
 
-		.reg_ra_addr(reg_ra_addr),
-		.reg_rb_addr(reg_rb_addr),
-		.reg_rt_addr(reg_rt_addr),
-
-		.imm_5bit(imm_5bit),
-		.imm_14bit(imm_14bit),
-		.imm_15bit(imm_15bit),
-		.imm_20bit(imm_20bit),
-		.imm_24bit(imm_24bit),
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
 		.select_write_reg(select_write_reg),

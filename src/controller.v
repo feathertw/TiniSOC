@@ -4,24 +4,11 @@
 module controller(
 	clock,
 	reset,
-	instruction,
 
 	opcode,
 	sub_op_base,
 	sub_op_ls,
-	sub_op_sv,
-	sub_op_b,
-	sub_op_j,
 
-	reg_ra_addr,
-	reg_rb_addr,
-	reg_rt_addr,
-
-	imm_5bit,
-	imm_14bit,
-	imm_15bit,
-	imm_20bit,
-	imm_24bit,
 	select_alu_src2,
 	select_imm_extend,
 	select_write_reg,
@@ -39,24 +26,11 @@ module controller(
 	
 	input clock;
 	input reset;
-	input [31:0] instruction;
 	
-	output [5:0] opcode;
-	output [4:0] sub_op_base;
-	output [7:0] sub_op_ls;
-	output [1:0] sub_op_sv;
-	output sub_op_b;
-	output sub_op_j;
+	input [5:0] opcode;
+	input [4:0] sub_op_base;
+	input [7:0] sub_op_ls;
 
-	output [4:0] reg_ra_addr;
-	output [4:0] reg_rb_addr;
-	output [4:0] reg_rt_addr;
-
-	output [4:0] imm_5bit;
-	output [13:0] imm_14bit;
-	output [14:0] imm_15bit;
-	output [19:0] imm_20bit;
-	output [23:0] imm_24bit;
 	output [2:0] select_alu_src2;
 	output [1:0] select_imm_extend;
 	output [1:0] select_write_reg;
@@ -79,34 +53,10 @@ module controller(
 	reg do_dm_write;
 	reg do_reg_write;
 
-	reg [31:0] present_instruction;
-
-	wire [5:0] opcode=instruction[30:25];
-	wire [4:0] sub_op_base=instruction[4:0];
-	wire [7:0] sub_op_ls=instruction[7:0];
-	wire [1:0] sub_op_sv=instruction[9:8];
-	wire sub_op_b=instruction[14];
-	wire sub_op_j=instruction[24];
-
-	wire [4:0] reg_ra_addr=instruction[19:15];
-	wire [4:0] reg_rb_addr=instruction[14:10];
-	wire [4:0] reg_rt_addr=instruction[24:20];
-
-	wire [4:0] imm_5bit=instruction[14:10];
-	wire [13:0] imm_14bit=instruction[13:0];
-	wire [14:0] imm_15bit=instruction[14:0];
-	wire [19:0] imm_20bit=instruction[19:0];
-	wire [23:0] imm_24bit=instruction[23:0];
-
 	assign do_im_read  = (reset)?1'b0:1'b1;
 	assign do_im_write = (reset)?1'b0:1'b0;
 
 	assign reg_rt_ra_equal=(reg_rt_data==reg_ra_data)?1'b1:1'b0;
-
-	always@(posedge clock or posedge reset) begin
-		if(reset) present_instruction<=0;
-		else	  present_instruction<=instruction;
-	end
 
 	always@(opcode or sub_op_base or sub_op_ls) begin
 		case(opcode)
