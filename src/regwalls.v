@@ -1,7 +1,4 @@
 module regwalls(
-`ifdef BUGMODE
-	iREG1_current_pc,
-`endif
 	clock,
 	iREG1_instruction,
 	oREG1_instruction,
@@ -61,13 +58,6 @@ module regwalls(
 	do_flush_REG4,
 	do_hazard
 );
-`ifdef BUGMODE
-	input  [ 9:0] iREG1_current_pc;
-	reg    [ 9:0] mREG1_current_pc;
-	reg    [ 9:0] mREG2_current_pc;
-	reg    [ 9:0] mREG3_current_pc;
-	reg    [ 9:0] mREG4_current_pc;
-`endif
 	input  clock;
 
 	input  [31:0] iREG1_instruction;
@@ -174,12 +164,6 @@ module regwalls(
 	end
 
 	always@(negedge clock)begin
-`ifdef BUGMODE
-		mREG1_current_pc <=iREG1_current_pc;
-		mREG2_current_pc <=mREG1_current_pc;
-		mREG3_current_pc <=mREG2_current_pc;
-		mREG4_current_pc <=mREG3_current_pc;
-`endif
 		if(do_flush_REG1)begin
 			oREG1_instruction<=32'b0;
 		end
