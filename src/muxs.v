@@ -6,7 +6,7 @@ module muxs(
 	reg_rt_data,
 
 	alu_result,
-	r_imm_extend,
+	xREG3_imm_extend,
 	mem_read_data,
 
 	imm_5bit,
@@ -29,7 +29,7 @@ module muxs(
 	input [DataSize-1:0] reg_rt_data;
 
 	input [DataSize-1:0] alu_result;
-	input [DataSize-1:0] r_imm_extend;
+	input [DataSize-1:0] xREG3_imm_extend;
 	input [DataSize-1:0] mem_read_data;
 
 	input [4:0] imm_5bit;
@@ -92,13 +92,13 @@ module muxs(
 		endcase
 	end
 
-	always @(select_write_reg or alu_result or r_imm_extend or mem_read_data) begin
+	always @(select_write_reg or alu_result or xREG3_imm_extend or mem_read_data) begin
 		case(select_write_reg)
 			`WRREG_ALURESULT: begin
 				write_reg_data = alu_result;
 			end
 			`WRREG_IMMDATA: begin
-				write_reg_data = r_imm_extend;
+				write_reg_data = xREG3_imm_extend;
 			end
 			`WRREG_MEM: begin
 				write_reg_data = mem_read_data;

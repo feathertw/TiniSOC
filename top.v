@@ -244,7 +244,7 @@ module top(
 		.reg_rt_data(f_reg_rt_data),
 
 		.alu_result(oREG3_alu_result),//*
-		.r_imm_extend(oREG3_imm_extend),
+		.xREG3_imm_extend(oREG3_imm_extend),
 		.mem_read_data(mem_read_data),
 
 		.imm_5bit(imm_5bit),
