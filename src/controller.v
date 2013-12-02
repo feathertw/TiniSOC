@@ -11,12 +11,6 @@ module controller(
 	reset,
 	instruction,
 
-	enable_fetch,
-	enable_execute,
-	enable_decode,
-	enable_memaccess,
-	enable_writeback,
-
 	opcode,
 	sub_op_base,
 	sub_op_ls,
@@ -52,12 +46,6 @@ module controller(
 	input reset;
 	input [31:0] instruction;
 	
-	output enable_fetch;
-	output enable_execute;
-	output enable_decode;
-	output enable_memaccess;
-	output enable_writeback;
-
 	output [5:0] opcode;
 	output [4:0] sub_op_base;
 	output [7:0] sub_op_ls;
@@ -88,12 +76,6 @@ module controller(
 	input [31:0] reg_ra_data;
 	output reg_rt_ra_equal;
 
-	reg enable_fetch;
-	reg enable_execute;
-	reg enable_decode;
-	reg enable_memaccess;
-	reg enable_writeback;
-
 	reg [2:0] select_alu_src2;
 	reg [1:0] select_imm_extend;
 	reg [1:0] select_write_reg;
@@ -102,8 +84,6 @@ module controller(
 	reg do_dm_write;
 	reg do_reg_write;
 
-	reg [2:0] current_state;
-	reg [2:0] next_state;
 	reg [31:0] present_instruction;
 
 	wire [5:0] opcode=instruction[30:25];
@@ -123,12 +103,6 @@ module controller(
 	wire [19:0] imm_20bit=instruction[19:0];
 	wire [23:0] imm_24bit=instruction[23:0];
 
-	parameter S0=3'b000;
-	parameter S1=3'b001;
-	parameter S2=3'b010;
-	parameter S3=3'b011;
-	parameter S4=3'b100;
-
 	assign do_im_read  = (reset)?1'b0:1'b1;
 	assign do_im_write = (reset)?1'b0:1'b0;
 
@@ -137,68 +111,6 @@ module controller(
 	always@(posedge clock or posedge reset) begin
 		if(reset) present_instruction<=0;
 		else	  present_instruction<=instruction;
-	end
-
-	always@(posedge clock or posedge reset) begin
-		if(reset)begin 
-			current_state<= S0;
-		end
-		else begin
-			current_state<= next_state;
-		end
-	end
-
-	always@(current_state) begin
-		case(current_state)
-			S0: begin
-				next_state=S1;
-				enable_fetch=1'b1;
-				enable_decode=1'b0;
-				enable_execute=1'b0;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b0;
-			end
-			S1: begin
-				next_state=S2;
-				enable_fetch=1'b0;
-				enable_decode=1'b1;
-				enable_execute=1'b0;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b0;
-			end
-			S2: begin
-				next_state=S3;
-				enable_fetch=1'b0;
-				enable_decode=1'b0;
-				enable_execute=1'b1;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b0;
-			end
-			S3: begin
-				next_state=S4;
-				enable_fetch=1'b0;
-				enable_decode=1'b0;
-				enable_execute=1'b0;
-				enable_memaccess=1'b1;
-				enable_writeback=1'b0;
-			end
-			S4: begin
-				next_state=S0;
-				enable_fetch=1'b0;
-				enable_decode=1'b0;
-				enable_execute=1'b0;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b1;
-			end
-			default: begin
-				next_state=S0;
-				enable_fetch=1'b0;
-				enable_decode=1'b0;
-				enable_execute=1'b0;
-				enable_memaccess=1'b0;
-				enable_writeback=1'b0;
-			end
-		endcase
 	end
 
 	always@(`OPCODE or `SUBOP_BASE or `SUBOP_LS) begin

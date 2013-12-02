@@ -47,8 +47,6 @@ module top(
 	wire do_dm_write;
 
 	//controller to regfile
-	wire enable_decode;
-	wire enable_writeback;
 	wire do_reg_write;
 	wire [4:0] reg_ra_addr;
 	wire [4:0] reg_rb_addr;
@@ -66,13 +64,10 @@ module top(
 	wire [1:0] sub_op_sv;
 	wire sub_op_b;
 	wire sub_op_j;
-	wire enable_execute;
 
 	//controller to im
-	wire enable_fetch;
 
 	//controller to dm
-	wire enable_memaccess;
 
 	// regfile to alu
 	wire [31:0] reg_ra_data;
@@ -234,12 +229,6 @@ module top(
 		.clock(clk),
 		.reset(rst),
 		.instruction(xREG1_instruction),
-
-		.enable_fetch(enable_fetch),
-		.enable_execute(enable_execute),
-		.enable_decode(enable_decode),
-		.enable_memaccess(enable_memaccess),
-		.enable_writeback(enable_writeback),
 
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
