@@ -50,9 +50,6 @@ module regwalls(
 	oREG4_write_reg_data,
 
 	do_flush_REG1,
-	do_flush_REG2,
-	do_flush_REG3,
-	do_flush_REG4,
 	do_hazard
 );
 	input  clock;
@@ -139,22 +136,7 @@ module regwalls(
 	reg    [31:0] oREG4_write_reg_data;
 
 	input do_flush_REG1;
-	input do_flush_REG2;
-	input do_flush_REG3;
-	input do_flush_REG4;
 	input do_hazard;
-
-	reg r_do_flush_REG1;
-	reg r_do_flush_REG2;
-	reg r_do_flush_REG3;
-	reg r_do_flush_REG4;
-
-	always@(posedge clock)begin
-		r_do_flush_REG1<=do_flush_REG1;
-		r_do_flush_REG2<=do_flush_REG2;
-		r_do_flush_REG3<=do_flush_REG3;
-		r_do_flush_REG4<=do_flush_REG4;
-	end
 
 	always@(negedge clock)begin
 		if(do_flush_REG1)begin
@@ -167,7 +149,7 @@ module regwalls(
 			oREG1_instruction<=iREG1_instruction;
 		end
 
-		if(do_flush_REG2||do_hazard)begin
+		if(do_hazard)begin
 			oREG2_reg_ra_data<=32'b0;
 			mREG2_reg_rt_data<=32'b0;
 
@@ -204,38 +186,18 @@ module regwalls(
 			mREG2_select_write_reg<=iREG2_select_write_reg;
 		end
 
-		if(do_flush_REG3)begin
-			oREG3_reg_rt_data     <=32'b0;
-			oREG3_alu_result      <=32'b0;
-			oREG3_imm_extend      <=32'b0;
+		oREG3_reg_rt_data     <=mREG2_reg_rt_data;
+		oREG3_alu_result      <=iREG3_alu_result;
+		oREG3_imm_extend      <=mREG2_imm_extend;
 
-			oREG3_do_dm_read      <=1'b0;
-			oREG3_do_dm_write     <=1'b0;
-			mREG3_do_reg_write    <=1'b0;
-			mREG3_write_reg_addr  <=5'b0;
-			oREG3_select_write_reg<=2'b0;
-		end
-		else begin
-			oREG3_reg_rt_data     <=mREG2_reg_rt_data;
-			oREG3_alu_result      <=iREG3_alu_result;
-			oREG3_imm_extend      <=mREG2_imm_extend;
+		oREG3_do_dm_read      <=mREG2_do_dm_read;
+		oREG3_do_dm_write     <=mREG2_do_dm_write;
+		mREG3_do_reg_write    <=mREG2_do_reg_write;
+		mREG3_write_reg_addr  <=mREG2_write_reg_addr;
+		oREG3_select_write_reg<=mREG2_select_write_reg;
 
-			oREG3_do_dm_read      <=mREG2_do_dm_read;
-			oREG3_do_dm_write     <=mREG2_do_dm_write;
-			mREG3_do_reg_write    <=mREG2_do_reg_write;
-			mREG3_write_reg_addr  <=mREG2_write_reg_addr;
-			oREG3_select_write_reg<=mREG2_select_write_reg;
-		end
-
-		if(do_flush_REG4)begin
-			oREG4_do_reg_write  <= 1'b0;
-			oREG4_write_reg_addr<= 5'b0;
-			oREG4_write_reg_data<=32'b0;
-		end
-		else begin
-			oREG4_do_reg_write  <=mREG3_do_reg_write;
-			oREG4_write_reg_addr<=mREG3_write_reg_addr;
-			oREG4_write_reg_data<=iREG4_write_reg_data;
-		end
+		oREG4_do_reg_write  <=mREG3_do_reg_write;
+		oREG4_write_reg_addr<=mREG3_write_reg_addr;
+		oREG4_write_reg_data<=iREG4_write_reg_data;
 	end
 endmodule

@@ -144,10 +144,6 @@ module top(
 	wire enable_system;
 	assign enable_system=1'b1;
 
-	assign do_flush_REG2=1'b0;
-	assign do_flush_REG3=1'b0;
-	assign do_flush_REG4=1'b0;
-
 	alu ALU(
 		.reset(rst),
 		.enable_execute(enable_system),
@@ -291,9 +287,6 @@ module top(
 		.oREG4_write_reg_data(xREG4_write_reg_data),
 
 		.do_flush_REG1(do_flush_REG1),
-		.do_flush_REG2(do_flush_REG2),
-		.do_flush_REG3(do_flush_REG3),
-		.do_flush_REG4(do_flush_REG4),
 		.do_hazard(do_hazard)
 	);
 	forward FORWARD(
