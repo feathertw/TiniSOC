@@ -8,6 +8,10 @@
 `define CHOOSE xREG4_do_reg_write or xREG4_write_reg_addr or xREG3_do_reg_write or xREG3_write_reg_addr \
 		or xREG2_do_reg_write or xREG2_write_reg_addr or xREG2_do_dm_read or xREG2_select_write_reg
 
+`define HAZARD_EVENT reg_rt_addr or reg_ra_addr or reg_rb_addr or xREG2_write_reg_addr
+`define HAZARD_ADDR_CONDITION (reg_rt_addr==xREG2_write_reg_addr || reg_ra_addr==xREG2_write_reg_addr \
+		|| reg_rb_addr==xREG2_write_reg_addr)
+
 module forward(
 	reg_ra_addr,
 	reg_rb_addr,
@@ -134,18 +138,11 @@ module forward(
 		endcase
 	end
 
-	always @(xREG2_do_dm_read or reg_rt_addr or reg_ra_addr or reg_rb_addr or xREG2_write_reg_addr) begin
+	always @(`HAZARD_EVENT or xREG2_do_dm_read) begin
 		if(xREG2_do_dm_read)begin
-			if(	   reg_rt_addr==xREG2_write_reg_addr
-				|| reg_ra_addr==xREG2_write_reg_addr
-				|| reg_rb_addr==xREG2_write_reg_addr)begin
-				do_hazard=1'b1;
-			end
-			else begin
-				do_hazard=1'b0;
-			end
+			if(`HAZARD_ADDR_CONDITION) do_hazard=1'b1;
+			else			   do_hazard=1'b0;
 		end
-		else
-			do_hazard=1'b0;
+		else				   do_hazard=1'b0;
 	end
 endmodule
