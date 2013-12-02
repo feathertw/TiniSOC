@@ -90,7 +90,7 @@ module forward(
 		end
 	end
 
-	always @(*) begin
+	always @(xREG2_do_dm_read or reg_rt_addr or reg_ra_addr or reg_rb_addr or xREG2_write_reg_addr) begin
 		if(xREG2_do_dm_read)begin
 			if(	   reg_rt_addr==xREG2_write_reg_addr
 				|| reg_ra_addr==xREG2_write_reg_addr
