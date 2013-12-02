@@ -10,8 +10,7 @@ module alu(
 	sub_op_ls,
 
 	alu_result,
-	alu_overflow,
-	alu_zero
+	alu_overflow
 );
 
 	input reset;
@@ -24,7 +23,6 @@ module alu(
 
 	output [31:0] alu_result;
 	output alu_overflow;
-	output alu_zero;
 
 	reg [31:0] alu_result;
 	reg alu_overflow;
@@ -32,8 +30,6 @@ module alu(
 	reg [63:0] rotate;
 	reg a;
 	reg b;
-
-	assign alu_zero=(alu_result==32'b0)?1'b1:1'b0;
 
 	always @(reset or enable_execute or opcode or sub_op_base or sub_op_ls or alu_src1 or alu_src2) begin
 		if(reset) begin
