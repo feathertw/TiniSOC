@@ -20,3 +20,9 @@
 `define WRREG_IMMDATA 	2'b01
 `define WRREG_MEM	2'b10
 `define WRREG_UNKOWN	2'bxx
+
+`define FOR_RG_ORI 	3'b000
+`define FOR_RG_REG4	3'b001
+`define FOR_RG_REG3	3'b010
+`define FOR_RG_REG2_IMM 3'b011
+`define FOR_RG_REG2_ALU 3'b100
