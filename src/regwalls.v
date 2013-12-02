@@ -46,9 +46,6 @@ module regwalls(
 	iREG3_alu_result,
 	oREG3_alu_result,
 
-	iREG3_alu_overflow,
-	oREG3_alu_overflow,
-
 	iREG4_write_reg_data,
 	oREG4_write_reg_data,
 
@@ -136,10 +133,6 @@ module regwalls(
 	output [31:0] oREG3_alu_result;
 	reg    [31:0] oREG3_alu_result;
 
-	input  iREG3_alu_overflow;
-	output oREG3_alu_overflow;
-	reg    oREG3_alu_overflow;
-
 	//muxs
 	input  [31:0] iREG4_write_reg_data;
 	output [31:0] oREG4_write_reg_data;
@@ -214,7 +207,6 @@ module regwalls(
 		if(do_flush_REG3)begin
 			oREG3_reg_rt_data     <=32'b0;
 			oREG3_alu_result      <=32'b0;
-			oREG3_alu_overflow    <= 1'b0;
 			oREG3_imm_extend      <=32'b0;
 
 			oREG3_do_dm_read      <=1'b0;
@@ -226,7 +218,6 @@ module regwalls(
 		else begin
 			oREG3_reg_rt_data     <=mREG2_reg_rt_data;
 			oREG3_alu_result      <=iREG3_alu_result;
-			oREG3_alu_overflow    <=iREG3_alu_overflow;
 			oREG3_imm_extend      <=mREG2_imm_extend;
 
 			oREG3_do_dm_read      <=mREG2_do_dm_read;

@@ -113,11 +113,6 @@ module top(
 	//mem to muxs
 	wire [31:0] mem_read_data;
 
-	//alu to reg
-	wire tmp_alu_overflow;
-
-	reg reg_alu_overflow; //*
-
 	//forward
 	wire [31:0] f_reg_rt_data;
 	wire [31:0] f_reg_ra_data;
@@ -163,9 +158,6 @@ module top(
 	wire [31:0] iREG3_alu_result;
 	wire [31:0] oREG3_alu_result;
 
-	wire iREG3_alu_overflow;
-	wire oREG3_alu_overflow;
-
 	wire [ 4:0] iREG2_write_reg_addr;
 	wire [ 4:0] mREG2_write_reg_addr;
 	wire [ 4:0] mREG3_write_reg_addr;
@@ -181,9 +173,6 @@ module top(
 	wire do_flush_REG2;
 	wire do_flush_REG3;
 	wire do_flush_REG4;
-
-	//top input output
-	assign alu_overflow=reg_alu_overflow;
 
 	assign IM_read =do_im_read;
 	assign IM_write=do_im_write;
@@ -214,7 +203,7 @@ module top(
 		.sub_op_ls(oREG2_sub_op_ls),
 
 		.alu_result(alu_result),
-		.alu_overflow(tmp_alu_overflow),
+		.alu_overflow(alu_overflow),
 		.alu_zero(alu_zero)
 	);
 	
@@ -362,9 +351,6 @@ module top(
 
 		.iREG3_alu_result(alu_result),
 		.oREG3_alu_result(oREG3_alu_result),
-
-		.iREG3_alu_overflow(iREG3_alu_overflow),
-		.oREG3_alu_overflow(oREG3_alu_overflow),
 
 		.iREG4_write_reg_data(write_reg_data),
 		.oREG4_write_reg_data(oREG4_write_reg_data),
