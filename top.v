@@ -40,21 +40,7 @@ module top(
 	output [31:0] DM_in;
 	input  [31:0] DM_out;
 
-	//controller to top
-	wire do_im_read;
-	wire do_im_write;
-	wire do_dm_read;
-	wire do_dm_write;
-
-	//controller to regfile
-	wire do_reg_write;
-
-	//controller to muxs
-	wire [2:0] select_alu_src2;
-	wire [1:0] select_imm_extend;
-	wire [1:0] select_write_reg;
-
-	//controller to alu
+	//top
 	wire [5:0] opcode	=xREG1_instruction[30:25];
 	wire [4:0] sub_op_base	=xREG1_instruction[4:0];
 	wire [7:0] sub_op_ls	=xREG1_instruction[7:0];
@@ -72,39 +58,35 @@ module top(
 	wire [19:0] imm_20bit   =xREG1_instruction[19:0];
 	wire [23:0] imm_24bit   =xREG1_instruction[23:0];
 
-	// regfile to alu
-	wire [31:0] reg_ra_data;
-
-	//alu to muxs
-	wire [31:0] alu_result;
-
-	//regfile to muxs
-	wire [31:0] reg_rb_data;
-	wire [31:0] reg_rt_data;
-
-
-	//muxs to regfile
-	wire [31:0] write_reg_data;
-	
-	//muxs
-	wire [31:0] imm_extend;
-
-	//muxs to alu
-	wire [31:0] alu_src2;
-
-	//alu to controller
-	wire alu_zero;
-
-	//regfile to pc
+	//controller
+	wire do_im_read;
+	wire do_im_write;
+	wire do_dm_read;
+	wire do_dm_write;
+	wire do_reg_write;
+	wire [2:0] select_alu_src2;
+	wire [1:0] select_imm_extend;
+	wire [1:0] select_write_reg;
 	wire reg_rt_ra_equal;
 
-	//pc to muxs
-	wire [9:0] current_pc;
+	//regfile
+	wire [31:0] reg_rt_data;
+	wire [31:0] reg_ra_data;
+	wire [31:0] reg_rb_data;
 
-	//pc to regfile
+	//alu
+	wire [31:0] alu_result;
+
+	//muxs
+	wire [31:0] alu_src2;
+	wire [31:0] imm_extend;
+	wire [31:0] write_reg_data;
+
+	//pc
+	wire [9:0] current_pc;
 	wire do_jump_link;
 
-	//mem to muxs
+	//mem
 	wire [31:0] mem_read_data;
 
 	//forward
@@ -116,16 +98,14 @@ module top(
 	//REGWALL
 	wire [31:0] xREG1_instruction;
 
-	wire [31:0] xREG2_reg_ra_data;
 	wire [31:0] xREG3_reg_rt_data;
+	wire [31:0] xREG2_reg_ra_data;
 
 	wire [ 5:0] xREG2_opcode;
 	wire [ 4:0] xREG2_sub_op_base;
 	wire [ 7:0] xREG2_sub_op_ls;
-
 	wire [ 1:0] xREG2_select_write_reg;
 	wire [ 1:0] xREG3_select_write_reg;
-
 	wire xREG2_do_dm_read;
 	wire xREG2_do_reg_write;
 	wire xREG3_do_dm_read;
@@ -178,8 +158,7 @@ module top(
 		.sub_op_ls(xREG2_sub_op_ls),
 
 		.alu_result(alu_result),
-		.alu_overflow(alu_overflow),
-		.alu_zero(alu_zero)
+		.alu_overflow(alu_overflow)
 	);
 	
 	regfile REGFILE(
