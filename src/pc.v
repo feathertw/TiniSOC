@@ -15,7 +15,7 @@ module pc(
 	imm_24bit,
 	reg_rb_data,
 
-	do_link,
+	do_jump_link,
 	do_flush_REG1,
 	do_hazard
 );
@@ -33,7 +33,7 @@ module pc(
 	input [23:0] imm_24bit;
 	input [31:0] reg_rb_data;
 
-	output do_link;
+	output do_jump_link;
 	output do_flush_REG1;
 	input  do_hazard;
 
@@ -41,7 +41,7 @@ module pc(
 	reg [9:0] next_pc;
 	reg [1:0] select_pc;
 
-	reg do_link;
+	reg do_jump_link;
 	reg do_jump_reg;
 	reg do_flush_REG1;
 
@@ -57,21 +57,21 @@ module pc(
 				if(      (sub_op_b==`BEQ)&&( reg_rt_ra_equal) ) select_pc=`PC_14BIT;
 				else if( (sub_op_b==`BNE)&&(!reg_rt_ra_equal) ) select_pc=`PC_14BIT;
 				else					 	select_pc=`PC_4;
-				do_link=1'b0;
+				do_jump_link=1'b0;
 			end
 			`TY_J:begin
 				select_pc=`PC_24BIT;
-				if(     sub_op_j==`JJ ) do_link=1'b0;
-				else if(sub_op_j==`JAL) do_link=1'b1;
-				else			do_link=1'b0;
+				if(     sub_op_j==`JJ ) do_jump_link=1'b0;
+				else if(sub_op_j==`JAL) do_jump_link=1'b1;
+				else			do_jump_link=1'b0;
 			end
 			`JR:begin
 				select_pc=`PC_REGISTER;
-				do_link=1'b0;
+				do_jump_link=1'b0;
 			end
 			default:begin
 				select_pc=`PC_4;
-				do_link=1'b0;
+				do_jump_link=1'b0;
 			end
 		endcase
 	end

@@ -102,7 +102,7 @@ module top(
 	wire [9:0] current_pc;
 
 	//pc to regfile
-	wire do_link;
+	wire do_jump_link;
 
 	//mem to muxs
 	wire [31:0] mem_read_data;
@@ -195,7 +195,7 @@ module top(
 		.do_reg_write(xREG4_do_reg_write),
 
 		.current_pc(current_pc),
-		.do_link(do_link),
+		.do_jump_link(do_jump_link),
 
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
@@ -261,7 +261,7 @@ module top(
 		.imm_24bit(imm_24bit),
 		.reg_rb_data(f_reg_rb_data),
 
-		.do_link(do_link),
+		.do_jump_link(do_jump_link),
 		.do_flush_REG1(do_flush_REG1),
 		.do_hazard(do_hazard)
 	);
