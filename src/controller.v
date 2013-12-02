@@ -1,11 +1,6 @@
 `include "def_opcode.v"
 `include "def_muxs.v"
 
-`define OPCODE instruction[30:25]
-`define SUBOP_BASE instruction[4:0]
-`define SUBOP_LS instruction[7:0]
-`define SUBOP_B instruction[14]
-
 module controller(
 	clock,
 	reset,
@@ -113,10 +108,10 @@ module controller(
 		else	  present_instruction<=instruction;
 	end
 
-	always@(`OPCODE or `SUBOP_BASE or `SUBOP_LS) begin
-		case(`OPCODE)
+	always@(opcode or sub_op_base or sub_op_ls) begin
+		case(opcode)
 			`TY_BASE: begin
-				case(`SUBOP_BASE)
+				case(sub_op_base)
 					//`NOP:begin
 					//	select_alu_src2=`ALUSRC2_RBDATA;
 					//	select_imm_extend=`IMM_UNKOWN;
@@ -248,7 +243,7 @@ module controller(
 				do_reg_write=1'b0;
 			end
 			`TY_LS:begin
-				case(`SUBOP_LS)
+				case(sub_op_ls)
 					`LW:begin
 						select_alu_src2=`ALUSRC2_LSW;
 						select_imm_extend=`IMM_UNKOWN;
