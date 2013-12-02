@@ -38,7 +38,7 @@ module top(
 	output DM_enable;
 	output [11:0] DM_address;
 	output [31:0] DM_in;
-	input [31:0] DM_out;
+	input  [31:0] DM_out;
 
 	//controller to top
 	wire do_im_read;
@@ -65,10 +65,6 @@ module top(
 	wire sub_op_b;
 	wire sub_op_j;
 
-	//controller to im
-
-	//controller to dm
-
 	// regfile to alu
 	wire [31:0] reg_ra_data;
 
@@ -78,7 +74,7 @@ module top(
 	//regfile to muxs
 	wire [31:0] reg_rb_data;
 	wire [31:0] reg_rt_data;
-	wire [4:0] imm_5bit;
+	wire [ 4:0] imm_5bit;
 	wire [13:0] imm_14bit;
 	wire [14:0] imm_15bit;
 	wire [19:0] imm_20bit;
