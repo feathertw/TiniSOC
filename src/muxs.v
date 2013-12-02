@@ -49,26 +49,6 @@ module muxs(
 
 	reg [DataSize-1:0] imm_extend;
 
-	always @(select_imm_extend or imm_5bit or imm_15bit or imm_20bit) begin
-		case(select_imm_extend)
-			`IMM_5BIT_ZE: begin
-				imm_extend={ {27{1'b0}}, imm_5bit };
-			end
-			`IMM_15BIT_SE: begin
-				imm_extend={ {17{imm_15bit[14]}}, {imm_15bit} };
-			end
-			`IMM_15BIT_ZE: begin
-				imm_extend={ {17{1'b0}}, {imm_15bit} };
-			end
-			`IMM_20BIT_SE: begin
-				imm_extend={ {12{imm_20bit[19]}}, {imm_20bit} };
-			end
-			default: begin
-				imm_extend=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
-			end
-		endcase
-	end
-
 	always @(select_alu_src2 or reg_rb_data or imm_extend or imm_15bit or sub_op_sv or reg_rt_data) begin
 		case(select_alu_src2)
 			`ALUSRC2_RBDATA: begin
@@ -88,6 +68,26 @@ module muxs(
 			end
 			default: begin
 				alu_src2 = 32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
+			end
+		endcase
+	end
+
+	always @(select_imm_extend or imm_5bit or imm_15bit or imm_20bit) begin
+		case(select_imm_extend)
+			`IMM_5BIT_ZE: begin
+				imm_extend={ {27{1'b0}}, imm_5bit };
+			end
+			`IMM_15BIT_SE: begin
+				imm_extend={ {17{imm_15bit[14]}}, {imm_15bit} };
+			end
+			`IMM_15BIT_ZE: begin
+				imm_extend={ {17{1'b0}}, {imm_15bit} };
+			end
+			`IMM_20BIT_SE: begin
+				imm_extend={ {12{imm_20bit[19]}}, {imm_20bit} };
+			end
+			default: begin
+				imm_extend=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
 			end
 		endcase
 	end
