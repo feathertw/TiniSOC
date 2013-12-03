@@ -7,7 +7,6 @@ module alu(
 	alu_src2,
 	opcode,
 	sub_op_base,
-	sub_op_ls,
 
 	alu_result,
 	alu_overflow
@@ -19,7 +18,6 @@ module alu(
 	input [31:0] alu_src2;
 	input [5:0]  opcode;
 	input [4:0]  sub_op_base;
-	input [7:0]  sub_op_ls;
 
 	output [31:0] alu_result;
 	output alu_overflow;
@@ -31,7 +29,7 @@ module alu(
 	reg a;
 	reg b;
 
-	always @(reset or enable_execute or opcode or sub_op_base or sub_op_ls or alu_src1 or alu_src2) begin
+	always @(reset or enable_execute or opcode or sub_op_base or alu_src1 or alu_src2) begin
 		if(reset) begin
 		    alu_result=32'b0;
 		    alu_overflow=1'b0;
@@ -100,10 +98,6 @@ module alu(
 		            alu_result=alu_src1^alu_src2;
 		            alu_overflow=1'b0;
 		        end
-		        `MOVI:begin
-		            alu_result=alu_src1;
-		            alu_overflow=1'b0;
-		        end
 			`LWI:begin
 		            {a,alu_result[30:0]}=alu_src1[30:0]+alu_src2[30:0];
 		            {b,alu_result[31]}=alu_src1[31]+alu_src2[31]+a;
@@ -115,30 +109,9 @@ module alu(
 		            alu_overflow=a^b;
 			end
 			`TY_LS:begin
-				case(sub_op_ls)
-					`LW:begin
-						{a,alu_result[30:0]}=alu_src1[30:0]+alu_src2[30:0];
-						{b,alu_result[31]}=alu_src1[31]+alu_src2[31]+a;
-						alu_overflow=a^b;
-					end
-					`SW:begin
-						{a,alu_result[30:0]}=alu_src1[30:0]+alu_src2[30:0];
-						{b,alu_result[31]}=alu_src1[31]+alu_src2[31]+a;
-						alu_overflow=a^b;
-					end
-					default:begin
-						alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
-						alu_overflow=1'b0;
-					end
-				endcase
-			end
-			`TY_B:begin
-		                    alu_result=alu_src1^alu_src2;
-		                    alu_overflow=1'b0;
-			end
-			`TY_J:begin
-				alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;
-				alu_overflow=1'b0;
+				{a,alu_result[30:0]}=alu_src1[30:0]+alu_src2[30:0];
+				{b,alu_result[31]}=alu_src1[31]+alu_src2[31]+a;
+				alu_overflow=a^b;
 			end
 		        default:begin
 				alu_result=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;

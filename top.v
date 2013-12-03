@@ -103,7 +103,6 @@ module top(
 
 	wire [ 5:0] xREG2_opcode;
 	wire [ 4:0] xREG2_sub_op_base;
-	wire [ 7:0] xREG2_sub_op_ls;
 	wire [ 1:0] xREG2_select_write_reg;
 	wire [ 1:0] xREG3_select_write_reg;
 	wire xREG2_do_dm_read;
@@ -151,7 +150,6 @@ module top(
 		.alu_src2(xREG2_alu_src2),
 		.opcode(xREG2_opcode),
 		.sub_op_base(xREG2_sub_op_base),
-		.sub_op_ls(xREG2_sub_op_ls),
 
 		.alu_result(alu_result),
 		.alu_overflow(alu_overflow)
@@ -255,10 +253,8 @@ module top(
 
 		.iREG2_opcode(opcode),
 		.iREG2_sub_op_base(sub_op_base),
-		.iREG2_sub_op_ls(sub_op_ls),
 		.oREG2_opcode(xREG2_opcode),
 		.oREG2_sub_op_base(xREG2_sub_op_base),
-		.oREG2_sub_op_ls(xREG2_sub_op_ls),
 
 		.iREG2_select_write_reg(select_write_reg),
 		.mREG2_select_write_reg(xREG2_select_write_reg),
