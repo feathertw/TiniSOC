@@ -65,3 +65,7 @@
 			,(IR),(MEM),DM.mem_data[((MEM)/4)],(VALUE) ); \
 		$write("%c[0m",27); \
 	end
+
+`define DEBUG(IR,MEM,VALUE) \
+	if(DM.mem_data[(MEM)/4]==(VALUE) ) $display("=%s TEST SUCCESS=",(IR)); \
+	else begin $write("%c[1;31m",27);  $display("*%s TEST FAULT*",(IR));   $write("%c[0m",27); end
