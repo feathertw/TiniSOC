@@ -40,24 +40,6 @@ module top(
 	output [31:0] DM_in;
 	input  [31:0] DM_out;
 
-	//top
-	wire [5:0] opcode	=xREG1_instruction[30:25];
-	wire [4:0] sub_op_base	=xREG1_instruction[4:0];
-	wire [7:0] sub_op_ls	=xREG1_instruction[7:0];
-	wire [1:0] sub_op_sv	=xREG1_instruction[9:8];
-	wire sub_op_b		=xREG1_instruction[14];
-	wire sub_op_j		=xREG1_instruction[24];
-
-	wire [4:0] reg_ra_addr  =xREG1_instruction[19:15];
-	wire [4:0] reg_rb_addr  =xREG1_instruction[14:10];
-	wire [4:0] reg_rt_addr  =xREG1_instruction[24:20];
-
-	wire [ 4:0] imm_5bit    =xREG1_instruction[14:10];
-	wire [13:0] imm_14bit   =xREG1_instruction[13:0];
-	wire [14:0] imm_15bit   =xREG1_instruction[14:0];
-	wire [19:0] imm_20bit   =xREG1_instruction[19:0];
-	wire [23:0] imm_24bit   =xREG1_instruction[23:0];
-
 	//controller
 	wire do_im_read;
 	wire do_im_write;
@@ -128,6 +110,27 @@ module top(
 	wire do_flush_REG3;
 	wire do_flush_REG4;
 
+	//top
+	wire [5:0] opcode	=xREG1_instruction[30:25];
+	wire [4:0] sub_op_base	=xREG1_instruction[4:0];
+	wire [7:0] sub_op_ls	=xREG1_instruction[7:0];
+	wire [1:0] sub_op_sv	=xREG1_instruction[9:8];
+	wire sub_op_b		=xREG1_instruction[14];
+	wire sub_op_j		=xREG1_instruction[24];
+
+	wire [4:0] reg_ra_addr  =xREG1_instruction[19:15];
+	wire [4:0] reg_rb_addr  =xREG1_instruction[14:10];
+	wire [4:0] reg_rt_addr  =xREG1_instruction[24:20];
+
+	wire [ 4:0] imm_5bit    =xREG1_instruction[14:10];
+	wire [13:0] imm_14bit   =xREG1_instruction[13:0];
+	wire [14:0] imm_15bit   =xREG1_instruction[14:0];
+	wire [19:0] imm_20bit   =xREG1_instruction[19:0];
+	wire [23:0] imm_24bit   =xREG1_instruction[23:0];
+
+	wire enable_system;
+	assign enable_system=1'b1;
+
 	assign IM_read =do_im_read;
 	assign IM_write=do_im_write;
 	assign IM_enable=enable_system;
@@ -139,9 +142,6 @@ module top(
 	assign DM_address=xREG3_alu_result[11:0];
 	assign DM_in=xREG3_reg_rt_data;//*
 	assign mem_read_data=DM_out;
-
-	wire enable_system;
-	assign enable_system=1'b1;
 
 	alu ALU(
 		.reset(rst),
