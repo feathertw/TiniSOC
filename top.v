@@ -50,6 +50,8 @@ module top(
 	wire [1:0] select_imm_extend;
 	wire [1:0] select_write_reg;
 	wire reg_rt_ra_equal;
+	wire reg_rt_zero;
+	wire reg_rt_negative;
 
 	//regfile
 	wire [31:0] reg_rt_data;
@@ -116,6 +118,7 @@ module top(
 	wire [7:0] sub_op_ls	=xREG1_instruction[7:0];
 	wire [1:0] sub_op_sv	=xREG1_instruction[9:8];
 	wire sub_op_b		=xREG1_instruction[14];
+	wire [3:0] sub_op_bz	=xREG1_instruction[19:16];
 	wire sub_op_j		=xREG1_instruction[24];
 
 	wire [4:0] reg_ra_addr  =xREG1_instruction[19:15];
@@ -125,6 +128,7 @@ module top(
 	wire [ 4:0] imm_5bit    =xREG1_instruction[14:10];
 	wire [13:0] imm_14bit   =xREG1_instruction[13:0];
 	wire [14:0] imm_15bit   =xREG1_instruction[14:0];
+	wire [15:0] imm_16bit   =xREG1_instruction[15:0];
 	wire [19:0] imm_20bit   =xREG1_instruction[19:0];
 	wire [23:0] imm_24bit   =xREG1_instruction[23:0];
 
@@ -217,7 +221,9 @@ module top(
 
 		.reg_rt_data(f_reg_rt_data),
 		.reg_ra_data(f_reg_ra_data),
-		.reg_rt_ra_equal(reg_rt_ra_equal)
+		.reg_rt_ra_equal(reg_rt_ra_equal),
+		.reg_rt_zero(reg_rt_zero),
+		.reg_rt_negative(reg_rt_negative)
 	);
 	pc PC(
 		.clock(clk),
@@ -227,10 +233,14 @@ module top(
 
 		.opcode(opcode),
 		.sub_op_b(sub_op_b),
+		.sub_op_bz(sub_op_bz),
 		.sub_op_j(sub_op_j),
 		.reg_rt_ra_equal(reg_rt_ra_equal),
+		.reg_rt_zero(reg_rt_zero),
+		.reg_rt_negative(reg_rt_negative),
 
 		.imm_14bit(imm_14bit),
+		.imm_16bit(imm_16bit),
 		.imm_24bit(imm_24bit),
 		.reg_rb_data(f_reg_rb_data),
 

@@ -25,6 +25,14 @@
 `define BEQ	1'b0
 `define BNE	1'b1
 
+`define TY_BZ	6'b100111
+`define BEQZ	4'b0010
+`define BGEZ	4'b0100
+`define BGTZ	4'b0110
+`define BLEZ	4'b0111
+`define BLTZ	4'b0101
+`define BNEZ	4'b0011
+
 `define TY_J	6'b100100
 `define JJ	1'b0
 `define JAL	1'b1

@@ -21,7 +21,9 @@ module controller(
 
 	reg_rt_data,
 	reg_ra_data,
-	reg_rt_ra_equal
+	reg_rt_ra_equal,
+	reg_rt_zero,
+	reg_rt_negative
 );
 	
 	input clock;
@@ -44,6 +46,8 @@ module controller(
 	input [31:0] reg_rt_data;
 	input [31:0] reg_ra_data;
 	output reg_rt_ra_equal;
+	output reg_rt_zero;
+	output reg_rt_negative;
 
 	reg [2:0] select_alu_src2;
 	reg [1:0] select_imm_extend;
@@ -57,6 +61,8 @@ module controller(
 	assign do_im_write = (reset)?1'b0:1'b0;
 
 	assign reg_rt_ra_equal=(reg_rt_data==reg_ra_data)?1'b1:1'b0;
+	assign reg_rt_zero=!(|reg_rt_data);//*
+	assign reg_rt_negative=reg_rt_data[31];
 
 	always@(opcode or sub_op_base or sub_op_ls) begin
 		case(opcode)

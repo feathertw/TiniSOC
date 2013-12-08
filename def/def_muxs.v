@@ -1,7 +1,8 @@
-`define PC_4 	 	2'b00
-`define PC_14BIT 	2'b01
-`define PC_24BIT 	2'b10
-`define PC_REGISTER 	2'b11
+`define PC_4 	 	3'b000
+`define PC_14BIT 	3'b001
+`define PC_16BIT	3'b010
+`define PC_24BIT 	3'b011
+`define PC_REGISTER 	3'b100
 
 `define ALUSRC2_RBDATA	3'b000
 `define ALUSRC2_IMM	3'b001
