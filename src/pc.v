@@ -64,7 +64,6 @@ module pc(
 				if(      (sub_op_b==`BEQ)&&( reg_rt_ra_equal) ) select_pc=`PC_14BIT;
 				else if( (sub_op_b==`BNE)&&(!reg_rt_ra_equal) ) select_pc=`PC_14BIT;
 				else					 	select_pc=`PC_4;
-				do_jump_link=1'b0;
 			end
 			`TY_BZ:begin
 				if(      (sub_op_bz==`BEQZ)&&(reg_rt_zero) ) 		      select_pc=`PC_16BIT;
@@ -74,20 +73,15 @@ module pc(
 				else if( (sub_op_bz==`BLTZ)&&(reg_rt_negative) )	      select_pc=`PC_16BIT;
 				else if( (sub_op_bz==`BNEZ)&&(!reg_rt_zero) )		      select_pc=`PC_16BIT;
 				else							      select_pc=`PC_4;
-				do_jump_link=1'b0;
 			end
 			`TY_J:begin
 				select_pc=`PC_24BIT;
-				if(sub_op_j==`JAL) do_jump_link=1'b1;
-				else		   do_jump_link=1'b0;
 			end
 			`JR:begin
 				select_pc=`PC_REGISTER;
-				do_jump_link=1'b0;
 			end
 			default:begin
 				select_pc=`PC_4;
-				do_jump_link=1'b0;
 			end
 		endcase
 	end
@@ -119,6 +113,11 @@ module pc(
 				do_flush_REG1=1'b0;
 			end
 		endcase
+	end
+
+	always@(opcode or sub_op_j)begin
+		if(opcode==`TY_J && sub_op_j==`JAL) do_jump_link=1'b1;
+		else				    do_jump_link=1'b0;
 	end
 
 endmodule
