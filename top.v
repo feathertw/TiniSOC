@@ -129,7 +129,7 @@ module top(
 	wire [23:0] imm_24bit   =xREG1_instruction[23:0];
 
 	wire enable_system;
-	assign enable_system=1'b1;
+	assign enable_system=(rst)? 1'b0:1'b1;
 
 	assign IM_read =do_im_read;
 	assign IM_write=do_im_write;
