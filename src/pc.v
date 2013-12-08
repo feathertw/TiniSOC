@@ -94,7 +94,7 @@ module pc(
 				do_jump_reg  =1'b0;
 			end
 			`PC_REGISTER:begin
-				next_pc=reg_rb_data;
+				next_pc=reg_rb_data[9:0];
 				do_flush_REG1=1'b1;
 				do_jump_reg  =1'b1;
 			end
