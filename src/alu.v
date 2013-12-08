@@ -30,6 +30,9 @@ module alu(
 	reg b;
 
 	always @(reset or enable_execute or opcode or sub_op_base or alu_src1 or alu_src2) begin
+		a='bx;
+		b='bx;
+		rotate='bx;
 		if(reset) begin
 		    alu_result=32'b0;
 		    alu_overflow=1'b0;
