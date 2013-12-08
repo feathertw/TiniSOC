@@ -42,7 +42,6 @@ module pc(
 	reg [1:0] select_pc;
 
 	reg do_jump_link;
-	reg do_jump_reg;
 	reg do_flush_REG1;
 
 	always@(negedge clock) begin
@@ -80,27 +79,22 @@ module pc(
 			`PC_4:begin
 				next_pc=current_pc+4;
 				do_flush_REG1=1'b0;
-				do_jump_reg  =1'b0;
 			end
 			`PC_14BIT:begin
 				next_pc=(current_pc-4)+({imm_14bit[13],imm_14bit[7:0],1'b0});//*
 				do_flush_REG1=1'b1;
-				do_jump_reg  =1'b0;
 			end
 			`PC_24BIT:begin
 				next_pc=(current_pc-4)+({imm_24bit[23],imm_24bit[7:0],1'b0});//*
 				do_flush_REG1=1'b1;
-				do_jump_reg  =1'b0;
 			end
 			`PC_REGISTER:begin
 				next_pc=reg_rb_data[9:0];
 				do_flush_REG1=1'b1;
-				do_jump_reg  =1'b1;
 			end
 			default:begin
 				next_pc=10'bxxxx_xxxx_xx;
 				do_flush_REG1=1'b0;
-				do_jump_reg  =1'b0;
 			end
 		endcase
 	end
