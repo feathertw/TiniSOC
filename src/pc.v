@@ -61,9 +61,8 @@ module pc(
 			end
 			`TY_J:begin
 				select_pc=`PC_24BIT;
-				if(     sub_op_j==`JJ ) do_jump_link=1'b0;
-				else if(sub_op_j==`JAL) do_jump_link=1'b1;
-				else			do_jump_link=1'b0;
+				if(sub_op_j==`JAL) do_jump_link=1'b1;
+				else		   do_jump_link=1'b0;
 			end
 			`JR:begin
 				select_pc=`PC_REGISTER;
