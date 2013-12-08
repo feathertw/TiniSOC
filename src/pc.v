@@ -51,7 +51,7 @@ module pc(
 		else if(enable_pc) current_pc<=next_pc;
 	end
 
-	always@(opcode or sub_op_b or reg_rt_ra_equal) begin
+	always@(opcode or sub_op_b or sub_op_j or reg_rt_ra_equal) begin
 		case(opcode)
 			`TY_B:begin
 				if(      (sub_op_b==`BEQ)&&( reg_rt_ra_equal) ) select_pc=`PC_14BIT;
