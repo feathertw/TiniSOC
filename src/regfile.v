@@ -34,7 +34,7 @@ module regfile(
 	input [DataSize-1:0] write_reg_data;
 	input do_reg_write;
 
-	input [9:0] current_pc;
+	input [31:0] current_pc;
 	input do_jump_link;
 
 	output [DataSize-1:0] reg_ra_data;

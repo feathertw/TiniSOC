@@ -67,7 +67,7 @@ module top(
 	wire [31:0] write_reg_data;
 
 	//pc
-	wire [9:0] current_pc;
+	wire [31:0] current_pc;
 	wire do_jump_link;
 
 	//mem
@@ -138,7 +138,7 @@ module top(
 	assign IM_read =do_im_read;
 	assign IM_write=do_im_write;
 	assign IM_enable=enable_system;
-	assign IM_address=current_pc;
+	assign IM_address=current_pc[9:0];
 
 	assign DM_read =xREG3_do_dm_read;
 	assign DM_write=xREG3_do_dm_write;

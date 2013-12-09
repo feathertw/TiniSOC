@@ -26,7 +26,7 @@ module pc(
 	input clock;
 	input reset;
 	input enable_pc;
-	output [9:0] current_pc;
+	output [31:0] current_pc;
 
 	input [5:0] opcode;
 	input sub_op_b;
@@ -45,15 +45,15 @@ module pc(
 	output do_flush_REG1;
 	input  do_hazard;
 
-	reg [9:0] current_pc;
-	reg [9:0] next_pc;
+	reg [31:0] current_pc;
+	reg [31:0] next_pc;
 	reg [2:0] select_pc;
 
 	reg do_jump_link;
 	reg do_flush_REG1;
 
 	always@(negedge clock) begin
-		if(reset) 	   current_pc<=0;
+		if(reset) 	   current_pc<=32'b0;
 		else if(do_hazard) current_pc<=current_pc;
 		else if(enable_pc) current_pc<=next_pc;
 	end
@@ -93,23 +93,23 @@ module pc(
 				do_flush_REG1=1'b0;
 			end
 			`PC_14BIT:begin
-				next_pc=(current_pc-4)+({imm_14bit[13],imm_14bit[7:0],1'b0});//*
+				next_pc=(current_pc-4)+({ {17{imm_14bit[13]}},imm_14bit,1'b0});//*
 				do_flush_REG1=1'b1;
 			end
 			`PC_16BIT:begin
-				next_pc=(current_pc-4)+({imm_16bit[15],imm_16bit[7:0],1'b0});//*
+				next_pc=(current_pc-4)+({ {15{imm_16bit[15]}},imm_16bit,1'b0});//*
 				do_flush_REG1=1'b1;
 			end
 			`PC_24BIT:begin
-				next_pc=(current_pc-4)+({imm_24bit[23],imm_24bit[7:0],1'b0});//*
+				next_pc=(current_pc-4)+({ {7{imm_24bit[23]}},imm_24bit,1'b0});//*
 				do_flush_REG1=1'b1;
 			end
 			`PC_REGISTER:begin
-				next_pc=reg_rb_data[9:0];
+				next_pc=reg_rb_data;
 				do_flush_REG1=1'b1;
 			end
 			default:begin
-				next_pc=10'bxxxx_xxxx_xx;
+				next_pc='bx;
 				do_flush_REG1=1'b0;
 			end
 		endcase
