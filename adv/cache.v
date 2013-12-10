@@ -28,5 +28,19 @@ module cache(
 	SysAddress,
 	SysData
 );
+	input clock;
+	input reset;
+
+	input  PStrobe;
+	input  PRw;
+	input  [31:0] PAddress;
+	output PReady;
+	inout  [31:0] PData;
+
+	output SysStrobe;
+	output SysRW;
+	output [31:0] SysAddress;
+	input  [31:0] SysData;
+
 endmodule
 
