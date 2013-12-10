@@ -6,8 +6,19 @@
 `define DEP  64
 `define WOR  32
 
-`define READ  1'b1
-`define WRITE 1'b0
+`define RW_READ  1'b1
+`define RW_WRITE 1'b0
+`define RW_UNK   1'bx
+`define PDATA_CAC 1'b0
+`define PDATA_SYS 1'b1
+`define PDATA_UNK 1'bx
+`define CDATA_PRO 1'b0
+`define CDATA_SYS 1'b1
+`define CDATA_UNK 1'bx
+`define SDATA_OPEN  1'b1
+`define SDATA_CLOSE 1'b0
+`define PDATA_OPEN  1'b1
+`define PDATA_CLOSE 1'b0
 
 `include "ram_tag.v"
 `include "ram_valid.v"

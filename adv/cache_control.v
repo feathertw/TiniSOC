@@ -32,8 +32,21 @@ module cache_control(
 	
 	output select_CacheData;
 	output select_PData;
+	output open_SysData;
+	output open_PData;
 
 	wire wait_state_ctr_carry;
+
+	reg  write;
+	reg  wait_state_ctr;
+	reg  RW_hit_state;
+	reg  RW_ready;
+	reg  SysStrobe;
+	reg  SysRW;
+	reg  select_CacheData;
+	reg  select_PData;
+	reg  open_SysData;
+	reg  open_PData;
 
 	reg [3:0] state;
 	reg [3:0] next_state;
@@ -55,9 +68,9 @@ module cache_control(
 	always@(*)begin
 		case(state)
 			STATE_IDLE:begin
-				if( (PStrobe)&&(PRw==`READ) )	    next_state=STATE_READ;
-				else if( (PStrobe)&&(PRw==`WRITE) ) next_state=STATE_WRITE;
-				else				    next_state=STATE_IDLE;
+				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
+				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
+				else				       next_state=STATE_IDLE;
 			end
 			STATE_READ:begin
 				if(tag_match&&valid) next_state=STATE_IDLE;
@@ -92,6 +105,143 @@ module cache_control(
 			end
 			default:begin
 				next_state=STATE_IDLE;
+			end
+		endcase
+	end
+
+	always@(*)begin
+		case(state)
+			STATE_IDLE:begin
+				write           =1'b0;
+				wait_state_ctr  =1'b0;
+				RW_hit_state    =1'b0;
+				RW_ready        =1'b0;
+				SysStrobe       =1'b0;
+				SysRW           =`RW_UNK;
+				select_CacheData=`CDATA_UNK;
+				select_PData    =`PDATA_UNK;
+				open_SysData    =`SDATA_CLOSE;
+				open_PData      =`PDATA_CLOSE;
+			end
+			STATE_READ:begin
+				write           =1'b0;
+				wait_state_ctr  =1'b0;
+				RW_hit_state    =1'b1;
+				RW_ready        =1'b0;
+				SysStrobe       =1'b0;
+				SysRW           =`RW_UNK;
+				select_CacheData=`CDATA_UNK;
+				select_PData    =`PDATA_CAC;
+				open_SysData    =`SDATA_CLOSE;
+				open_PData      =`PDATA_OPEN;
+			end
+			STATE_READMISS:begin
+				write           =1'b0;
+				wait_state_ctr  =1'b1;
+				RW_hit_state    =1'b0;
+				RW_ready        =1'b0;
+				SysStrobe       =1'b1;
+				SysRW           =`RW_READ;
+				select_CacheData=`CDATA_UNK;
+				select_PData    =`PDATA_UNK;
+				open_SysData    =`SDATA_CLOSE;
+				open_PData      =`PDATA_CLOSE;
+			end
+			STATE_READSYS:begin
+				write           =1'b0;
+				wait_state_ctr  =1'b0;
+				RW_hit_state    =1'b0;
+				RW_ready        =1'b0;
+				SysStrobe       =1'b0;
+				SysRW           =`RW_UNK;
+				select_CacheData=`CDATA_UNK;
+				select_PData    =`PDATA_UNK;
+				open_SysData    =`SDATA_CLOSE;
+				open_PData      =`PDATA_CLOSE;
+			end
+			STATE_READDATA:begin
+				write           =1'b1;
+				wait_state_ctr  =1'b0;
+				RW_hit_state    =1'b0;
+				RW_ready        =1'b1;
+				SysStrobe       =1'b0;
+				SysRW           =`RW_UNK;
+				select_CacheData=`CDATA_SYS;
+				select_PData    =`PDATA_SYS;
+				open_SysData    =`SDATA_CLOSE;
+				open_PData      =`PDATA_OPEN;
+			end
+			STATE_WRITE:begin
+				write           =1'b0;
+				wait_state_ctr  =1'b0;
+				RW_hit_state    =1'b1;
+				RW_ready        =1'b0;
+				SysStrobe       =1'b0;
+				SysRW           =`RW_UNK;
+				select_CacheData=`CDATA_UNK;
+				select_PData    =`PDATA_UNK;
+				open_SysData    =`SDATA_CLOSE;
+				open_PData      =`PDATA_CLOSE;
+			end
+			STATE_WRITEHIT:begin
+				write           =1'b1;
+				wait_state_ctr  =1'b1;
+				RW_hit_state    =1'b0;
+				RW_ready        =1'b0;
+				SysStrobe       =1'b1;
+				SysRW           =`RW_WRITE;
+				select_CacheData=`CDATA_PRO;
+				select_PData    =`PDATA_UNK;
+				open_SysData    =`SDATA_OPEN;
+				open_PData      =`PDATA_CLOSE;
+			end
+			STATE_WRITEMISS:begin
+				write           =1'b1;
+				wait_state_ctr  =1'b1;
+				RW_hit_state    =1'b0;
+				RW_ready        =1'b0;
+				SysStrobe       =1'b1;
+				SysRW           =`RW_WRITE;
+				select_CacheData=`CDATA_PRO;
+				select_PData    =`PDATA_UNK;
+				open_SysData    =`SDATA_OPEN;
+				open_PData      =`PDATA_CLOSE;
+			end
+			STATE_WRITESYS:begin
+				write           =1'b0;
+				wait_state_ctr  =1'b0;
+				RW_hit_state    =1'b0;
+				RW_ready        =1'b0;
+				SysStrobe       =1'b0;
+				SysRW           =`RW_UNK;
+				select_CacheData=`CDATA_UNK;
+				select_PData    =`PDATA_UNK;
+				open_SysData    =`SDATA_CLOSE;
+				open_PData      =`PDATA_CLOSE;
+			end
+			STATE_WRITEDATA:begin
+				write           =1'b0;
+				wait_state_ctr  =1'b0;
+				RW_hit_state    =1'b0;
+				RW_ready        =1'b1;
+				SysStrobe       =1'b0;
+				SysRW           =`RW_UNK;
+				select_CacheData=`CDATA_UNK;
+				select_PData    =`PDATA_UNK;
+				open_SysData    =`SDATA_CLOSE;
+				open_PData      =`PDATA_CLOSE;
+			end
+			default:begin
+				write           =1'b0;
+				wait_state_ctr  =1'b0;
+				RW_hit_state    =1'b0;
+				RW_ready        =1'b0;
+				SysStrobe       =1'b0;
+				SysRW           =`RW_UNK;
+				select_CacheData=`CDATA_UNK;
+				select_PData    =`PDATA_UNK;
+				open_SysData    =`SDATA_CLOSE;
+				open_PData      =`PDATA_CLOSE;
 			end
 		endcase
 	end
