@@ -33,6 +33,8 @@ module cache_control(
 	output select_CacheData;
 	output select_PData;
 
+	wire wait_state_ctr_carry;
+
 	reg [3:0] state;
 	reg [3:0] next_state;
 
@@ -52,17 +54,45 @@ module cache_control(
 	end
 	always@(*)begin
 		case(state)
-			STATE_IDLE:
-			STATE_READ:
-			STATE_READMISS:
-			STATE_READSYS:
-			STATE_READDATA:
-			STATE_WRITE:
-			STATE_WRITEHIT:
-			STATE_WRITEMISS:
-			STATE_WRITESYS:
-			STATE_WRITEDATA:
-			default:
+			STATE_IDLE:begin
+				if( (PStrobe)&&(PRw==`READ) )	    next_state=STATE_READ;
+				else if( (PStrobe)&&(PRw==`WRITE) ) next_state=STATE_WRITE;
+				else				    next_state=STATE_IDLE;
+			end
+			STATE_READ:begin
+				if(tag_match&&valid) next_state=STATE_IDLE;
+				else		     next_state=STATE_READMISS;
+			end
+			STATE_READMISS:begin
+				next_state=STATE_READSYS;
+			end
+			STATE_READSYS:begin
+				if(wait_state_ctr_carry) next_state=STATE_READDATA;
+				else			 next_state=STATE_READSYS;
+			end
+			STATE_READDATA:begin
+				next_state=STATE_IDLE;
+			end
+			STATE_WRITE:begin
+				if(tag_match&&valid) next_state=STATE_WRITEHIT;
+				else		     next_state=STATE_WRITEMISS;
+			end
+			STATE_WRITEHIT:begin
+				next_state=STATE_WRITESYS;
+			end
+			STATE_WRITEMISS:begin
+				next_state=STATE_WRITESYS;
+			end
+			STATE_WRITESYS:begin
+				if(wait_state_ctr_carry) next_state=STATE_WRITEDATA;
+				else			 next_state=STATE_WRITESYS;
+			end
+			STATE_WRITEDATA:begin
+				next_state=STATE_IDLE;
+			end
+			default:begin
+				next_state=STATE_IDLE;
+			end
 		endcase
 	end
 
