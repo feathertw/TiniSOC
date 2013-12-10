@@ -38,16 +38,16 @@ module cache_control(
 	reg [3:0] state;
 	reg [3:0] next_state;
 
-	parameter STATE_IDLE		4'd0
-	parameter STATE_READ		4'd1
-	parameter STATE_READMISS	4'd2
-	parameter STATE_READSYS		4'd3
-	parameter STATE_READDATA	4'd4
-	parameter STATE_WRITE		4'd5
-	parameter STATE_WRITEHIT	4'd6
-	parameter STATE_WRITEMISS	4'd7
-	parameter STATE_WRITESYS	4'd8
-	parameter STATE_WRITEDATA	4'd9
+	parameter STATE_IDLE	  =4'd0;
+	parameter STATE_READ	  =4'd1;
+	parameter STATE_READMISS  =4'd2;
+	parameter STATE_READSYS	  =4'd3;
+	parameter STATE_READDATA  =4'd4;
+	parameter STATE_WRITE	  =4'd5;
+	parameter STATE_WRITEHIT  =4'd6;
+	parameter STATE_WRITEMISS =4'd7;
+	parameter STATE_WRITESYS  =4'd8;
+	parameter STATE_WRITEDATA =4'd9;
 
 	always@(posedge clock)begin
 		state<=(reset)? STATE_IDLE:next_state;
