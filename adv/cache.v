@@ -6,6 +6,7 @@
 `define BLK    32
 `define DEP  1024
 `define WOR    32
+`define WAITSTATE 2'd2
 
 `define RW_READ  1'b1
 `define RW_WRITE 1'b0
@@ -25,7 +26,6 @@
 `include "ram_tag.v"
 `include "ram_valid.v"
 `include "ram_data.v"
-`include "wait_state_ctr.v"
 `include "mux2to1.v"
 
 module cache(
