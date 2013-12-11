@@ -1,4 +1,4 @@
-module mux2to1.v(S,A,B,Z);
+module mux2to1(S,A,B,Z);
 	input  S;
 	input  [31:0] A;
 	input  [31:0] B;

@@ -1,11 +1,10 @@
-module cache_control(
+module cache_ctr(
 	clock,
 	reset,
 
 	PStrobe,
 	PRw,
 	PReady,
-
 	SysStrobe,
 	SysRW,
 
@@ -22,7 +21,6 @@ module cache_control(
 	input  PStrobe;
 	input  PRw;
 	output PReady;
-
 	output SysStrobe;
 	output SysRW;
 
