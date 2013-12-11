@@ -71,7 +71,7 @@ module cache(
 	wire tag_match;
 	wire valid;
 	wire write;
-	wire select_CacheData;
+	wire select_CData;
 	wire select_PData;
 
 	wire [`IDX-1:0] index;
@@ -91,7 +91,7 @@ module cache(
 		.tag_match(tag_match),
 		.valid(valid),
 		.write(write),
-		.select_CacheData(select_CacheData),
+		.select_CData(select_CData),
 		.select_PData(select_PData)
 	);
 
@@ -122,7 +122,7 @@ module cache(
 	);
 
 	mux2to1 CDATA_MUX(
-		.s(select_CacheData),
+		.s(select_CData),
 		.in0(PData),
 		.in1(SysData),
 		.out(cache_data_in)
