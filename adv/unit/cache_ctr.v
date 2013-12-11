@@ -34,6 +34,8 @@ module cache_ctr(
 	output open_SysData;
 	output open_PData;
 
+	wire PReady=(RW_hit_state&&tag_match&&valid) || (RW_ready);
+
 	wire wsc_carry;
 	wire [1:0] wsc_load_value=`WAITSTATE;
 
