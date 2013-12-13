@@ -127,11 +127,11 @@ module regwalls(
 	input do_hazard;
 
 	always@(negedge clock)begin
-		if(do_flush_REG1)begin
-			oREG1_instruction<=32'b0;
-		end
-		else if(do_hazard)begin
+		if(do_hazard)begin
 			oREG1_instruction<=oREG1_instruction;
+		end
+		else if(do_flush_REG1)begin
+			oREG1_instruction<=32'b0;
 		end
 		else begin
 			oREG1_instruction<=iREG1_instruction;
