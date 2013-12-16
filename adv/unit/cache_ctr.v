@@ -84,7 +84,11 @@ module cache_ctr(
 				else				       next_state=STATE_IDLE;
 			end
 			STATE_READ:begin
-				if(tag_match&&valid) next_state=STATE_IDLE;
+				if(tag_match&&valid)begin
+					if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
+					else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
+					else				       next_state=STATE_IDLE;
+				end
 				else		     next_state=STATE_READMISS;
 			end
 			STATE_READMISS:begin
@@ -95,7 +99,9 @@ module cache_ctr(
 				else	      next_state=STATE_READSYS;
 			end
 			STATE_READDATA:begin
-				next_state=STATE_IDLE;
+				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
+				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
+				else				       next_state=STATE_IDLE;
 			end
 			STATE_WRITE:begin
 				if(tag_match&&valid) next_state=STATE_WRITEHIT;
