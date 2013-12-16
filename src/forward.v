@@ -10,8 +10,8 @@
 		or xREG2_do_reg_write or xREG2_write_reg_addr or xREG2_do_dm_read or xREG2_select_write_reg
 
 `define HAZARD_EVENT reg_rt_addr or reg_ra_addr or reg_rb_addr or xREG2_write_reg_addr
-`define HAZARD_ADDR_CONDITION (reg_rt_addr==xREG2_write_reg_addr || reg_ra_addr==xREG2_write_reg_addr \
-		|| reg_rb_addr==xREG2_write_reg_addr)
+`define HAZARD_ADDR_CONDITION ( ( (reg_rt_addr==xREG2_write_reg_addr)&&(!do_reg_write) ) \
+		|| reg_ra_addr==xREG2_write_reg_addr || reg_rb_addr==xREG2_write_reg_addr)
 
 module forw(
 	reg_rx_addr,
@@ -104,6 +104,7 @@ module forward(
 	f_reg_rb_data,
 	f_reg_rt_data,
 
+	do_reg_write,
 	do_hazard
 );
 	input [ 4:0] reg_ra_addr;
@@ -132,6 +133,7 @@ module forward(
 	output [31:0] f_reg_ra_data;
 	output [31:0] f_reg_rb_data;
 
+	input  do_reg_write;
 	output do_hazard;
 	reg    do_hazard;
 

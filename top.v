@@ -344,6 +344,7 @@ module top(
 		.f_reg_rb_data(f_reg_rb_data),
 		.f_reg_rt_data(f_reg_rt_data),
 
+		.do_reg_write(do_reg_write),
 		.do_hazard(do_hazard)
 	);
 
