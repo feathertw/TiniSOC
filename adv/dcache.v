@@ -70,6 +70,7 @@ module dcache(
 	wire [31:0] CData_out;
 	wire [31:0] CData_in=(select_CData)? SysData_out:PData_out;
 	wire [31:0] PData_in=(select_PData)? SysData_out:CData_out;
+	wire [31:0] SysData_in=PData_out;
 	wire [31:0] SysAddress=PAddress;
 
 
