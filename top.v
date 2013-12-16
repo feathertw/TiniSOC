@@ -149,20 +149,23 @@ module top(
 	assign DM_write=(dSysRW)? 1'b0:1'b1;
 	assign DM_enable=dSysStrobe;
 	assign DM_address=dSysAddress[11:0];
-	assign DM_in=dSysData;//*
-	assign dSysData=DM_out;
-	assign mem_read_data=dPData;
+	assign DM_in=dSysData_in;//*
+	assign dSysData_out=DM_out;
+	assign mem_read_data=dPData_in;
+	assign dPData_out=xREG3_reg_rt_data;
 
 	wire dPStrobe=xREG3_do_dm_read||xREG3_do_dm_write;
 	wire dPRw=(xREG3_do_dm_read)? 1'b1:1'b0;
 	wire [31:0] dPAddress=xREG3_alu_result;
 	wire dPReady;
-	wire [31:0] dPData;
+	wire [31:0] dPData_in;
+	wire [31:0] dPData_out;
 
 	wire dSysStrobe;
 	wire dSysRW;
 	wire [31:0] dSysAddress;
-	wire [31:0] dSysData;
+	wire [31:0] dSysData_in;
+	wire [31:0] dSysData_out;
 
 	wire enable_system=do_system && dPReady;
 
@@ -356,10 +359,12 @@ module top(
 		.PRw(dPRw),
 		.PAddress(dPAddress),
 		.PReady(dPReady),
-		.PData(dPData),
+		.PData_in(dPData_in),
+		.PData_out(dPData_out),
 		.SysStrobe(dSysStrobe),
 		.SysRW(dSysRW),
 		.SysAddress(dSysAddress),
-		.SysData(dSysData)
+		.SysData_in(dSysData_in),
+		.SysData_out(dSysData_out)
 	);
 endmodule

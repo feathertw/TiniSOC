@@ -19,16 +19,10 @@
 `define PDATA_SYS 1'b1
 `define PDATA_UNK 1'bx
 
-`define SDATA_OPEN  1'b1
-`define SDATA_CLOSE 1'b0
-`define PDATA_OPEN  1'b1
-`define PDATA_CLOSE 1'b0
-
 `include "cache_ctr.v"
 `include "ram_tag.v"
 `include "ram_valid.v"
 `include "ram_data.v"
-`include "mux2to1.v"
 
 module dcache(
 	clock,
@@ -38,12 +32,14 @@ module dcache(
 	PRw,
 	PAddress,
 	PReady,
-	PData,
+	PData_in,
+	PData_out,
 
 	SysStrobe,
 	SysRW,
 	SysAddress,
-	SysData
+	SysData_in,
+	SysData_out
 );
 	input clock;
 	input reset;
@@ -52,21 +48,14 @@ module dcache(
 	input  PRw;
 	input  [31:0] PAddress;
 	output PReady;
-	inout  [31:0] PData;
+	output [31:0] PData_in;
+	input  [31:0] PData_out;
 
 	output SysStrobe;
 	output SysRW;
 	output [31:0] SysAddress;
-	inout  [31:0] SysData;
-
-	wire open_SysData;
-	wire open_PData;
-
-	wire [31:0] PDataOut;
-	wire PData  =(open_PData)? PDataOut:32'bz;
-	wire SysData=(open_SysData)? PData:32'bz;
-
-	wire [31:0] SysAddress=PAddress;
+	output [31:0] SysData_in;
+	input  [31:0] SysData_out;
 
 	wire tag_match;
 	wire valid;
@@ -77,8 +66,12 @@ module dcache(
 	wire [`IDX-1:0] index=PAddress[11:2];
 	wire [`TAG-1:0] tag_in=PAddress[31:12];
 	wire valid_in=1'b1;
-	wire [31:0] cache_data_in;
+
 	wire [31:0] cache_data_out;
+	wire [31:0] cache_data_in=(select_CData)? SysData_out:PData_out;
+	wire [31:0] PData_in=(select_PData)? SysData_out:cache_data_out;
+	wire [31:0] SysAddress=PAddress;
+
 
 	cache_ctr CACHE_CTR(
 		.clock(clock),
@@ -92,9 +85,7 @@ module dcache(
 		.valid(valid),
 		.write(write),
 		.select_CData(select_CData),
-		.select_PData(select_PData),
-		.open_SysData(open_SysData),
-		.open_PData(open_PData)
+		.select_PData(select_PData)
 	);
 
 	ram_tag RAM_TAG(
@@ -123,18 +114,5 @@ module dcache(
 		.write(write)
 	);
 
-	mux2to1 CDATA_MUX(
-		.s(select_CData),
-		.in0(PData),
-		.in1(SysData),
-		.out(cache_data_in)
-	);
-
-	mux2to1 PDATA_MUX(
-		.s(select_PData),
-		.in0(cache_data_out),
-		.in1(SysData),
-		.out(PDataOut)
-	);
 endmodule
 

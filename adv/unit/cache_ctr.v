@@ -14,9 +14,7 @@ module cache_ctr(
 	write,
 
 	select_CData,
-	select_PData,
-	open_SysData,
-	open_PData
+	select_PData
 );
 	input clock;
 	input reset;
@@ -33,8 +31,6 @@ module cache_ctr(
 	
 	output select_CData;
 	output select_PData;
-	output open_SysData;
-	output open_PData;
 
 	wire PReady=(RW_hit_state&&tag_match&&valid) || (RW_ready);
 
@@ -49,8 +45,6 @@ module cache_ctr(
 	reg  SysRW;
 	reg  select_CData;
 	reg  select_PData;
-	reg  open_SysData;
-	reg  open_PData;
 
 	reg [3:0] state;
 	reg [3:0] next_state;
@@ -137,8 +131,6 @@ module cache_ctr(
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
 				select_PData    =`PDATA_UNK;
-				open_SysData    =`SDATA_CLOSE;
-				open_PData      =`PDATA_CLOSE;
 			end
 			STATE_READ:begin
 				write           =1'b0;
@@ -149,8 +141,6 @@ module cache_ctr(
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
 				select_PData    =`PDATA_CAC;
-				open_SysData    =`SDATA_CLOSE;
-				open_PData      =`PDATA_OPEN;
 			end
 			STATE_READMISS:begin
 				write           =1'b0;
@@ -161,8 +151,6 @@ module cache_ctr(
 				SysRW           =`RW_READ;
 				select_CData    =`CDATA_UNK;
 				select_PData    =`PDATA_UNK;
-				open_SysData    =`SDATA_CLOSE;
-				open_PData      =`PDATA_CLOSE;
 			end
 			STATE_READSYS:begin
 				write           =1'b0;
@@ -173,8 +161,6 @@ module cache_ctr(
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
 				select_PData    =`PDATA_UNK;
-				open_SysData    =`SDATA_CLOSE;
-				open_PData      =`PDATA_CLOSE;
 			end
 			STATE_READDATA:begin
 				write           =1'b1;
@@ -185,8 +171,6 @@ module cache_ctr(
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_SYS;
 				select_PData    =`PDATA_SYS;
-				open_SysData    =`SDATA_CLOSE;
-				open_PData      =`PDATA_OPEN;
 			end
 			STATE_WRITE:begin
 				write           =1'b0;
@@ -197,8 +181,6 @@ module cache_ctr(
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
 				select_PData    =`PDATA_UNK;
-				open_SysData    =`SDATA_CLOSE;
-				open_PData      =`PDATA_CLOSE;
 			end
 			STATE_WRITEHIT:begin
 				write           =1'b1;
@@ -209,8 +191,6 @@ module cache_ctr(
 				SysRW           =`RW_WRITE;
 				select_CData    =`CDATA_PRO;
 				select_PData    =`PDATA_UNK;
-				open_SysData    =`SDATA_OPEN;
-				open_PData      =`PDATA_CLOSE;
 			end
 			STATE_WRITEMISS:begin
 				write           =1'b1;
@@ -221,8 +201,6 @@ module cache_ctr(
 				SysRW           =`RW_WRITE;
 				select_CData    =`CDATA_PRO;
 				select_PData    =`PDATA_UNK;
-				open_SysData    =`SDATA_OPEN;
-				open_PData      =`PDATA_CLOSE;
 			end
 			STATE_WRITESYS:begin
 				write           =1'b0;
@@ -233,8 +211,6 @@ module cache_ctr(
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
 				select_PData    =`PDATA_UNK;
-				open_SysData    =`SDATA_CLOSE;
-				open_PData      =`PDATA_CLOSE;
 			end
 			STATE_WRITEDATA:begin
 				write           =1'b0;
@@ -245,8 +221,6 @@ module cache_ctr(
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
 				select_PData    =`PDATA_UNK;
-				open_SysData    =`SDATA_CLOSE;
-				open_PData      =`PDATA_CLOSE;
 			end
 			default:begin
 				write           =1'b0;
@@ -257,8 +231,6 @@ module cache_ctr(
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
 				select_PData    =`PDATA_UNK;
-				open_SysData    =`SDATA_CLOSE;
-				open_PData      =`PDATA_CLOSE;
 			end
 		endcase
 	end
