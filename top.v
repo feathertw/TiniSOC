@@ -5,6 +5,7 @@
 `include "src/pc.v"
 `include "src/regwalls.v"
 `include "src/forward.v"
+`include "adv/dcache.v"
 module top(
 	clk,
 	rst,
@@ -23,7 +24,7 @@ module top(
 	DM_in,
 	DM_out,
 
-	enable_system
+	do_system
 );
 	input clk;
 	input rst;
@@ -42,7 +43,7 @@ module top(
 	output [31:0] DM_in;
 	input  [31:0] DM_out;
 
-	input enable_system;
+	input do_system;
 
 	//controller
 	wire do_im_read;
@@ -144,12 +145,25 @@ module top(
 	assign IM_enable=enable_system;
 	assign IM_address=current_pc[9:0];
 
-	assign DM_read =xREG3_do_dm_read;
-	assign DM_write=xREG3_do_dm_write;
-	assign DM_enable=enable_system;
-	assign DM_address=xREG3_alu_result[11:0];
-	assign DM_in=xREG3_reg_rt_data;//*
-	assign mem_read_data=DM_out;
+	assign DM_read =(dSysRW)? 1'b1:1'b0;
+	assign DM_write=(dSysRW)? 1'b0:1'b1;
+	assign DM_enable=dSysStrobe;
+	assign DM_address=dSysAddress[11:0];
+	assign DM_in=dSysData;//*
+	assign mem_read_data=dPData;
+
+	wire dPStrobe=xREG3_do_dm_read||xREG3_do_dm_write;
+	wire dPRw=(xREG3_do_dm_read)? 1'b1:1'b0;
+	wire [31:0] dPAddress=xREG3_alu_result;
+	wire dPReady;
+	wire [31:0] dPData;
+
+	wire dSysStrobe;
+	wire dSysRW;
+	wire [31:0] dSysAddress;
+	wire [31:0] dSysData;
+
+	wire enable_system=do_system&&( (!dPStrobe)||(dPReady) );
 
 	alu ALU(
 		.reset(rst),
@@ -254,6 +268,7 @@ module top(
 	);
 	regwalls REGWALLS(
 		.clock(clk),
+		.reset(rst),
 		.enable_regwalls(enable_system),
 		.iREG1_instruction(instruction),
 		.oREG1_instruction(xREG1_instruction),
@@ -330,5 +345,19 @@ module top(
 		.f_reg_rt_data(f_reg_rt_data),
 
 		.do_hazard(do_hazard)
+	);
+
+	dcache DCACHE(
+		.clock(clk),
+		.reset(rst),
+		.PStrobe(dPStrobe),
+		.PRw(dPRw),
+		.PAddress(dPAddress),
+		.PReady(dPReady),
+		.PData(dPData),
+		.SysStrobe(dSysStrobe),
+		.SysRW(dSysRW),
+		.SysAddress(dSysAddress),
+		.SysData(dSysData)
 	);
 endmodule

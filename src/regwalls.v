@@ -1,5 +1,6 @@
 module regwalls(
 	clock,
+	reset,
 	enable_regwalls,
 	iREG1_instruction,
 	oREG1_instruction,
@@ -49,6 +50,7 @@ module regwalls(
 	do_hazard
 );
 	input  clock;
+	input  reset;
 	input  enable_regwalls;
 
 	input  [31:0] iREG1_instruction;
@@ -129,7 +131,39 @@ module regwalls(
 	input do_hazard;
 
 	always@(negedge clock)begin
-		if(enable_regwalls)begin
+		if(reset)begin
+			oREG1_instruction<=32'b0;
+
+			oREG2_reg_ra_data<=32'b0;
+			mREG2_reg_rt_data<=32'b0;
+
+			oREG2_opcode     <=6'b0;
+			oREG2_sub_op_base<=5'b0;
+
+			oREG2_alu_src2   <=32'b0;
+			mREG2_imm_extend <=32'b0;
+
+			mREG2_do_dm_read      <=1'b0;
+			mREG2_do_dm_write     <=1'b0;
+			mREG2_do_reg_write    <=1'b0;
+			mREG2_write_reg_addr  <=5'b0;
+			mREG2_select_write_reg<=2'b0;
+
+			oREG3_reg_rt_data     <=32'b0;
+			oREG3_alu_result      <=32'b0;
+			oREG3_imm_extend      <=32'b0;
+
+			oREG3_do_dm_read      <=1'b0;
+			oREG3_do_dm_write     <=1'b0;
+			mREG3_do_reg_write    <=1'b0;
+			mREG3_write_reg_addr  <=5'b0;
+			oREG3_select_write_reg<=2'b0;
+
+			oREG4_do_reg_write  <=1'b0;
+			oREG4_write_reg_addr<=5'b0;
+			oREG4_write_reg_data<=32'b0;
+		end
+		else if(enable_regwalls)begin
 			if(do_hazard)begin
 				oREG1_instruction<=oREG1_instruction;
 			end

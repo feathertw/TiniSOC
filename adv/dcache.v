@@ -30,7 +30,7 @@
 `include "ram_data.v"
 `include "mux2to1.v"
 
-module cache(
+module dcache(
 	clock,
 	reset,
 
@@ -74,8 +74,8 @@ module cache(
 	wire select_CData;
 	wire select_PData;
 
-	wire [`IDX-1:0] index;
-	wire [`TAG-1:0] tag_in;
+	wire [`IDX-1:0] index=PAddress[11:2];
+	wire [`TAG-1:0] tag_in=PAddress[31:12];
 	wire valid_in=1'b1;
 	wire [31:0] cache_data_in;
 	wire [31:0] cache_data_out;
