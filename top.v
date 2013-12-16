@@ -163,7 +163,7 @@ module top(
 	wire [31:0] dSysAddress;
 	wire [31:0] dSysData;
 
-	wire enable_system=do_system&&( (!dPStrobe)||(dPReady) );
+	wire enable_system=do_system && dPReady;
 
 	alu ALU(
 		.reset(rst),

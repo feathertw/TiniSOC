@@ -73,7 +73,7 @@ module cache_ctr(
 		.carry(wsc_carry)
 	);
 
-	always@(negedge clock)begin
+	always@(posedge clock)begin
 		state<=(reset)? STATE_IDLE:next_state;
 	end
 	always@(*)begin
@@ -126,7 +126,7 @@ module cache_ctr(
 				write           =1'b0;
 				wsc_load        =1'b0;
 				RW_hit_state    =1'b0;
-				RW_ready        =1'b0;
+				RW_ready        =1'b1;
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
