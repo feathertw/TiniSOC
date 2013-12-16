@@ -53,9 +53,11 @@ module pc(
 	reg do_flush_REG1;
 
 	always@(negedge clock) begin
-		if(reset) 	   current_pc<=32'b0;
-		else if(do_hazard) current_pc<=current_pc;
-		else if(enable_pc) current_pc<=next_pc;
+		if(reset) 	      current_pc<=32'b0;
+		else if(enable_pc)begin
+			if(do_hazard) current_pc<=current_pc;
+			else	      current_pc<=next_pc;
+		end
 	end
 
 	always@(opcode or sub_op_b or sub_op_bz or sub_op_j or reg_rt_ra_equal or reg_rt_zero or reg_rt_negative) begin
