@@ -150,6 +150,7 @@ module top(
 	assign DM_enable=dSysStrobe;
 	assign DM_address=dSysAddress[11:0];
 	assign DM_in=dSysData;//*
+	assign dSysData=DM_out;
 	assign mem_read_data=dPData;
 
 	wire dPStrobe=xREG3_do_dm_read||xREG3_do_dm_write;
