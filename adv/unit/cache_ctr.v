@@ -73,7 +73,7 @@ module cache_ctr(
 		.carry(wsc_carry)
 	);
 
-	always@(posedge clock)begin
+	always@(negedge clock)begin
 		state<=(reset)? STATE_IDLE:next_state;
 	end
 	always@(*)begin
