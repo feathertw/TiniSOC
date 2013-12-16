@@ -67,9 +67,9 @@ module dcache(
 	wire [`TAG-1:0] tag_in=PAddress[31:12];
 	wire valid_in=1'b1;
 
-	wire [31:0] cache_data_out;
-	wire [31:0] cache_data_in=(select_CData)? SysData_out:PData_out;
-	wire [31:0] PData_in=(select_PData)? SysData_out:cache_data_out;
+	wire [31:0] CData_out;
+	wire [31:0] CData_in=(select_CData)? SysData_out:PData_out;
+	wire [31:0] PData_in=(select_PData)? SysData_out:CData_out;
 	wire [31:0] SysAddress=PAddress;
 
 
@@ -109,8 +109,8 @@ module dcache(
 		.clock(clock),
 		.index(index),
 		.offset(),
-		.data_in(cache_data_in),
-		.data_out(cache_data_out),
+		.data_in(CData_in),
+		.data_out(CData_out),
 		.write(write)
 	);
 
