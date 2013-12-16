@@ -14,7 +14,9 @@ module cache_ctr(
 	write,
 
 	select_CData,
-	select_PData
+	select_PData,
+	open_SysData,
+	open_PData
 );
 	input clock;
 	input reset;

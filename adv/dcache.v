@@ -92,7 +92,9 @@ module dcache(
 		.valid(valid),
 		.write(write),
 		.select_CData(select_CData),
-		.select_PData(select_PData)
+		.select_PData(select_PData),
+		.open_SysData(open_SysData),
+		.open_PData(open_PData)
 	);
 
 	ram_tag RAM_TAG(
