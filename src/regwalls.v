@@ -1,5 +1,6 @@
 module regwalls(
 	clock,
+	enable_regwalls,
 	iREG1_instruction,
 	oREG1_instruction,
 
@@ -48,6 +49,7 @@ module regwalls(
 	do_hazard
 );
 	input  clock;
+	input  enable_regwalls;
 
 	input  [31:0] iREG1_instruction;
 	output [31:0] oREG1_instruction;
@@ -127,61 +129,63 @@ module regwalls(
 	input do_hazard;
 
 	always@(negedge clock)begin
-		if(do_hazard)begin
-			oREG1_instruction<=oREG1_instruction;
+		if(enable_regwalls)begin
+			if(do_hazard)begin
+				oREG1_instruction<=oREG1_instruction;
+			end
+			else if(do_flush_REG1)begin
+				oREG1_instruction<=32'b0;
+			end
+			else begin
+				oREG1_instruction<=iREG1_instruction;
+			end
+
+			if(do_hazard)begin
+				oREG2_reg_ra_data<=32'b0;
+				mREG2_reg_rt_data<=32'b0;
+
+				oREG2_opcode     <=6'b0;
+				oREG2_sub_op_base<=5'b0;
+
+				oREG2_alu_src2   <=32'b0;
+				mREG2_imm_extend <=32'b0;
+
+				mREG2_do_dm_read      <=1'b0;
+				mREG2_do_dm_write     <=1'b0;
+				mREG2_do_reg_write    <=1'b0;
+				mREG2_write_reg_addr  <=5'b0;
+				mREG2_select_write_reg<=2'b0;
+			end
+			else begin
+				oREG2_reg_ra_data<=iREG2_reg_ra_data;
+				mREG2_reg_rt_data<=iREG2_reg_rt_data;
+
+				oREG2_opcode     <=iREG2_opcode;
+				oREG2_sub_op_base<=iREG2_sub_op_base;
+
+				oREG2_alu_src2        <=iREG2_alu_src2;
+				mREG2_imm_extend      <=iREG2_imm_extend;
+
+				mREG2_do_dm_read      <=iREG2_do_dm_read;
+				mREG2_do_dm_write     <=iREG2_do_dm_write;
+				mREG2_do_reg_write    <=iREG2_do_reg_write;
+				mREG2_write_reg_addr  <=iREG2_write_reg_addr;
+				mREG2_select_write_reg<=iREG2_select_write_reg;
+			end
+
+			oREG3_reg_rt_data     <=mREG2_reg_rt_data;
+			oREG3_alu_result      <=iREG3_alu_result;
+			oREG3_imm_extend      <=mREG2_imm_extend;
+
+			oREG3_do_dm_read      <=mREG2_do_dm_read;
+			oREG3_do_dm_write     <=mREG2_do_dm_write;
+			mREG3_do_reg_write    <=mREG2_do_reg_write;
+			mREG3_write_reg_addr  <=mREG2_write_reg_addr;
+			oREG3_select_write_reg<=mREG2_select_write_reg;
+
+			oREG4_do_reg_write  <=mREG3_do_reg_write;
+			oREG4_write_reg_addr<=mREG3_write_reg_addr;
+			oREG4_write_reg_data<=iREG4_write_reg_data;
 		end
-		else if(do_flush_REG1)begin
-			oREG1_instruction<=32'b0;
-		end
-		else begin
-			oREG1_instruction<=iREG1_instruction;
-		end
-
-		if(do_hazard)begin
-			oREG2_reg_ra_data<=32'b0;
-			mREG2_reg_rt_data<=32'b0;
-
-			oREG2_opcode     <=6'b0;
-			oREG2_sub_op_base<=5'b0;
-
-			oREG2_alu_src2   <=32'b0;
-			mREG2_imm_extend <=32'b0;
-
-			mREG2_do_dm_read      <=1'b0;
-			mREG2_do_dm_write     <=1'b0;
-			mREG2_do_reg_write    <=1'b0;
-			mREG2_write_reg_addr  <=5'b0;
-			mREG2_select_write_reg<=2'b0;
-		end
-		else begin
-			oREG2_reg_ra_data<=iREG2_reg_ra_data;
-			mREG2_reg_rt_data<=iREG2_reg_rt_data;
-
-			oREG2_opcode     <=iREG2_opcode;
-			oREG2_sub_op_base<=iREG2_sub_op_base;
-
-			oREG2_alu_src2        <=iREG2_alu_src2;
-			mREG2_imm_extend      <=iREG2_imm_extend;
-
-			mREG2_do_dm_read      <=iREG2_do_dm_read;
-			mREG2_do_dm_write     <=iREG2_do_dm_write;
-			mREG2_do_reg_write    <=iREG2_do_reg_write;
-			mREG2_write_reg_addr  <=iREG2_write_reg_addr;
-			mREG2_select_write_reg<=iREG2_select_write_reg;
-		end
-
-		oREG3_reg_rt_data     <=mREG2_reg_rt_data;
-		oREG3_alu_result      <=iREG3_alu_result;
-		oREG3_imm_extend      <=mREG2_imm_extend;
-
-		oREG3_do_dm_read      <=mREG2_do_dm_read;
-		oREG3_do_dm_write     <=mREG2_do_dm_write;
-		mREG3_do_reg_write    <=mREG2_do_reg_write;
-		mREG3_write_reg_addr  <=mREG2_write_reg_addr;
-		oREG3_select_write_reg<=mREG2_select_write_reg;
-
-		oREG4_do_reg_write  <=mREG3_do_reg_write;
-		oREG4_write_reg_addr<=mREG3_write_reg_addr;
-		oREG4_write_reg_data<=iREG4_write_reg_data;
 	end
 endmodule

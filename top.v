@@ -21,7 +21,9 @@ module top(
 	DM_enable,
 	DM_address,
 	DM_in,
-	DM_out
+	DM_out,
+
+	enable_system
 );
 	input clk;
 	input rst;
@@ -39,6 +41,8 @@ module top(
 	output [11:0] DM_address;
 	output [31:0] DM_in;
 	input  [31:0] DM_out;
+
+	input enable_system;
 
 	//controller
 	wire do_im_read;
@@ -132,8 +136,8 @@ module top(
 	wire [19:0] imm_20bit   =xREG1_instruction[19:0];
 	wire [23:0] imm_24bit   =xREG1_instruction[23:0];
 
-	wire enable_system;
-	assign enable_system=(rst)? 1'b0:1'b1;
+	//wire enable_system;
+	//assign enable_system=(rst)? 1'b0:1'b1;
 
 	assign IM_read =do_im_read;
 	assign IM_write=do_im_write;
@@ -250,6 +254,7 @@ module top(
 	);
 	regwalls REGWALLS(
 		.clock(clk),
+		.enable_regwalls(enable_system),
 		.iREG1_instruction(instruction),
 		.oREG1_instruction(xREG1_instruction),
 		.iREG2_reg_ra_data(f_reg_ra_data),
