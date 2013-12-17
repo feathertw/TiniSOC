@@ -2,12 +2,13 @@
 module cache_ctr(
 	clock,
 	reset,
+	CReady,
 
 	PStrobe,
 	PRw,
-	PReady,
 	SysStrobe,
 	SysRW,
+	SysReady,
 
 	tag_match,
 	valid,
@@ -18,12 +19,13 @@ module cache_ctr(
 );
 	input clock;
 	input reset;
+	output CReady;
 
 	input  PStrobe;
 	input  PRw;
-	output PReady;
 	output SysStrobe;
 	output SysRW;
+	input  SysReady;
 
 	input  tag_match;
 	input  valid;
@@ -32,7 +34,7 @@ module cache_ctr(
 	output select_CData;
 	output select_PData;
 
-	wire PReady=( (PRw==`RW_READ)&&RW_hit_state&&tag_match&&valid) || (RW_ready);
+	wire CReady=( (PRw==`RW_READ)&&RW_hit_state&&tag_match&&valid) || (RW_ready);
 
 	wire wsc_carry;
 	wire [1:0] wsc_load_value=`WAITSTATE;

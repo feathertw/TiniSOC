@@ -157,7 +157,7 @@ module top(
 	wire dPStrobe=xREG3_do_dm_read||xREG3_do_dm_write;
 	wire dPRw=(xREG3_do_dm_read)? 1'b1:1'b0;
 	wire [31:0] dPAddress=xREG3_alu_result;
-	wire dPReady;
+	wire dCReady;
 	wire [31:0] dPData_in;
 	wire [31:0] dPData_out;
 
@@ -167,7 +167,7 @@ module top(
 	wire [31:0] dSysData_in;
 	wire [31:0] dSysData_out;
 
-	wire enable_system=do_system && dPReady;
+	wire enable_system=do_system && dCReady;
 
 	alu ALU(
 		.reset(rst),
@@ -358,7 +358,7 @@ module top(
 		.PStrobe(dPStrobe),
 		.PRw(dPRw),
 		.PAddress(dPAddress),
-		.PReady(dPReady),
+		.CReady(dCReady),
 		.PData_in(dPData_in),
 		.PData_out(dPData_out),
 		.SysStrobe(dSysStrobe),

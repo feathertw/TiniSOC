@@ -27,11 +27,11 @@
 module dcache(
 	clock,
 	reset,
+	CReady,
 
 	PStrobe,
 	PRw,
 	PAddress,
-	PReady,
 	PData_in,
 	PData_out,
 
@@ -39,15 +39,16 @@ module dcache(
 	SysRW,
 	SysAddress,
 	SysData_in,
-	SysData_out
+	SysData_out,
+	SysReady
 );
 	input clock;
 	input reset;
+	output CReady;
 
 	input  PStrobe;
 	input  PRw;
 	input  [31:0] PAddress;
-	output PReady;
 	output [31:0] PData_in;
 	input  [31:0] PData_out;
 
@@ -56,6 +57,7 @@ module dcache(
 	output [31:0] SysAddress;
 	output [31:0] SysData_in;
 	input  [31:0] SysData_out;
+	input  SysReady;
 
 	wire tag_match;
 	wire valid;
@@ -79,7 +81,7 @@ module dcache(
 		.reset(reset),
 		.PStrobe(PStrobe),
 		.PRw(PRw),
-		.PReady(PReady),
+		.CReady(CReady),
 		.SysStrobe(SysStrobe),
 		.SysRW(SysRW),
 		.tag_match(tag_match),
