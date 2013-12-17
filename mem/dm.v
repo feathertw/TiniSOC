@@ -1,3 +1,5 @@
+`define WAIT_STATE 2
+`define WS `WAIT_STATE
 module dm(
 	clock,
 	reset,
@@ -28,12 +30,26 @@ module dm(
 
 	reg [data_size-1:0] mem_data[mem_size-1:0];
 
-	reg REG_DM_enable [1:0];
-	reg REG_DM_read   [1:0];
-	reg REG_DM_write  [1:0];
-	reg [31:0] REG_DM_address [1:0];
-	reg [31:0] REG_DM_data    [1:0];
+	reg REG_DM_enable [`WAIT_STATE:0];
+	reg REG_DM_read   [`WAIT_STATE:0];
+	reg REG_DM_write  [`WAIT_STATE:0];
+	reg [31:0] REG_DM_address [`WAIT_STATE:0];
+	reg [31:0] REG_DM_data    [`WAIT_STATE:0];
+
 	integer i;
+	always@(negedge clock)begin
+		REG_DM_enable[0] <=DM_enable;
+		REG_DM_read[0]   <=DM_read;
+		REG_DM_write[0]  <=DM_write;
+		REG_DM_address[0]<=DM_address;
+		REG_DM_data[0]   <=DM_in;
+
+		for(i=0;i<`WAIT_STATE;i=i+1) REG_DM_enable[i+1] <=REG_DM_enable[i];
+		for(i=0;i<`WAIT_STATE;i=i+1) REG_DM_read[i+1]   <=REG_DM_read[i];
+		for(i=0;i<`WAIT_STATE;i=i+1) REG_DM_write[i+1]  <=REG_DM_write[i];
+		for(i=0;i<`WAIT_STATE;i=i+1) REG_DM_address[i+1]<=REG_DM_address[i];
+		for(i=0;i<`WAIT_STATE;i=i+1) REG_DM_data[i+1]   <=REG_DM_data[i];
+	end
 
 	always@(posedge clock)begin
 		if(reset)begin
@@ -44,28 +60,16 @@ module dm(
 			end
 		end
 		else begin
-			REG_DM_enable[0] <=DM_enable;
-			REG_DM_read[0]   <=DM_read;
-			REG_DM_write[0]  <=DM_write;
-			REG_DM_address[0]<=DM_address;
-			REG_DM_data[0]   <=DM_in;
-
-			REG_DM_enable[1] <=REG_DM_enable[0];
-			REG_DM_read[1]   <=REG_DM_read[0];
-			REG_DM_write[1]  <=REG_DM_write[0];
-			REG_DM_address[1]<=REG_DM_address[0];
-			REG_DM_data[1]   <=REG_DM_data[0];
-
 			if(DM_enable&&DM_read)begin
 				DM_ready<=1'b0;
 			end
-			if(REG_DM_enable[1])begin
-				if(REG_DM_read[1])begin
-					DM_out<=mem_data[(REG_DM_address[1]/4)];
+			if(REG_DM_enable[`WS])begin
+				if(REG_DM_read[`WS])begin
+					DM_out<=mem_data[(REG_DM_address[`WS]/4)];
 					DM_ready<=1'b1;
 				end
-				else if(REG_DM_write[1])begin
-					mem_data[(REG_DM_address[1]/4)] <= DM_in;
+				else if(REG_DM_write[`WS])begin
+					mem_data[(REG_DM_address[`WS]/4)] <= REG_DM_data[`WS];
 				end
 			end
 		end
