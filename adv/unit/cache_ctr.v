@@ -32,7 +32,7 @@ module cache_ctr(
 	output select_CData;
 	output select_PData;
 
-	wire PReady=(RW_hit_state&&tag_match&&valid) || (RW_ready);
+	wire PReady=( (PRw==`RW_READ)&&RW_hit_state&&tag_match&&valid) || (RW_ready);
 
 	wire wsc_carry;
 	wire [1:0] wsc_load_value=`WAITSTATE;
@@ -112,7 +112,9 @@ module cache_ctr(
 				else          next_state=STATE_WRITESYS;
 			end
 			STATE_WRITEDATA:begin
-				next_state=STATE_IDLE;
+				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
+				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
+				else				       next_state=STATE_IDLE;
 			end
 			default:begin
 				next_state=STATE_IDLE;
