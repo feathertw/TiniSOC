@@ -84,6 +84,7 @@ module dcache(
 		.CReady(CReady),
 		.SysStrobe(SysStrobe),
 		.SysRW(SysRW),
+		.SysReady(SysReady),
 		.tag_match(tag_match),
 		.valid(valid),
 		.write(write),

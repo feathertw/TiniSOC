@@ -16,6 +16,7 @@ module top(
 	IM_write,
 	IM_enable,
 	IM_address,
+	IM_ready,
 
 	DM_read,
 	DM_write,
@@ -23,6 +24,7 @@ module top(
 	DM_address,
 	DM_in,
 	DM_out,
+	DM_ready,
 
 	do_system
 );
@@ -35,6 +37,7 @@ module top(
 	output IM_write;
 	output IM_enable;
 	output [9:0] IM_address;
+	input  IM_ready;
 
 	output DM_read;
 	output DM_write;
@@ -42,6 +45,7 @@ module top(
 	output [11:0] DM_address;
 	output [31:0] DM_in;
 	input  [31:0] DM_out;
+	input  DM_ready;
 
 	input do_system;
 
@@ -166,6 +170,7 @@ module top(
 	wire [31:0] dSysAddress;
 	wire [31:0] dSysData_in;
 	wire [31:0] dSysData_out;
+	wire dSysReady=DM_ready;
 
 	wire enable_system=do_system && dCReady;
 
@@ -355,16 +360,17 @@ module top(
 	dcache DCACHE(
 		.clock(clk),
 		.reset(rst),
+		.CReady(dCReady),
 		.PStrobe(dPStrobe),
 		.PRw(dPRw),
 		.PAddress(dPAddress),
-		.CReady(dCReady),
 		.PData_in(dPData_in),
 		.PData_out(dPData_out),
 		.SysStrobe(dSysStrobe),
 		.SysRW(dSysRW),
 		.SysAddress(dSysAddress),
 		.SysData_in(dSysData_in),
-		.SysData_out(dSysData_out)
+		.SysData_out(dSysData_out),
+		.SysReady(dSysReady)
 	);
 endmodule

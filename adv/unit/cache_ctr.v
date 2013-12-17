@@ -1,4 +1,3 @@
-`include "wait_state_ctr.v"
 module cache_ctr(
 	clock,
 	reset,
@@ -34,13 +33,9 @@ module cache_ctr(
 	output select_CData;
 	output select_PData;
 
-	wire CReady=( (PRw==`RW_READ)&&RW_hit_state&&tag_match&&valid) || (RW_ready);
-
-	wire wsc_carry;
-	wire [1:0] wsc_load_value=`WAITSTATE;
+	wire CReady=(RW_hit_state&&tag_match&&valid) || (RW_ready);
 
 	reg  write;
-	reg  wsc_load;
 	reg  RW_hit_state;
 	reg  RW_ready;
 	reg  SysStrobe;
@@ -61,13 +56,6 @@ module cache_ctr(
 	parameter STATE_WRITEMISS =4'd7;
 	parameter STATE_WRITESYS  =4'd8;
 	parameter STATE_WRITEDATA =4'd9;
-
-	wait_state_ctr WAIT_STATE_CTR(
-		.clock(clock),
-		.load(wsc_load),
-		.load_value(wsc_load_value),
-		.carry(wsc_carry)
-	);
 
 	always@(posedge clock)begin
 		state<=(reset)? STATE_IDLE:next_state;
@@ -91,7 +79,7 @@ module cache_ctr(
 				next_state=STATE_READSYS;
 			end
 			STATE_READSYS:begin
-				if(wsc_carry) next_state=STATE_READDATA;
+				if(SysReady)  next_state=STATE_READDATA;
 				else	      next_state=STATE_READSYS;
 			end
 			STATE_READDATA:begin
@@ -110,7 +98,7 @@ module cache_ctr(
 				next_state=STATE_WRITESYS;
 			end
 			STATE_WRITESYS:begin
-				if(wsc_carry) next_state=STATE_WRITEDATA;
+				if(SysReady)  next_state=STATE_WRITEDATA;
 				else          next_state=STATE_WRITESYS;
 			end
 			STATE_WRITEDATA:begin
@@ -128,7 +116,6 @@ module cache_ctr(
 		case(state)
 			STATE_IDLE:begin
 				write           =1'b0;
-				wsc_load        =1'b0;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b1;
 				SysStrobe       =1'b0;
@@ -138,7 +125,6 @@ module cache_ctr(
 			end
 			STATE_READ:begin
 				write           =1'b0;
-				wsc_load        =1'b0;
 				RW_hit_state    =1'b1;
 				RW_ready        =1'b0;
 				SysStrobe       =1'b0;
@@ -148,7 +134,6 @@ module cache_ctr(
 			end
 			STATE_READMISS:begin
 				write           =1'b0;
-				wsc_load        =1'b1;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b0;
 				SysStrobe       =1'b1;
@@ -158,7 +143,6 @@ module cache_ctr(
 			end
 			STATE_READSYS:begin
 				write           =1'b0;
-				wsc_load        =1'b0;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b0;
 				SysStrobe       =1'b0;
@@ -168,7 +152,6 @@ module cache_ctr(
 			end
 			STATE_READDATA:begin
 				write           =1'b1;
-				wsc_load        =1'b0;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b1;
 				SysStrobe       =1'b0;
@@ -178,7 +161,6 @@ module cache_ctr(
 			end
 			STATE_WRITE:begin
 				write           =1'b0;
-				wsc_load        =1'b0;
 				RW_hit_state    =1'b1;
 				RW_ready        =1'b0;
 				SysStrobe       =1'b0;
@@ -188,7 +170,6 @@ module cache_ctr(
 			end
 			STATE_WRITEHIT:begin
 				write           =1'b1;
-				wsc_load        =1'b1;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b0;
 				SysStrobe       =1'b1;
@@ -198,7 +179,6 @@ module cache_ctr(
 			end
 			STATE_WRITEMISS:begin
 				write           =1'b1;
-				wsc_load        =1'b1;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b0;
 				SysStrobe       =1'b1;
@@ -208,7 +188,6 @@ module cache_ctr(
 			end
 			STATE_WRITESYS:begin
 				write           =1'b0;
-				wsc_load        =1'b0;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b0;
 				SysStrobe       =1'b0;
@@ -218,7 +197,6 @@ module cache_ctr(
 			end
 			STATE_WRITEDATA:begin
 				write           =1'b0;
-				wsc_load        =1'b0;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b1;
 				SysStrobe       =1'b0;
@@ -228,7 +206,6 @@ module cache_ctr(
 			end
 			default:begin
 				write           =1'b0;
-				wsc_load        =1'b0;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b0;
 				SysStrobe       =1'b0;
