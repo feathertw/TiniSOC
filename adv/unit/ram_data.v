@@ -1,14 +1,12 @@
 module ram_data(
 	clock,
 	index,
-	offset,
 	data_in,
 	data_out,
 	write
 );
 	input  clock;
 	input  [`IDX-1:0] index;
-	input  [`OFS-1:0] offset;
 	input  [`BLK-1:0] data_in;
 	output [`BLK-1:0] data_out;
 	input  write;

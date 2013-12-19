@@ -24,6 +24,7 @@ module top(
 	DM_address,
 	DM_in,
 	DM_out,
+	DM_ack,
 	DM_ready,
 
 	do_system
@@ -45,6 +46,7 @@ module top(
 	output [11:0] DM_address;
 	output [31:0] DM_in;
 	input  [31:0] DM_out;
+	input  DM_ack;
 	input  DM_ready;
 
 	input do_system;
@@ -170,6 +172,7 @@ module top(
 	wire [31:0] dSysAddress;
 	wire [31:0] dSysData_in;
 	wire [31:0] dSysData_out;
+	wire dSysAck=DM_ack;
 	wire dSysReady=DM_ready;
 
 	wire enable_system=do_system && dCReady;
@@ -371,6 +374,7 @@ module top(
 		.SysAddress(dSysAddress),
 		.SysData_in(dSysData_in),
 		.SysData_out(dSysData_out),
+		.SysAck(dSysAck),
 		.SysReady(dSysReady)
 	);
 endmodule
