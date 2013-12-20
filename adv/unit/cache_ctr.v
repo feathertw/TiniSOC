@@ -15,6 +15,7 @@ module cache_ctr(
 	write,
 
 	select_CData,
+	select_CWOffset,
 	do_buffer_flush
 );
 	input clock;
@@ -33,6 +34,7 @@ module cache_ctr(
 	output write;
 	
 	output select_CData;
+	output select_CWOffset;
 	output do_buffer_flush;
 
 	wire CReady=(RW_hit_state&&tag_match&&valid) || (RW_ready);
@@ -43,6 +45,7 @@ module cache_ctr(
 	reg  SysStrobe;
 	reg  SysRW;
 	reg  select_CData;
+	reg  select_CWOffset;
 	reg  do_buffer_flush;
 
 	reg [3:0] state;
@@ -53,8 +56,9 @@ module cache_ctr(
 	parameter STATE_READMISS  =4'd2;
 	parameter STATE_READSYS	  =4'd3;
 	parameter STATE_READDATA  =4'd4;
-	parameter STATE_WRITEHIT  =4'd5;
-	parameter STATE_WRITEMISS =4'd6;
+	parameter STATE_WRITE	  =4'd5;
+	parameter STATE_WRITEHIT  =4'd6;
+	parameter STATE_WRITEMISS =4'd7;
 
 	always@(posedge clock)begin
 		state<=(reset)? STATE_IDLE:next_state;
@@ -63,13 +67,13 @@ module cache_ctr(
 		case(state)
 			STATE_IDLE:begin
 				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
-				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITEHIT;
+				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
 				else			      	       next_state=STATE_IDLE;
 			end
 			STATE_READ:begin
 				if(tag_match&&valid) begin
 					if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
-					else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITEHIT;
+					else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
 					else			      	       next_state=STATE_IDLE;
 				end
 				else		     			       next_state=STATE_READMISS;
@@ -83,30 +87,22 @@ module cache_ctr(
 			end
 			STATE_READDATA:begin
 				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
-				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITEHIT;
+				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
 				else			      	       next_state=STATE_IDLE;
 			end
+			STATE_WRITE:begin
+				if(tag_match&&valid) next_state=STATE_WRITEHIT;
+				else		     next_state=STATE_WRITEMISS;
+			end
 			STATE_WRITEHIT:begin
-				if( (PStrobe)&&(PRw==`RW_READ) ) begin
-					if(tag_match&&valid) next_state=STATE_READ;
-					else		     next_state=STATE_READMISS;
-				end
-				else if( (PStrobe)&&(PRw==`RW_WRITE) )begin
-					if(tag_match&&valid) next_state=STATE_WRITEHIT;
-					else		     next_state=STATE_WRITEMISS;
-				end
-				else			     next_state=STATE_IDLE;
+				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
+				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
+				else			      	       next_state=STATE_IDLE;
 			end
 			STATE_WRITEMISS:begin
-				if( (PStrobe)&&(PRw==`RW_READ) ) begin
-					if(tag_match&&valid) next_state=STATE_READ;
-					else		     next_state=STATE_READMISS;
-				end
-				else if( (PStrobe)&&(PRw==`RW_WRITE) )begin
-					if(tag_match&&valid) next_state=STATE_WRITEHIT;
-					else		     next_state=STATE_WRITEMISS;
-				end
-				else			     next_state=STATE_IDLE;
+				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
+				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
+				else			      	       next_state=STATE_IDLE;
 			end
 			default:begin
 				next_state=STATE_IDLE;
@@ -123,6 +119,7 @@ module cache_ctr(
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
+				select_CWOffset =`CWOFS_UNK;
 				do_buffer_flush =1'b0;
 			end
 			STATE_READ:begin
@@ -132,6 +129,7 @@ module cache_ctr(
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
+				select_CWOffset =`CWOFS_UNK;
 				do_buffer_flush =1'b0;
 			end
 			STATE_READMISS:begin
@@ -141,6 +139,7 @@ module cache_ctr(
 				SysStrobe       =1'b1;
 				SysRW           =`RW_READ;
 				select_CData    =`CDATA_UNK;
+				select_CWOffset =`CWOFS_UNK;
 				do_buffer_flush =1'b1;
 			end
 			STATE_READSYS:begin
@@ -150,6 +149,7 @@ module cache_ctr(
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_SYS;
+				select_CWOffset =`CWOFS_SYS;
 				do_buffer_flush =1'b0;
 			end
 			STATE_READDATA:begin
@@ -159,6 +159,17 @@ module cache_ctr(
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
+				select_CWOffset =`CWOFS_UNK;
+				do_buffer_flush =1'b0;
+			end
+			STATE_WRITE:begin
+				write           =1'b0;
+				RW_hit_state    =1'b0;
+				RW_ready        =1'b0;
+				SysStrobe       =1'b0;
+				SysRW           =`RW_UNK;
+				select_CData    =`CDATA_UNK;
+				select_CWOffset =`CWOFS_UNK;
 				do_buffer_flush =1'b0;
 			end
 			STATE_WRITEHIT:begin
@@ -168,6 +179,7 @@ module cache_ctr(
 				SysStrobe       =1'b1;
 				SysRW           =`RW_WRITE;
 				select_CData    =`CDATA_PRO;
+				select_CWOffset =`CWOFS_PRO;
 				do_buffer_flush =1'b0;
 			end
 			STATE_WRITEMISS:begin
@@ -177,6 +189,7 @@ module cache_ctr(
 				SysStrobe       =1'b1;
 				SysRW           =`RW_WRITE;
 				select_CData    =`CDATA_UNK;
+				select_CWOffset =`CWOFS_UNK;
 				do_buffer_flush =1'b0;
 			end
 			default:begin
@@ -186,6 +199,7 @@ module cache_ctr(
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
+				select_CWOffset =`CWOFS_UNK;
 				do_buffer_flush =1'b0;
 			end
 		endcase

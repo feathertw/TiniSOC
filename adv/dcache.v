@@ -15,6 +15,9 @@
 `define CDATA_PRO 1'b0
 `define CDATA_SYS 1'b1
 `define CDATA_UNK 1'bx
+`define CWOFS_PRO 1'b0
+`define CWOFS_SYS 1'b1
+`define CWOFS_UNK 1'bx
 
 `include "cache_ctr.v"
 `include "ram_tag.v"
@@ -67,11 +70,12 @@ module dcache(
 
 	wire [`IDX-1:0] index=PAddress[11:6];
 	wire [`TAG-1:0] tag_in=PAddress[31:12];
-	wire [`OFS-1:0] offset=PAddress[5:2];
+	wire [`OFS-1:0] offset_pro=PAddress[5:2];
 	wire valid_in=1'b1;
 
-	wire [`OFS-1:0] offset_in;
+	wire [`OFS-1:0] offset_sys;
 	wire [31:0] CData_out;
+	wire [`OFS-1:0] offset_write=(select_CWOffset==`CWOFS_PRO)? offset_pro:offset_sys;
 	wire [31:0] CData_in=(select_CData==`CDATA_SYS)? SysData_out:PData_out;
 	wire [31:0] PData_in=CData_out;
 	wire [31:0] SysData_in=PData_out;
@@ -91,6 +95,7 @@ module dcache(
 		.valid(valid),
 		.write(write),
 		.select_CData(select_CData),
+		.select_CWOffset(select_CWOffset),
 		.do_buffer_flush(do_buffer_flush)
 	);
 
@@ -114,8 +119,8 @@ module dcache(
 	ram_data RAM_DATA(
 		.clock(clock),
 		.index(index),
-		.offset_write(offset_in),
-		.offset_read(offset),
+		.offset_write(offset_write),
+		.offset_read(offset_pro),
 		.data_in(CData_in),
 		.data_out(CData_out),
 		.write(write)
@@ -125,7 +130,7 @@ module dcache(
 		.clock(clock),
 		.flush(do_buffer_flush),
 		.signal(SysAck),
-		.value(offset_in)
+		.value(offset_sys)
 	);
 endmodule
 
