@@ -5,7 +5,7 @@ module ram_data(
 	offset_read,
 	data_in,
 	data_out,
-	write
+	do_write
 );
 	input  clock;
 	input  [`IDX-1:0] index;
@@ -13,13 +13,13 @@ module ram_data(
 	input  [`OFS-1:0] offset_read;
 	input  [`WOR-1:0] data_in;
 	output [`WOR-1:0] data_out;
-	input  write;
+	input  do_write;
 
 	reg [`WOR-1:0] data_out;
 	reg [`BLK-1:0] data_ram [`DEP-1:0];
 
 	always@(negedge clock)begin
-		if(write) write_offset(data_in,offset_write);
+		if(do_write) write_offset(data_in,offset_write);
 	end
 	always@(posedge clock)begin
 		read_offset(offset_read);

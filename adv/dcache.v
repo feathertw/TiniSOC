@@ -64,7 +64,7 @@ module dcache(
 
 	wire tag_match;
 	wire valid;
-	wire write;
+	wire do_write;
 	wire select_CData;
 	wire do_buffer_flush;
 
@@ -93,7 +93,7 @@ module dcache(
 		.SysReady(SysReady),
 		.tag_match(tag_match),
 		.valid(valid),
-		.write(write),
+		.do_write(do_write),
 		.select_CData(select_CData),
 		.select_CWOffset(select_CWOffset),
 		.do_buffer_flush(do_buffer_flush)
@@ -104,7 +104,7 @@ module dcache(
 		.index(index),
 		.tag_in(tag_in),
 		.tag_match(tag_match),
-		.write(write)
+		.do_write(do_write)
 	);
 
 	ram_valid RAM_VALID(
@@ -113,7 +113,7 @@ module dcache(
 		.index(index),
 		.valid_in(valid_in),
 		.valid_out(valid),
-		.write(write)
+		.do_write(do_write)
 	);
 
 	ram_data RAM_DATA(
@@ -123,7 +123,7 @@ module dcache(
 		.offset_read(offset_pro),
 		.data_in(CData_in),
 		.data_out(CData_out),
-		.write(write)
+		.do_write(do_write)
 	);
 
 	counter COUNTER(

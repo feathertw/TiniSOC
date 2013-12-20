@@ -12,7 +12,7 @@ module cache_ctr(
 
 	tag_match,
 	valid,
-	write,
+	do_write,
 
 	select_CData,
 	select_CWOffset,
@@ -31,13 +31,15 @@ module cache_ctr(
 
 	input  tag_match;
 	input  valid;
-	output write;
+	output do_write;
 	
 	output select_CData;
 	output select_CWOffset;
 	output do_buffer_flush;
 
 	wire CReady=(RW_hit_state&&tag_match&&valid) || (RW_ready);
+
+	wire do_write=write||(state==STATE_WRITE&&tag_match&&valid);
 
 	reg  write;
 	reg  RW_hit_state;
@@ -91,15 +93,6 @@ module cache_ctr(
 				else			      	       next_state=STATE_IDLE;
 			end
 			STATE_WRITE:begin
-				if(tag_match&&valid) next_state=STATE_WRITEHIT;
-				else		     next_state=STATE_WRITEMISS;
-			end
-			STATE_WRITEHIT:begin
-				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
-				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
-				else			      	       next_state=STATE_IDLE;
-			end
-			STATE_WRITEMISS:begin
 				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
 				else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITE;
 				else			      	       next_state=STATE_IDLE;
@@ -165,31 +158,11 @@ module cache_ctr(
 			STATE_WRITE:begin
 				write           =1'b0;
 				RW_hit_state    =1'b0;
-				RW_ready        =1'b0;
-				SysStrobe       =1'b0;
-				SysRW           =`RW_UNK;
-				select_CData    =`CDATA_UNK;
-				select_CWOffset =`CWOFS_UNK;
-				do_buffer_flush =1'b0;
-			end
-			STATE_WRITEHIT:begin
-				write           =1'b1;
-				RW_hit_state    =1'b1;
-				RW_ready        =1'b0;
+				RW_ready        =1'b1;
 				SysStrobe       =1'b1;
 				SysRW           =`RW_WRITE;
 				select_CData    =`CDATA_PRO;
 				select_CWOffset =`CWOFS_PRO;
-				do_buffer_flush =1'b0;
-			end
-			STATE_WRITEMISS:begin
-				write           =1'b0;
-				RW_hit_state    =1'b0;
-				RW_ready        =1'b1;
-				SysStrobe       =1'b1;
-				SysRW           =`RW_WRITE;
-				select_CData    =`CDATA_UNK;
-				select_CWOffset =`CWOFS_UNK;
 				do_buffer_flush =1'b0;
 			end
 			default:begin
