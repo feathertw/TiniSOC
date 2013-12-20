@@ -15,7 +15,6 @@ module cache_ctr(
 	write,
 
 	select_CData,
-	select_PData,
 	do_buffer_flush
 );
 	input clock;
@@ -34,7 +33,6 @@ module cache_ctr(
 	output write;
 	
 	output select_CData;
-	output select_PData;
 	output do_buffer_flush;
 
 	wire CReady=(RW_hit_state&&tag_match&&valid) || (RW_ready);
@@ -45,7 +43,6 @@ module cache_ctr(
 	reg  SysStrobe;
 	reg  SysRW;
 	reg  select_CData;
-	reg  select_PData;
 	reg  do_buffer_flush;
 
 	reg [3:0] state;
@@ -126,7 +123,6 @@ module cache_ctr(
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
-				select_PData    =`PDATA_UNK;
 				do_buffer_flush =1'b0;
 			end
 			STATE_READ:begin
@@ -136,7 +132,6 @@ module cache_ctr(
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
-				select_PData    =`PDATA_CAC;
 				do_buffer_flush =1'b0;
 			end
 			STATE_READMISS:begin
@@ -146,27 +141,24 @@ module cache_ctr(
 				SysStrobe       =1'b1;
 				SysRW           =`RW_READ;
 				select_CData    =`CDATA_UNK;
-				select_PData    =`PDATA_UNK;
 				do_buffer_flush =1'b1;
 			end
 			STATE_READSYS:begin
-				write           =1'b0;
+				write           =1'b1;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b0;
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
-				select_CData    =`CDATA_UNK;
-				select_PData    =`PDATA_UNK;
+				select_CData    =`CDATA_SYS;
 				do_buffer_flush =1'b0;
 			end
 			STATE_READDATA:begin
-				write           =1'b1;
+				write           =1'b0;
 				RW_hit_state    =1'b0;
 				RW_ready        =1'b1;
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
-				select_CData    =`CDATA_SYS;
-				select_PData    =`PDATA_SYS;
+				select_CData    =`CDATA_UNK;
 				do_buffer_flush =1'b0;
 			end
 			STATE_WRITEHIT:begin
@@ -176,7 +168,6 @@ module cache_ctr(
 				SysStrobe       =1'b1;
 				SysRW           =`RW_WRITE;
 				select_CData    =`CDATA_PRO;
-				select_PData    =`PDATA_UNK;
 				do_buffer_flush =1'b0;
 			end
 			STATE_WRITEMISS:begin
@@ -186,7 +177,6 @@ module cache_ctr(
 				SysStrobe       =1'b1;
 				SysRW           =`RW_WRITE;
 				select_CData    =`CDATA_UNK;
-				select_PData    =`PDATA_UNK;
 				do_buffer_flush =1'b0;
 			end
 			default:begin
@@ -196,7 +186,6 @@ module cache_ctr(
 				SysStrobe       =1'b0;
 				SysRW           =`RW_UNK;
 				select_CData    =`CDATA_UNK;
-				select_PData    =`PDATA_UNK;
 				do_buffer_flush =1'b0;
 			end
 		endcase

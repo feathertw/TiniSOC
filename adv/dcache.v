@@ -15,17 +15,12 @@
 `define CDATA_PRO 1'b0
 `define CDATA_SYS 1'b1
 `define CDATA_UNK 1'bx
-`define PDATA_CAC 1'b0
-`define PDATA_SYS 1'b1
-`define PDATA_UNK 1'bx
 
 `include "cache_ctr.v"
 `include "ram_tag.v"
 `include "ram_valid.v"
 `include "ram_data.v"
-`include "write_cache.v"
-`include "read_buffer.v"
-`include "offset.v"
+`include "counter.v"
 
 module dcache(
 	clock,
@@ -68,7 +63,6 @@ module dcache(
 	wire valid;
 	wire write;
 	wire select_CData;
-	wire select_PData;
 	wire do_buffer_flush;
 
 	wire [`IDX-1:0] index=PAddress[11:6];
@@ -76,13 +70,10 @@ module dcache(
 	wire [`OFS-1:0] offset=PAddress[5:2];
 	wire valid_in=1'b1;
 
-	wire [`BLK-1:0] write_data;
-	wire [`BLK-1:0] cache_data;
-	wire [`BLK-1:0] buffer_data;
+	wire [`OFS-1:0] offset_in;
 	wire [31:0] CData_out;
-	wire [31:0] BData_out;
-	wire [`BLK-1:0] CData_in=(select_CData)? buffer_data:write_data;
-	wire [31:0] PData_in=(select_PData)? BData_out:CData_out;
+	wire [31:0] CData_in=(select_CData==`CDATA_SYS)? SysData_out:PData_out;
+	wire [31:0] PData_in=CData_out;
 	wire [31:0] SysData_in=PData_out;
 	wire [31:0] SysAddress=PAddress;
 
@@ -100,7 +91,6 @@ module dcache(
 		.valid(valid),
 		.write(write),
 		.select_CData(select_CData),
-		.select_PData(select_PData),
 		.do_buffer_flush(do_buffer_flush)
 	);
 
@@ -124,38 +114,18 @@ module dcache(
 	ram_data RAM_DATA(
 		.clock(clock),
 		.index(index),
+		.offset_write(offset_in),
+		.offset_read(offset),
 		.data_in(CData_in),
-		.data_out(cache_data),
+		.data_out(CData_out),
 		.write(write)
 	);
 
-	 write_cache WRITE_CACHE(
+	counter COUNTER(
 		.clock(clock),
-		.offset(offset),
-		.pro_data(PData_out),
-		.cache_data(CData_out),
-		.write_data(write_data)
+		.flush(do_buffer_flush),
+		.signal(SysAck),
+		.value(offset_in)
 	);
-
-	read_buffer READ_BUFFER(
-		.clock(clock),
-		.do_buffer_flush(do_buffer_flush),
-		.SysAck(SysAck),
-		.SysData_out(SysData_out),
-		.buffer_data(buffer_data)
-	);
-
-	offset OFFSET_CDATA(
-		.offset_in(cache_data),
-		.offset_out(CData_out),
-		.offset(offset)
-	);
-
-	offset OFFSET_BDATA(
-		.offset_in(buffer_data),
-		.offset_out(BData_out),
-		.offset(offset)
-	);
-
 endmodule
 
