@@ -69,13 +69,13 @@ module dm(
 			if(DM_enable&&DM_read)begin
 				DM_ready<=1'b0;
 				start<=1'b0;
+				DM_base_address<=(DM_address&32'hffff_ffc0);
 			end
 			if(REG_DM_enable[`WS])begin
 				if(REG_DM_read[`WS])begin
 					counter<=4'b1;
 					start<=1'b1;
-					DM_base_address<=REG_DM_address[`WS]&32'hffff_fff0;
-					DM_out<=mem_data[( (REG_DM_address[`WS]&32'hffff_fff0)/4)];
+					DM_out<=mem_data[( DM_base_address/4)];
 					DM_ack<=1'b1;
 				end
 				else if(REG_DM_write[`WS])begin
