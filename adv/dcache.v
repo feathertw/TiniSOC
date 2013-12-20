@@ -23,6 +23,7 @@
 `include "ram_tag.v"
 `include "ram_valid.v"
 `include "ram_data.v"
+`include "write_cache.v"
 `include "read_buffer.v"
 `include "offset.v"
 
@@ -75,11 +76,12 @@ module dcache(
 	wire [`OFS-1:0] offset=PAddress[5:2];
 	wire valid_in=1'b1;
 
+	wire [`BLK-1:0] write_data;
 	wire [`BLK-1:0] cache_data;
 	wire [`BLK-1:0] buffer_data;
 	wire [31:0] CData_out;
 	wire [31:0] BData_out;
-	//wire [31:0] CData_in=(select_CData)? SysData_out:PData_out;
+	wire [`BLK-1:0] CData_in=(select_CData)? buffer_data:write_data;
 	wire [31:0] PData_in=(select_PData)? BData_out:CData_out;
 	wire [31:0] SysData_in=PData_out;
 	wire [31:0] SysAddress=PAddress;
@@ -122,9 +124,17 @@ module dcache(
 	ram_data RAM_DATA(
 		.clock(clock),
 		.index(index),
-		.data_in(buffer_data),
+		.data_in(CData_in),
 		.data_out(cache_data),
 		.write(write)
+	);
+
+	 write_cache WRITE_CACHE(
+		.clock(clock),
+		.offset(offset),
+		.pro_data(PData_out),
+		.cache_data(CData_out),
+		.write_data(write_data)
 	);
 
 	read_buffer READ_BUFFER(

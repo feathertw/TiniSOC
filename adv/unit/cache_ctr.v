@@ -75,7 +75,7 @@ module cache_ctr(
 					else if( (PStrobe)&&(PRw==`RW_WRITE) ) next_state=STATE_WRITEHIT;
 					else			      	       next_state=STATE_IDLE;
 				end
-				else		     next_state=STATE_READMISS;
+				else		     			       next_state=STATE_READMISS;
 			end
 			STATE_READMISS:begin
 				next_state=STATE_READSYS;
