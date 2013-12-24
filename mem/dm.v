@@ -1,5 +1,6 @@
 `define WAIT_STATE 2
 `define WS `WAIT_STATE
+`define DM_ADDR_OFS 32'hffff_ffc0
 module dm(
 	clock,
 	reset,
@@ -37,9 +38,10 @@ module dm(
 	reg [31:0] REG_DM_data    [`WAIT_STATE:0];
 
 	reg [31:0] DM_base_address;
-	reg [3:0] counter;
-	reg start;
+	reg [ 3:0] count_value;
+	reg do_count;
 	integer i;
+
 	always@(negedge clock)begin
 		REG_DM_enable[0] <=DM_enable;
 		REG_DM_read[0]   <=DM_read;
@@ -59,19 +61,20 @@ module dm(
 			for(i=0;i<mem_size;i=i+1)begin
 				mem_data[i]<=0;
 				DM_out<=0;
+				DM_ready<=1'b0;
+				do_count<=1'b0;
 			end
 		end
 		else begin
 			if(DM_enable&&DM_read)begin
-				start<=1'b0;
-				DM_base_address<=(DM_address&32'hffff_ffc0);
+				DM_base_address<=(DM_address&`DM_ADDR_OFS);
 			end
 			if(REG_DM_enable[`WS])begin
 				if(REG_DM_read[`WS])begin
-					counter<=4'b1;
-					start<=1'b1;
 					DM_out<=mem_data[( DM_base_address/4)];
 					DM_ready<=1'b1;
+					do_count<=1'b1;
+					count_value<=4'b1;
 				end
 				else if(REG_DM_write[`WS])begin
 					mem_data[(REG_DM_address[`WS]/4)] <= REG_DM_data[`WS];
@@ -80,17 +83,15 @@ module dm(
 		end
 	end
 	always@(posedge clock)begin
-		if(start)begin
-			if(counter)begin
-				DM_out<=mem_data[( (DM_base_address+4*counter)/4)];
-				counter<=counter+4'b1;
-				if(counter==4'b1111) begin
-				end
+		if(do_count)begin
+			if(count_value)begin
+				DM_out<=mem_data[( (DM_base_address+4*count_value)/4)];
 				DM_ready<=1'b1;
+				count_value<=count_value+4'b1;
 			end
 			else begin
 				DM_ready<=1'b0;
-				start<=1'b0;
+				do_count<=1'b0;
 			end
 		end
 	end
