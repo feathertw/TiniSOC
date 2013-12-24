@@ -9,7 +9,7 @@ module dm(
 	DM_address,
 	DM_in,
 	DM_out,
-	DM_ack,
+	DM_ready
 );
 	parameter data_size=32;
 	parameter mem_size=4096;
@@ -23,10 +23,10 @@ module dm(
 	input [mem_size_bit-1:0] DM_address;
 	input [data_size-1:0] DM_in;
 	output [data_size-1:0] DM_out;
-	output DM_ack;
+	output DM_ready;
 
 	reg [data_size-1:0] DM_out;
-	reg DM_ack;
+	reg DM_ready;
 
 	reg [data_size-1:0] mem_data[mem_size-1:0];
 
@@ -71,7 +71,7 @@ module dm(
 					counter<=4'b1;
 					start<=1'b1;
 					DM_out<=mem_data[( DM_base_address/4)];
-					DM_ack<=1'b1;
+					DM_ready<=1'b1;
 				end
 				else if(REG_DM_write[`WS])begin
 					mem_data[(REG_DM_address[`WS]/4)] <= REG_DM_data[`WS];
@@ -86,10 +86,10 @@ module dm(
 				counter<=counter+4'b1;
 				if(counter==4'b1111) begin
 				end
-				DM_ack<=1'b1;
+				DM_ready<=1'b1;
 			end
 			else begin
-				DM_ack<=1'b0;
+				DM_ready<=1'b0;
 				start<=1'b0;
 			end
 		end

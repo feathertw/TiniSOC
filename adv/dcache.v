@@ -41,7 +41,7 @@ module dcache(
 	SysAddress,
 	SysData_in,
 	SysData_out,
-	SysAck
+	SysReady
 );
 	input clock;
 	input reset;
@@ -58,7 +58,7 @@ module dcache(
 	output [31:0] SysAddress;
 	output [31:0] SysData_in;
 	input  [31:0] SysData_out;
-	input  SysAck;
+	input  SysReady;
 
 	wire tag_match;
 	wire valid;
@@ -128,7 +128,7 @@ module dcache(
 	counter COUNTER(
 		.clock(clock),
 		.flush(do_buffer_flush),
-		.signal(SysAck),
+		.signal(SysReady),
 		.value(offset_sys),
 		.readup(readup)
 	);
