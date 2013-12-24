@@ -375,7 +375,6 @@ module top(
 		.SysAddress(dSysAddress),
 		.SysData_in(dSysData_in),
 		.SysData_out(dSysData_out),
-		.SysAck(dSysAck),
-		.SysReady(dSysReady)
+		.SysAck(dSysAck)
 	);
 endmodule

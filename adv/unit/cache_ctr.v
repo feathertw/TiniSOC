@@ -7,11 +7,10 @@ module cache_ctr(
 	PRw,
 	SysStrobe,
 	SysRW,
-	SysAck,
-	SysReady,
 
 	tag_match,
 	valid,
+	readup,
 	do_write,
 
 	select_CData,
@@ -26,11 +25,10 @@ module cache_ctr(
 	input  PRw;
 	output SysStrobe;
 	output SysRW;
-	input  SysAck;
-	input  SysReady;
 
 	input  tag_match;
 	input  valid;
+	input  readup;
 	output do_write;
 	
 	output select_CData;
@@ -84,8 +82,8 @@ module cache_ctr(
 				next_state=STATE_READSYS;
 			end
 			STATE_READSYS:begin
-				if(SysReady)  next_state=STATE_READDATA;
-				else	      next_state=STATE_READSYS;
+				if(readup) next_state=STATE_READDATA;
+				else	   next_state=STATE_READSYS;
 			end
 			STATE_READDATA:begin
 				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;

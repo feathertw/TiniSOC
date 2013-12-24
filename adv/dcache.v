@@ -41,8 +41,7 @@ module dcache(
 	SysAddress,
 	SysData_in,
 	SysData_out,
-	SysAck,
-	SysReady
+	SysAck
 );
 	input clock;
 	input reset;
@@ -60,10 +59,10 @@ module dcache(
 	output [31:0] SysData_in;
 	input  [31:0] SysData_out;
 	input  SysAck;
-	input  SysReady;
 
 	wire tag_match;
 	wire valid;
+	wire readup;
 	wire do_write;
 	wire select_CData;
 	wire do_buffer_flush;
@@ -90,9 +89,9 @@ module dcache(
 		.CReady(CReady),
 		.SysStrobe(SysStrobe),
 		.SysRW(SysRW),
-		.SysReady(SysReady),
 		.tag_match(tag_match),
 		.valid(valid),
+		.readup(readup),
 		.do_write(do_write),
 		.select_CData(select_CData),
 		.select_CWOffset(select_CWOffset),
@@ -130,7 +129,8 @@ module dcache(
 		.clock(clock),
 		.flush(do_buffer_flush),
 		.signal(SysAck),
-		.value(offset_sys)
+		.value(offset_sys),
+		.readup(readup)
 	);
 endmodule
 
