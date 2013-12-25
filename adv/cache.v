@@ -25,7 +25,7 @@
 `include "ram_data.v"
 `include "counter.v"
 
-module dcache(
+module cache(
 	clock,
 	reset,
 	CReady,

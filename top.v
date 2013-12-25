@@ -5,7 +5,7 @@
 `include "src/pc.v"
 `include "src/regwalls.v"
 `include "src/forward.v"
-`include "adv/dcache.v"
+`include "adv/cache.v"
 module top(
 	clk,
 	rst,
@@ -144,10 +144,10 @@ module top(
 	//wire enable_system;
 	//assign enable_system=(rst)? 1'b0:1'b1;
 
-	assign IM_read =do_im_read;
-	assign IM_write=do_im_write;
-	assign IM_enable=enable_system;
-	assign IM_address=current_pc[9:0];
+	assign IM_read =(iSysRW)? 1'b1:1'b0;
+	assign IM_write=(iSysRW)? 1'b0:1'b1;
+	assign IM_enable=iSysStrobe;
+	assign IM_address=iSysAddress[9:0];
 
 	assign DM_read =(dSysRW)? 1'b1:1'b0;
 	assign DM_write=(dSysRW)? 1'b0:1'b1;
@@ -158,9 +158,20 @@ module top(
 	assign mem_read_data=dPData_in;
 	assign dPData_out=xREG3_reg_rt_data;
 
+	wire iPStrobe=do_im_read||do_im_write;
+	wire iPRw=(do_im_read)? 1'b1:1'b0;
+	wire [31:0] iPAddress=current_pc;
+	wire [31:0] iPData_in;
+	wire iSysStrobe;
+	wire iSysRW;
+	wire [31:0] iSysAddress;
+	wire [31:0] iSysData_out=instruction;
+	wire iSysReady=IM_ready;
+
 	wire dPStrobe=xREG3_do_dm_read||xREG3_do_dm_write;
 	wire dPRw=(xREG3_do_dm_read)? 1'b1:1'b0;
 	wire [31:0] dPAddress=xREG3_alu_result;
+	wire iCReady;
 	wire dCReady;
 	wire [31:0] dPData_in;
 	wire [31:0] dPData_out;
@@ -172,7 +183,7 @@ module top(
 	wire [31:0] dSysData_out;
 	wire dSysReady=DM_ready;
 
-	wire enable_system=do_system && dCReady;
+	wire enable_system=do_system && iCReady && dCReady;
 
 	alu ALU(
 		.reset(rst),
@@ -279,7 +290,7 @@ module top(
 		.clock(clk),
 		.reset(rst),
 		.enable_regwalls(enable_system),
-		.iREG1_instruction(instruction),
+		.iREG1_instruction(iPData_in),
 		.oREG1_instruction(xREG1_instruction),
 		.iREG2_reg_ra_data(f_reg_ra_data),
 		.iREG2_reg_rt_data(f_reg_rt_data),
@@ -358,7 +369,23 @@ module top(
 		.do_hazard(do_hazard)
 	);
 
-	dcache DCACHE(
+	cache ICACHE(
+		.clock(clk),
+		.reset(rst),
+		.CReady(iCReady),
+		.PStrobe(iPStrobe),
+		.PRw(iPRw),
+		.PAddress(iPAddress),
+		.PData_in(iPData_in),
+		.PData_out(),
+		.SysStrobe(iSysStrobe),
+		.SysRW(iSysRW),
+		.SysAddress(iSysAddress),
+		.SysData_in(),
+		.SysData_out(iSysData_out),
+		.SysReady(iSysReady)
+	);
+	cache DCACHE(
 		.clock(clk),
 		.reset(rst),
 		.CReady(dCReady),
