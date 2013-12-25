@@ -14,11 +14,6 @@ module ahb(
 	HLOCK_M2,
 	HGRANT_M1,
 	HGRANT_M2,
-	HTRANS,
-	HWRITE,
-	HSIZE,
-	HADDR,
-	HWDATA,
 
 	HSEL_S1,
 	HSEL_S2,
@@ -29,19 +24,33 @@ module ahb(
 	HWRITE_M2,
 	HSIZE_M1,
 	HSIZE_M2,
+	HBURST_M1,
+	HBURST_M2,
+	HPROT_M1,
+	HPROT_M2,
 	HADDR_M1,
 	HADDR_M2,
 	HWDATA_M1,
 	HWDATA_M2,
+	HTRANS,
+	HWRITE,
+	HSIZE,
+	HBURST,
+	HPROT,
+	HADDR,
+	HWDATA,
 
 	HREADY_S1,
 	HREADY_S2,
 	HRESP_S1,
 	HRESP_S2,
+	HSPLIT_S1,
+	HSPLIT_S2,
 	HRDATA_S1,
 	HRDATA_S2,
 	HREADY,
 	HRESP,
+	HSPLIT,
 	HRDATA
 );
 	input HCLK;
@@ -63,6 +72,10 @@ module ahb(
 	input         HWRITE_M2;
 	input  [ 2:0] HSIZE_M1;
 	input  [ 2:0] HSIZE_M2;
+	input  [ 2:0] HBURST_M1;
+	input  [ 2:0] HBURST_M2;
+	input  [ 3:0] HPROT_M1;
+	input  [ 3:0] HPROT_M2;
 	input  [31:0] HADDR_M1;
 	input  [31:0] HADDR_M2;
 	input  [31:0] HWDATA_M1;
@@ -70,6 +83,8 @@ module ahb(
 	output [ 1:0] HTRANS;
 	output        HWRITE;
 	output [ 2:0] HSIZE;
+	output [ 2:0] HBURST;
+	output [ 3:0] HPROT;
 	output [31:0] HADDR;
 	output [31:0] HWDATA;
 
@@ -77,10 +92,13 @@ module ahb(
 	input         HREADY_S2;
 	input  [ 1:0] HRESP_S1;
 	input  [ 1:0] HRESP_S2;
+	input  [15:0] HSPLIT_S1;
+	input  [15:0] HSPLIT_S2;
 	input  [31:0] HRDATA_S1;
 	input  [31:0] HRDATA_S2;
 	output        HREADY;
 	output [ 1:0] HRESP;
+	output [15:0] HSPLIT;
 	output [31:0] HRDATA;
 
 	wire [2:0] HMASTER;
@@ -89,6 +107,7 @@ module ahb(
 		.HCLK(HCLK),
 		.HRESETn(HRESETn),
 		.HTRANS(HTRANS),
+		.HBURST(HBURST),
 		.HREADY(HREADY),
 		.HRESP(HRESP),
 	
@@ -125,6 +144,10 @@ module ahb(
 		.HWRITE_M2(HWRITE_M2),
 		.HSIZE_M1(HSIZE_M1),
 		.HSIZE_M2(HSIZE_M2),
+		.HBURST_M1(HBURST_M1),
+		.HBURST_M2(HBURST_M2),
+		.HPROT_M1(HPROT_M1),
+		.HPROT_M2(HPROT_M2),
 		.HADDR_M1(HADDR_M1),
 		.HADDR_M2(HADDR_M2),
 		.HWDATA_M1(HWDATA_M1),
@@ -133,6 +156,8 @@ module ahb(
 		.HTRANS(HTRANS),
 		.HWRITE(HWRITE),
 		.HSIZE(HSIZE),
+		.HBURST(HBURST),
+		.HPROT(HPROT),
 		.HADDR(HADDR),
 		.HWDATA(HWDATA)
 	);
@@ -148,11 +173,14 @@ module ahb(
 		.HREADY_S2(HREADY_S2),
 		.HRESP_S1(HRESP_S1),
 		.HRESP_S2(HRESP_S2),
+		.HSPLIT_S1(HSPLIT_S1),
+		.HSPLIT_S2(HSPLIT_S2),
 		.HRDATA_S1(HRDATA_S1),
 		.HRDATA_S2(HRDATA_S2),
 	
 		.HREADY(HREADY),
 		.HRESP(HRESP),
+		.HSPLIT(HSPLIT),
 		.HRDATA(HRDATA)
 	);
 endmodule

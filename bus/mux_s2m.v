@@ -9,11 +9,14 @@ module mux_s2m(
 	HREADY_S2,
 	HRESP_S1,
 	HRESP_S2,
+	HSPLIT_S1,
+	HSPLIT_S2,
 	HRDATA_S1,
 	HRDATA_S2,
 
 	HREADY,
 	HRESP,
+	HSPLIT,
 	HRDATA
 );
 	input HCLK;
@@ -26,14 +29,18 @@ module mux_s2m(
 	input         HREADY_S2;
 	input  [ 1:0] HRESP_S1;
 	input  [ 1:0] HRESP_S2;
+	input  [15:0] HSPLIT_S1;
+	input  [15:0] HSPLIT_S2;
 	input  [31:0] HRDATA_S1;
 	input  [31:0] HRDATA_S2;
 
 	output        HREADY;
 	output [ 1:0] HRESP;
+	output [15:0] HSPLIT;
 	output [31:0] HRDATA;
 	reg           HREADY;
 	reg    [ 1:0] HRESP;
+	reg    [15:0] HSPLIT;
 	reg    [31:0] HRDATA;
 
 	reg [4:0] HSEL_Reg;
@@ -59,6 +66,14 @@ module mux_s2m(
 			`HSEL_1: HRESP= HRESP_S1;
 			`HSEL_2: HRESP= HRESP_S2;
 			default: HRESP= `RSP_OKAY;
+		endcase
+	end
+
+	always@(HSEL_Reg or HSPLIT_S1 or HSPLIT_S2)begin
+		case(HSEL_Reg)
+			`HSEL_1: HSPLIT= HSPLIT_S1;
+			`HSEL_2: HSPLIT= HSPLIT_S2;
+			default: HSPLIT= 'bx;
 		endcase
 	end
 

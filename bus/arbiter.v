@@ -2,6 +2,7 @@ module arbiter(
 	HCLK,
 	HRESETn,
 	HTRANS,
+	HBURST,
 	HREADY,
 	HRESP,
 
@@ -15,11 +16,13 @@ module arbiter(
 	HGRANT_M0,
 	HGRANT_M1,
 	HGRANT_M2,
-	HMASTER
+	HMASTER,
+	HMASTERLOCK
 );
 	input HCLK;
 	input HRESETn;
 	input [1:0] HTRANS;
+	input [2:0] HBURST;
 	input HREADY;
 	input [1:0] HRESP;
 
@@ -34,6 +37,7 @@ module arbiter(
 	output HGRANT_M1;
 	output HGRANT_M2;
 	output [2:0] HMASTER;
+	output HMASTERLOCK;
 	reg    HGRANT_M0;
 	reg    HGRANT_M1;
 	reg    HGRANT_M2;
