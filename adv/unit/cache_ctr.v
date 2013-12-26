@@ -35,10 +35,6 @@ module cache_ctr(
 	output select_CWOffset;
 	output do_buffer_flush;
 
-	wire CReady=(RW_hit_state&&tag_match&&valid) || (RW_ready);
-
-	wire do_write=write||(state==STATE_WRITE&&tag_match&&valid);
-
 	reg  write;
 	reg  RW_hit_state;
 	reg  RW_ready;
@@ -59,6 +55,10 @@ module cache_ctr(
 	parameter STATE_WRITE	  =4'd5;
 	parameter STATE_WRITEHIT  =4'd6;
 	parameter STATE_WRITEMISS =4'd7;
+
+	wire CReady=(RW_hit_state&&tag_match&&valid) || (RW_ready);
+
+	wire do_write=write||(state==STATE_WRITE&&tag_match&&valid);
 
 	always@(posedge clock)begin
 		state<=(reset)? STATE_IDLE:next_state;

@@ -65,6 +65,7 @@ module cache(
 	wire readup;
 	wire do_write;
 	wire select_CData;
+	wire select_CWOffset;
 	wire do_buffer_flush;
 
 	wire [`IDX-1:0] index=PAddress[11:6];

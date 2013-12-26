@@ -141,23 +141,6 @@ module top(
 	wire [19:0] imm_20bit   =xREG1_instruction[19:0];
 	wire [23:0] imm_24bit   =xREG1_instruction[23:0];
 
-	//wire enable_system;
-	//assign enable_system=(rst)? 1'b0:1'b1;
-
-	assign IM_read =(iSysRW)? 1'b1:1'b0;
-	assign IM_write=(iSysRW)? 1'b0:1'b1;
-	assign IM_enable=iSysStrobe;
-	assign IM_address=iSysAddress[9:0];
-
-	assign DM_read =(dSysRW)? 1'b1:1'b0;
-	assign DM_write=(dSysRW)? 1'b0:1'b1;
-	assign DM_enable=dSysStrobe;
-	assign DM_address=dSysAddress[11:0];
-	assign DM_in=dSysData_in;//*
-	assign dSysData_out=DM_out;
-	assign mem_read_data=dPData_in;
-	assign dPData_out=xREG3_reg_rt_data;
-
 	wire iPStrobe=do_im_read||do_im_write;
 	wire iPRw=(do_im_read)? 1'b1:1'b0;
 	wire [31:0] iPAddress=current_pc;
@@ -184,6 +167,23 @@ module top(
 	wire dSysReady=DM_ready;
 
 	wire enable_system=do_system && iCReady && dCReady;
+
+	//wire enable_system;
+	//assign enable_system=(rst)? 1'b0:1'b1;
+
+	assign IM_read =(iSysRW)? 1'b1:1'b0;
+	assign IM_write=(iSysRW)? 1'b0:1'b1;
+	assign IM_enable=iSysStrobe;
+	assign IM_address=iSysAddress[9:0];
+
+	assign DM_read =(dSysRW)? 1'b1:1'b0;
+	assign DM_write=(dSysRW)? 1'b0:1'b1;
+	assign DM_enable=dSysStrobe;
+	assign DM_address=dSysAddress[11:0];
+	assign DM_in=dSysData_in;//*
+	assign dSysData_out=DM_out;
+	assign mem_read_data=dPData_in;
+	assign dPData_out=xREG3_reg_rt_data;
 
 	alu ALU(
 		.reset(rst),
