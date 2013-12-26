@@ -71,7 +71,7 @@ module cache(
 	wire [`IDX-1:0] index=PAddress[11:6];
 	wire [`TAG-1:0] tag_in=PAddress[31:12];
 	wire [`OFS-1:0] offset_pro=PAddress[5:2];
-	wire valid_in=1'b1;
+	wire valid_in=(reset)? 1'b0:1'b1;
 
 	wire [`OFS-1:0] offset_sys;
 	wire [31:0] CData_out;
