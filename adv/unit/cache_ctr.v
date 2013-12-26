@@ -63,7 +63,7 @@ module cache_ctr(
 	always@(posedge clock)begin
 		state<=(reset)? STATE_IDLE:next_state;
 	end
-	always@(*)begin
+	always@(state or PStrobe or PRw or tag_match or valid or readup)begin
 		case(state)
 			STATE_IDLE:begin
 				if( (PStrobe)&&(PRw==`RW_READ) )       next_state=STATE_READ;
@@ -101,7 +101,7 @@ module cache_ctr(
 		endcase
 	end
 
-	always@(*)begin
+	always@(state)begin
 		case(state)
 			STATE_IDLE:begin
 				write           =1'b0;
