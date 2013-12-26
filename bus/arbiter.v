@@ -5,6 +5,7 @@ module arbiter(
 	HBURST,
 	HREADY,
 	HRESP,
+	HSPLIT,
 
 	HBUSREQ_M0,
 	HBUSREQ_M1,
@@ -21,10 +22,11 @@ module arbiter(
 );
 	input HCLK;
 	input HRESETn;
-	input [1:0] HTRANS;
-	input [2:0] HBURST;
+	input [ 1:0] HTRANS;
+	input [ 2:0] HBURST;
 	input HREADY;
-	input [1:0] HRESP;
+	input [ 1:0] HRESP;
+	input [15:0] HSPLIT;
 
 	input HBUSREQ_M0;
 	input HBUSREQ_M1;
