@@ -36,7 +36,7 @@ module top(
 	output IM_read;
 	output IM_write;
 	output IM_enable;
-	output [9:0] IM_address;
+	output [11:0] IM_address;
 	input  IM_ready;
 
 	output DM_read;
@@ -174,7 +174,7 @@ module top(
 	assign IM_read =(iSysRW)? 1'b1:1'b0;
 	assign IM_write=(iSysRW)? 1'b0:1'b1;
 	assign IM_enable=iSysStrobe;
-	assign IM_address=iSysAddress[9:0];
+	assign IM_address=iSysAddress[11:0];
 
 	assign DM_read =(dSysRW)? 1'b1:1'b0;
 	assign DM_write=(dSysRW)? 1'b0:1'b1;
