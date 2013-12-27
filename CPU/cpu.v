@@ -6,7 +6,7 @@
 `include "src/regwalls.v"
 `include "src/forward.v"
 `include "adv/cache.v"
-module top(
+module cpu(
 	clk,
 	rst,
 	instruction,
