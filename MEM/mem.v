@@ -31,13 +31,13 @@ module mem(
 
 	reg [data_size-1:0] mem_data[mem_size-1:0];
 
-	reg REG_M_enable [`WAIT_STATE:0];
-	reg REG_M_read   [`WAIT_STATE:0];
-	reg REG_M_write  [`WAIT_STATE:0];
-	reg [31:0] REG_M_address [`WAIT_STATE:0];
-	reg [31:0] REG_M_data    [`WAIT_STATE:0];
+	reg REG_MEnable [`WAIT_STATE:0];
+	reg REG_MRead   [`WAIT_STATE:0];
+	reg REG_MWrite  [`WAIT_STATE:0];
+	reg [31:0] REG_MAddress [`WAIT_STATE:0];
+	reg [31:0] REG_MData    [`WAIT_STATE:0];
 
-	reg [31:0] M_base_address;
+	reg [31:0] MBaseAddress;
 	reg [ 3:0] count_value;
 	reg do_count;
 	reg Reg_do_count;
@@ -45,25 +45,25 @@ module mem(
 
 	always@(negedge clock)begin
 		if(MReady&&(!do_count)&&(!Reg_do_count) )begin
-			REG_M_enable[0] <=MEnable;
-			REG_M_read[0]   <=MRead;
-			REG_M_write[0]  <=MWrite;
-			REG_M_address[0]<=MAddress;
-			REG_M_data[0]   <=MWriteData;
+			REG_MEnable[0] <=MEnable;
+			REG_MRead[0]   <=MRead;
+			REG_MWrite[0]  <=MWrite;
+			REG_MAddress[0]<=MAddress;
+			REG_MData[0]   <=MWriteData;
 		end
 		else begin
-			REG_M_enable[0] <=1'b0;
-			REG_M_read[0]   <=1'b0;
-			REG_M_write[0]  <=1'b0;
-			REG_M_address[0]<='b0;
-			REG_M_data[0]   <='b0;
+			REG_MEnable[0] <=1'b0;
+			REG_MRead[0]   <=1'b0;
+			REG_MWrite[0]  <=1'b0;
+			REG_MAddress[0]<='b0;
+			REG_MData[0]   <='b0;
 		end
 
-		for(i=0;i<`WAIT_STATE;i=i+1) REG_M_enable[i+1] <=REG_M_enable[i];
-		for(i=0;i<`WAIT_STATE;i=i+1) REG_M_read[i+1]   <=REG_M_read[i];
-		for(i=0;i<`WAIT_STATE;i=i+1) REG_M_write[i+1]  <=REG_M_write[i];
-		for(i=0;i<`WAIT_STATE;i=i+1) REG_M_address[i+1]<=REG_M_address[i];
-		for(i=0;i<`WAIT_STATE;i=i+1) REG_M_data[i+1]   <=REG_M_data[i];
+		for(i=0;i<`WAIT_STATE;i=i+1) REG_MEnable[i+1] <=REG_MEnable[i];
+		for(i=0;i<`WAIT_STATE;i=i+1) REG_MRead[i+1]   <=REG_MRead[i];
+		for(i=0;i<`WAIT_STATE;i=i+1) REG_MWrite[i+1]  <=REG_MWrite[i];
+		for(i=0;i<`WAIT_STATE;i=i+1) REG_MAddress[i+1]<=REG_MAddress[i];
+		for(i=0;i<`WAIT_STATE;i=i+1) REG_MData[i+1]   <=REG_MData[i];
 	end
 
 	always@(posedge clock)begin
@@ -76,19 +76,19 @@ module mem(
 			end
 		end
 		else begin
-			if(REG_M_enable[0]&&REG_M_read[0])begin
-				M_base_address<=(MAddress&`M_ADDR_OFS);
+			if(REG_MEnable[0]&&REG_MRead[0])begin
+				MBaseAddress<=(MAddress&`M_ADDR_OFS);
 				MReady<=1'b0;
 			end
-			if(REG_M_enable[`WS])begin
-				if(REG_M_read[`WS])begin
-					MReadData<=mem_data[( M_base_address/4)];
+			if(REG_MEnable[`WS])begin
+				if(REG_MRead[`WS])begin
+					MReadData<=mem_data[( MBaseAddress/4)];
 					MReady<=1'b1;
 					do_count<=1'b1;
 					count_value<=4'b1;
 				end
-				else if(REG_M_write[`WS])begin
-					mem_data[(REG_M_address[`WS]/4)] <= REG_M_data[`WS-1];
+				else if(REG_MWrite[`WS])begin
+					mem_data[(REG_MAddress[`WS]/4)] <= REG_MData[`WS-1];
 				end
 			end
 		end
@@ -97,7 +97,7 @@ module mem(
 		Reg_do_count<=do_count;
 		if(do_count)begin
 			if(count_value)begin
-				MReadData<=mem_data[( (M_base_address+4*count_value)/4)];
+				MReadData<=mem_data[( (MBaseAddress+4*count_value)/4)];
 				count_value<=count_value+4'b1;
 			end
 			else begin
