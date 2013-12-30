@@ -79,6 +79,14 @@ module soc(
 	wire [31:0] DMReadData;
 	wire DMReady;
 
+	wire IMRead;
+	wire IMWrite;
+	wire IMEnable;
+	wire [31:0] IMAddress;
+	wire [31:0] IMWriteData;
+	wire [31:0] IMReadData;
+	wire IMReady;
+
 	cpu CPU(
 		.clock(clock),
 		.reset(reset),
@@ -146,13 +154,13 @@ module soc(
 	mem IM(
 		.clock(clock),
 		.reset(reset),
-		.MRead(IM_read),
-		.MWrite(IM_write),
-		.MEnable(IM_enable),
-		.MAddress(IM_address[15:0]),
-		.MWriteData(),
-		.MReadData(IM_out),
-		.MReady(IM_ready)
+		.MRead(IMRead),
+		.MWrite(IMWrite),
+		.MEnable(IMEnable),
+		.MAddress(IMAddress[15:0]),
+		.MWriteData(IMWriteData),
+		.MReadData(IMReadData),
+		.MReady(IMReady)
 	);
 	mem DM(
 		.clock(clock),
@@ -164,6 +172,30 @@ module soc(
 		.MWriteData(DMWriteData),
 		.MReadData(DMReadData),
 		.MReady(DMReady)
+	);
+	wrp_master WRP_MST_IM(
+		.HCLK(clock),
+		.HRESETn(!reset),
+		.MRead(IM_read),
+		.MWrite(IM_write),
+		.MEnable(IM_enable),
+		.MAddress(IM_address),
+		.MReadData(IM_out),
+		.MWriteData(),
+		.MReady(IM_ready),
+		.HBUSREQ(HBUSREQ_M1),
+		.HLOCK(HLOCK_M1),
+		.HGRANT(HGRANT_M1),
+		.HTRANS(HTRANS_M1),
+		.HWRITE(HWRITE_M1),
+		.HSIZE(HSIZE_M1),
+		.HBURST(HBURST_M1),
+		.HPROT(HPROT_M1),
+		.HADDR(HADDR_M1),
+		.HWDATA(HWDATA_M1),
+		.HREADY(HREADY),
+		.HRESP(HRESP),
+		.HRDATA(HRDATA)
 	);
 	wrp_master WRP_MST_DM(
 		.HCLK(clock),
@@ -188,6 +220,30 @@ module soc(
 		.HREADY(HREADY),
 		.HRESP(HRESP),
 		.HRDATA(HRDATA)
+	);
+	wrp_slaver WRP_SLV_IM(
+		.HCLK(clock),
+		.HRESETn(!reset),
+		.MRead(IMRead),
+		.MWrite(IMWrite),
+		.MEnable(IMEnable),
+		.MAddress(IMAddress),
+		.MWriteData(IMWriteData),
+		.MReadData(IMReadData),
+		.MReady(IMReady),
+		.HSEL(HSEL_S1),
+		.HTRANS(HTRANS),
+		.HWRITE(HWRITE),
+		.HSIZE(HSIZE),
+		.HBURST(HBURST),
+		.HADDR(HADDR),
+		.HWDATA(HWDATA),
+		.HMASTER(),
+		.HMASTERLOCK(),
+		.HREADY(HREADY_S1),
+		.HRESP(HRESP_S1),
+		.HSPLIT(HSPLIT_S1),
+		.HRDATA(HRDATA_S1)
 	);
 	wrp_slaver WRP_SLV_DM(
 		.HCLK(clock),
