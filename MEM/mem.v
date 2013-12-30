@@ -1,6 +1,8 @@
 `define WAIT_STATE 2
 `define WS `WAIT_STATE
 `define M_ADDR_OFS 32'hffff_ffc0
+
+`include "mcounter.v"
 module mem(
 	clock,
 	reset,
@@ -26,10 +28,10 @@ module mem(
 	output [data_size-1:0] MReadData;
 	output MReady;
 
-	reg [data_size-1:0] MReadData;
-	reg MReady;
-
 	reg [data_size-1:0] mem_data[mem_size-1:0];
+
+	reg MReady;
+	reg [data_size-1:0] MReadData;
 
 	reg REG_MEnable [`WAIT_STATE:0];
 	reg REG_MRead   [`WAIT_STATE:0];
@@ -38,13 +40,23 @@ module mem(
 	reg [31:0] REG_MData    [`WAIT_STATE:0];
 
 	reg [31:0] MBaseAddress;
-	reg [ 3:0] count_value;
-	reg do_count;
-	reg Reg_do_count;
+	reg do_counter_flush;
+	reg do_counter_start;
+	wire [3:0] counter_value;
+	wire counter_up;
+
 	integer i;
 
+	mcounter MCOUNTER(
+		.clock(clock),
+		.flush(do_counter_flush),
+		.signal(do_counter_start),
+		.value(counter_value),
+		.readup(counter_up)
+	);
+
 	always@(negedge clock)begin
-		if(MReady&&(!do_count)&&(!Reg_do_count) )begin
+		if(MReady&&(!do_counter_start) )begin
 			REG_MEnable[0] <=MEnable;
 			REG_MRead[0]   <=MRead;
 			REG_MWrite[0]  <=MWrite;
@@ -72,36 +84,32 @@ module mem(
 				mem_data[i]<=0;
 				MReadData<=0;
 				MReady<=1'b1;
-				do_count<=1'b0;
+				do_counter_flush<=1'b1;
+				do_counter_start<=1'b0;
 			end
 		end
 		else begin
 			if(REG_MEnable[0]&&REG_MRead[0])begin
-				MBaseAddress<=(MAddress&`M_ADDR_OFS);
 				MReady<=1'b0;
+				MBaseAddress<=(MAddress&`M_ADDR_OFS);
+				do_counter_flush<=1'b1;
 			end
 			if(REG_MEnable[`WS])begin
 				if(REG_MRead[`WS])begin
-					MReadData<=mem_data[( MBaseAddress/4)];
 					MReady<=1'b1;
-					do_count<=1'b1;
-					count_value<=4'b1;
+					MReadData<=mem_data[( MBaseAddress/4)];
+					do_counter_flush<=1'b0;
+					do_counter_start<=1'b1;
 				end
 				else if(REG_MWrite[`WS])begin
 					mem_data[(REG_MAddress[`WS]/4)] <= REG_MData[`WS-1];
 				end
 			end
-		end
-	end
-	always@(posedge clock)begin
-		Reg_do_count<=do_count;
-		if(do_count)begin
-			if(count_value)begin
-				MReadData<=mem_data[( (MBaseAddress+4*count_value)/4)];
-				count_value<=count_value+4'b1;
+			if(do_counter_start)begin
+				MReadData<=mem_data[( (MBaseAddress+4*counter_value)/4)];
 			end
-			else begin
-				do_count<=1'b0;
+			if(counter_up)begin
+				do_counter_start<=1'b0;
 			end
 		end
 	end
