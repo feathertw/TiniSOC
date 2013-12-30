@@ -7,15 +7,15 @@
 `include "src/forward.v"
 `include "adv/cache.v"
 module cpu(
-	clk,
-	rst,
-	instruction,
+	clock,
+	reset,
 	alu_overflow,
 
 	IM_read,
 	IM_write,
 	IM_enable,
 	IM_address,
+	IM_out,
 	IM_ready,
 
 	DM_read,
@@ -28,21 +28,21 @@ module cpu(
 
 	do_system
 );
-	input clk;
-	input rst;
-	input [31:0] instruction;
+	input clock;
+	input reset;
 	output alu_overflow;
 
 	output IM_read;
 	output IM_write;
 	output IM_enable;
-	output [11:0] IM_address;
+	output [31:0] IM_address;
+	input [31:0] IM_out;
 	input  IM_ready;
 
 	output DM_read;
 	output DM_write;
 	output DM_enable;
-	output [11:0] DM_address;
+	output [31:0] DM_address;
 	output [31:0] DM_in;
 	input  [31:0] DM_out;
 	input  DM_ready;
@@ -148,7 +148,7 @@ module cpu(
 	wire iSysStrobe;
 	wire iSysRW;
 	wire [31:0] iSysAddress;
-	wire [31:0] iSysData_out=instruction;
+	wire [31:0] iSysData_out=IM_out;
 	wire iSysReady=IM_ready;
 
 	wire dPStrobe=xREG3_do_dm_read||xREG3_do_dm_write;
@@ -169,24 +169,24 @@ module cpu(
 	wire enable_system=do_system && iCReady && dCReady;
 
 	//wire enable_system;
-	//assign enable_system=(rst)? 1'b0:1'b1;
+	//assign enable_system=(reset)? 1'b0:1'b1;
 
 	assign IM_read =(iSysRW)? 1'b1:1'b0;
 	assign IM_write=(iSysRW)? 1'b0:1'b1;
 	assign IM_enable=iSysStrobe;
-	assign IM_address=iSysAddress[11:0];
+	assign IM_address=iSysAddress[31:0];
 
 	assign DM_read =(dSysRW)? 1'b1:1'b0;
 	assign DM_write=(dSysRW)? 1'b0:1'b1;
 	assign DM_enable=dSysStrobe;
-	assign DM_address=dSysAddress[11:0];
+	assign DM_address=dSysAddress[31:0];
 	assign DM_in=dSysData_in;//*
 	assign dSysData_out=DM_out;
 	assign mem_read_data=dPData_in;
 	assign dPData_out=xREG3_reg_rt_data;
 
 	alu ALU(
-		.reset(rst),
+		.reset(reset),
 		.enable_execute(enable_system),
 		.alu_src1(xREG2_reg_ra_data),
 		.alu_src2(xREG2_alu_src2),
@@ -198,8 +198,8 @@ module cpu(
 	);
 	
 	regfile REGFILE(
-		.clock(clk),
-		.reset(rst),
+		.clock(clock),
+		.reset(reset),
 		.enable_reg_fetch(enable_system),
 		.enable_reg_write(enable_system),
 		.reg_ra_addr(reg_ra_addr),
@@ -240,8 +240,8 @@ module cpu(
 	);
 	
 	controller CONTROLLER(
-		.clock(clk),
-		.reset(rst),
+		.clock(clock),
+		.reset(reset),
 
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
@@ -264,8 +264,8 @@ module cpu(
 		.reg_rt_negative(reg_rt_negative)
 	);
 	pc PC(
-		.clock(clk),
-		.reset(rst),
+		.clock(clock),
+		.reset(reset),
 		.enable_pc(enable_system),
 		.current_pc(current_pc),
 
@@ -287,8 +287,8 @@ module cpu(
 		.do_hazard(do_hazard)
 	);
 	regwalls REGWALLS(
-		.clock(clk),
-		.reset(rst),
+		.clock(clock),
+		.reset(reset),
 		.enable_regwalls(enable_system),
 		.iREG1_instruction(iPData_in),
 		.oREG1_instruction(xREG1_instruction),
@@ -370,8 +370,8 @@ module cpu(
 	);
 
 	cache ICACHE(
-		.clock(clk),
-		.reset(rst),
+		.clock(clock),
+		.reset(reset),
 		.CReady(iCReady),
 		.PStrobe(iPStrobe),
 		.PRw(iPRw),
@@ -386,8 +386,8 @@ module cpu(
 		.SysReady(iSysReady)
 	);
 	cache DCACHE(
-		.clock(clk),
-		.reset(rst),
+		.clock(clock),
+		.reset(reset),
 		.CReady(dCReady),
 		.PStrobe(dPStrobe),
 		.PRw(dPRw),

@@ -90,6 +90,7 @@ module cache(
 		.CReady(CReady),
 		.SysStrobe(SysStrobe),
 		.SysRW(SysRW),
+		.SysReady(SysReady),
 		.tag_match(tag_match),
 		.valid(valid),
 		.readup(readup),

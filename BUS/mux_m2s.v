@@ -115,7 +115,7 @@ module mux_m2s(
 
 	always@(HMASTER or HADDR_M1 or HADDR_M2)begin
 		case(HMASTER)
-			`HMST_0: HADDR='b0;
+			`HMST_0: HADDR=32'hFFFF_FFFF;
 			`HMST_1: HADDR=HADDR_M1;
 			`HMST_2: HADDR=HADDR_M2;
 			default: HADDR='bx;

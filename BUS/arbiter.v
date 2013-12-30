@@ -59,9 +59,9 @@ module arbiter(
 
 	always@(HBUSREQ or CurrentMaster)begin
 		NextMaster=`HMST_0;
-		index=CurrentMaster;
 		for(i=0;i<8;i=i+1)begin
-			if( (1<<(index+i+1) )& HBUSREQ) NextMaster=index+i+1;
+			index=CurrentMaster+i+1;
+			if( (1<<(index) )& HBUSREQ) NextMaster=index;
 		end
 	end
 
@@ -103,7 +103,7 @@ module arbiter(
 		end
 		else if(HREADY)begin
 			RegLock1<= Lock;
-			RegLock2<= RegLock1;
+			//RegLock2<= RegLock1;
 		end
 	end
 endmodule
