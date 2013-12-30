@@ -149,7 +149,7 @@ module soc(
 		.MRead(IM_read),
 		.MWrite(IM_write),
 		.MEnable(IM_enable),
-		.MAddress(IM_address[11:0]),
+		.MAddress(IM_address[15:0]),
 		.MWriteData(),
 		.MReadData(IM_out),
 		.MReady(IM_ready)
@@ -160,7 +160,7 @@ module soc(
 		.MRead(DMRead),
 		.MWrite(DMWrite),
 		.MEnable(DMEnable),
-		.MAddress(DMAddress[11:0]),
+		.MAddress(DMAddress[15:0]),
 		.MWriteData(DMWriteData),
 		.MReadData(DMReadData),
 		.MReady(DMReady)

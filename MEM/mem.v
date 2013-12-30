@@ -13,8 +13,8 @@ module mem(
 	MReady
 );
 	parameter data_size=32;
-	parameter mem_size=4096;
-	parameter mem_size_bit=12;
+	parameter mem_size=1024*256/4;
+	parameter mem_size_bit=10+8-2;
 
 	input clock;
 	input reset;

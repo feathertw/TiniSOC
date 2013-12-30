@@ -12,6 +12,6 @@ module decoder(
 	output HSEL_S2;
 
 	wire HSEL_Default=( (!HRESETn)|( (!HSEL_S1)&&(!HSEL_S2) ))? 1'b1:1'b0;
-	wire HSEL_S1=( (32'h0000_0000<HADDR)&&(HADDR<=32'h0010_0000) )? 1'b1:1'b0;
-	wire HSEL_S2=( (32'h0020_0000<HADDR)&&(HADDR<=32'h0024_0000) )? 1'b1:1'b0;
+	wire HSEL_S1=( (32'h0000_0000<=HADDR)&&(HADDR<32'h0004_0000) )? 1'b1:1'b0;
+	wire HSEL_S2=( (32'h0010_0000<=HADDR)&&(HADDR<32'h0014_0000) )? 1'b1:1'b0;
 endmodule
