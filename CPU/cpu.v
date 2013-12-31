@@ -364,7 +364,6 @@ module cpu(
 		.f_reg_rb_data(f_reg_rb_data),
 		.f_reg_rt_data(f_reg_rt_data),
 
-		.do_dm_read(do_dm_read),
 		.do_reg_write(do_reg_write),
 		.do_hazard(do_hazard)
 	);
