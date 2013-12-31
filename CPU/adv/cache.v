@@ -1,10 +1,10 @@
-// tag:20 index: 6 offset:4 word:2 block:512 deep:  32
+// tag:20 index: 6 offset:4 word:2 block:512 deep:  64
 // tag:20 index:10 offset:0 word:2 block: 32 deep:1024
 `define TAG    20
 `define IDX     6
 `define OFS     4
 `define BLK   512
-`define DEP    32
+`define DEP    64
 `define WOR    32
 `define WAITSTATE 2'd2
 
