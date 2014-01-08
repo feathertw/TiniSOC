@@ -5,6 +5,7 @@
 `include "src/pc.v"
 `include "src/regwalls.v"
 `include "src/forward.v"
+`include "src/memctr.v"
 `include "adv/cache.v"
 module cpu(
 	clock,
@@ -26,6 +27,14 @@ module cpu(
 	DM_out,
 	DM_ready,
 
+	IOM_read,
+	IOM_write,
+	IOM_enable,
+	IOM_address,
+	IOM_in,
+	IOM_out,
+	IOM_ready,
+
 	do_system
 );
 	input clock;
@@ -46,6 +55,14 @@ module cpu(
 	output [31:0] DM_in;
 	input  [31:0] DM_out;
 	input  DM_ready;
+
+	output IOM_read;
+	output IOM_write;
+	output IOM_enable;
+	output [31:0] IOM_address;
+	output [31:0] IOM_in;
+	input  [31:0] IOM_out;
+	input  IOM_ready;
 
 	input do_system;
 
@@ -141,6 +158,9 @@ module cpu(
 	wire [19:0] imm_20bit   =xREG1_instruction[19:0];
 	wire [23:0] imm_24bit   =xREG1_instruction[23:0];
 
+	wire do_dmem_enable;
+	wire do_iomem_enable;
+
 	wire iPStrobe=do_im_read||do_im_write;
 	wire iPRw=(do_im_read)? 1'b1:1'b0;
 	wire [31:0] iPAddress=current_pc;
@@ -151,7 +171,7 @@ module cpu(
 	wire [31:0] iSysData_out=IM_out;
 	wire iSysReady=IM_ready;
 
-	wire dPStrobe=xREG3_do_dm_read||xREG3_do_dm_write;
+	wire dPStrobe=do_dmem_enable;
 	wire dPRw=(xREG3_do_dm_read)? 1'b1:1'b0;
 	wire [31:0] dPAddress=xREG3_alu_result;
 	wire iCReady;
@@ -182,8 +202,16 @@ module cpu(
 	assign DM_address=dSysAddress[31:0];
 	assign DM_in=dSysData_in;//*
 	assign dSysData_out=DM_out;
-	assign mem_read_data=dPData_in;
+	assign mem_read_data=(do_dmem_enable)? dPData_in:IOM_out;
 	assign dPData_out=xREG3_reg_rt_data;
+
+	wire IOM_read=xREG3_do_dm_read;
+	wire IOM_write=xREG3_do_dm_write;
+	wire IOM_enable=do_iomem_enable;
+	wire [31:0] IOM_address=xREG3_alu_result;
+	wire [31:0] IOM_in=xREG3_reg_rt_data;
+	wire [31:0] IOM_out;
+	wire IOM_ready;
 
 	alu ALU(
 		.reset(reset),
@@ -366,6 +394,13 @@ module cpu(
 
 		.do_reg_write(do_reg_write),
 		.do_hazard(do_hazard)
+	);
+	memctr MEMCTR(
+		.do_mem_read(xREG3_do_dm_read),
+		.do_mem_write(xREG3_do_dm_write),
+		.mem_address(xREG3_alu_result),
+		.do_dmem_enable(do_dmem_enable),
+		.do_iomem_enable(do_iomem_enable)
 	);
 
 	cache ICACHE(
