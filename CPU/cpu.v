@@ -186,7 +186,7 @@ module cpu(
 	wire [31:0] dSysData_out;
 	wire dSysReady=DM_ready;
 
-	wire enable_system=do_system && iCReady && dCReady;
+	wire enable_system=do_system && iCReady && dCReady && IOM_ready;
 
 	//wire enable_system;
 	//assign enable_system=(reset)? 1'b0:1'b1;

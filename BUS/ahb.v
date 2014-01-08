@@ -10,28 +10,39 @@ module ahb(
 
 	HBUSREQ_M1,
 	HBUSREQ_M2,
+	HBUSREQ_M3,
 	HLOCK_M1,
 	HLOCK_M2,
+	HLOCK_M3,
 	HGRANT_M1,
 	HGRANT_M2,
+	HGRANT_M3,
 
 	HSEL_S1,
 	HSEL_S2,
+	HSEL_S3,
 
 	HTRANS_M1,
 	HTRANS_M2,
+	HTRANS_M3,
 	HWRITE_M1,
 	HWRITE_M2,
+	HWRITE_M3,
 	HSIZE_M1,
 	HSIZE_M2,
+	HSIZE_M3,
 	HBURST_M1,
 	HBURST_M2,
+	HBURST_M3,
 	HPROT_M1,
 	HPROT_M2,
+	HPROT_M3,
 	HADDR_M1,
 	HADDR_M2,
+	HADDR_M3,
 	HWDATA_M1,
 	HWDATA_M2,
+	HWDATA_M3,
 	HTRANS,
 	HWRITE,
 	HSIZE,
@@ -42,12 +53,16 @@ module ahb(
 
 	HREADY_S1,
 	HREADY_S2,
+	HREADY_S3,
 	HRESP_S1,
 	HRESP_S2,
+	HRESP_S3,
 	HSPLIT_S1,
 	HSPLIT_S2,
+	HSPLIT_S3,
 	HRDATA_S1,
 	HRDATA_S2,
+	HRDATA_S3,
 	HREADY,
 	HRESP,
 	HSPLIT,
@@ -58,28 +73,39 @@ module ahb(
 
 	input  HBUSREQ_M1;
 	input  HBUSREQ_M2;
+	input  HBUSREQ_M3;
 	input  HLOCK_M1;
 	input  HLOCK_M2;
+	input  HLOCK_M3;
 	output HGRANT_M1;
 	output HGRANT_M2;
+	output HGRANT_M3;
 
 	output HSEL_S1;
 	output HSEL_S2;
+	output HSEL_S3;
 
 	input  [ 1:0] HTRANS_M1;
 	input  [ 1:0] HTRANS_M2;
+	input  [ 1:0] HTRANS_M3;
 	input         HWRITE_M1;
 	input         HWRITE_M2;
+	input         HWRITE_M3;
 	input  [ 2:0] HSIZE_M1;
 	input  [ 2:0] HSIZE_M2;
+	input  [ 2:0] HSIZE_M3;
 	input  [ 2:0] HBURST_M1;
 	input  [ 2:0] HBURST_M2;
+	input  [ 2:0] HBURST_M3;
 	input  [ 3:0] HPROT_M1;
 	input  [ 3:0] HPROT_M2;
+	input  [ 3:0] HPROT_M3;
 	input  [31:0] HADDR_M1;
 	input  [31:0] HADDR_M2;
+	input  [31:0] HADDR_M3;
 	input  [31:0] HWDATA_M1;
 	input  [31:0] HWDATA_M2;
+	input  [31:0] HWDATA_M3;
 	output [ 1:0] HTRANS;
 	output        HWRITE;
 	output [ 2:0] HSIZE;
@@ -90,12 +116,16 @@ module ahb(
 
 	input         HREADY_S1;
 	input         HREADY_S2;
+	input         HREADY_S3;
 	input  [ 1:0] HRESP_S1;
 	input  [ 1:0] HRESP_S2;
+	input  [ 1:0] HRESP_S3;
 	input  [15:0] HSPLIT_S1;
 	input  [15:0] HSPLIT_S2;
+	input  [15:0] HSPLIT_S3;
 	input  [31:0] HRDATA_S1;
 	input  [31:0] HRDATA_S2;
+	input  [31:0] HRDATA_S3;
 	output        HREADY;
 	output [ 1:0] HRESP;
 	output [15:0] HSPLIT;
@@ -114,13 +144,16 @@ module ahb(
 		.HBUSREQ_M0(),
 		.HBUSREQ_M1(HBUSREQ_M1),
 		.HBUSREQ_M2(HBUSREQ_M2),
+		.HBUSREQ_M3(HBUSREQ_M3),
 		.HLOCK_M0(),
 		.HLOCK_M1(HLOCK_M1),
 		.HLOCK_M2(HLOCK_M2),
+		.HLOCK_M3(HLOCK_M3),
 	
 		.HGRANT_M0(),
 		.HGRANT_M1(HGRANT_M1),
 		.HGRANT_M2(HGRANT_M2),
+		.HGRANT_M3(HGRANT_M3),
 		.HMASTER(HMASTER)
 	);
 
@@ -129,7 +162,8 @@ module ahb(
 		.HADDR(HADDR),
 		.HSEL_Default(),
 		.HSEL_S1(HSEL_S1),
-		.HSEL_S2(HSEL_S2)
+		.HSEL_S2(HSEL_S2),
+		.HSEL_S3(HSEL_S3)
 	);
 
 	mux_m2s MUX_M2S(
@@ -140,18 +174,25 @@ module ahb(
 		
 		.HTRANS_M1(HTRANS_M1),
 		.HTRANS_M2(HTRANS_M2),
+		.HTRANS_M3(HTRANS_M3),
 		.HWRITE_M1(HWRITE_M1),
 		.HWRITE_M2(HWRITE_M2),
+		.HWRITE_M3(HWRITE_M3),
 		.HSIZE_M1(HSIZE_M1),
 		.HSIZE_M2(HSIZE_M2),
+		.HSIZE_M3(HSIZE_M3),
 		.HBURST_M1(HBURST_M1),
 		.HBURST_M2(HBURST_M2),
+		.HBURST_M3(HBURST_M3),
 		.HPROT_M1(HPROT_M1),
 		.HPROT_M2(HPROT_M2),
+		.HPROT_M3(HPROT_M3),
 		.HADDR_M1(HADDR_M1),
 		.HADDR_M2(HADDR_M2),
+		.HADDR_M3(HADDR_M3),
 		.HWDATA_M1(HWDATA_M1),
 		.HWDATA_M2(HWDATA_M2),
+		.HWDATA_M3(HWDATA_M3),
 	
 		.HTRANS(HTRANS),
 		.HWRITE(HWRITE),
@@ -169,14 +210,19 @@ module ahb(
 		.HSEL_Default(),
 		.HSEL_S1(HSEL_S1),
 		.HSEL_S2(HSEL_S2),
+		.HSEL_S3(HSEL_S3),
 		.HREADY_S1(HREADY_S1),
 		.HREADY_S2(HREADY_S2),
+		.HREADY_S3(HREADY_S3),
 		.HRESP_S1(HRESP_S1),
 		.HRESP_S2(HRESP_S2),
+		.HRESP_S3(HRESP_S3),
 		.HSPLIT_S1(HSPLIT_S1),
 		.HSPLIT_S2(HSPLIT_S2),
+		.HSPLIT_S3(HSPLIT_S3),
 		.HRDATA_S1(HRDATA_S1),
 		.HRDATA_S2(HRDATA_S2),
+		.HRDATA_S3(HRDATA_S3),
 	
 		.HREADY(HREADY),
 		.HRESP(HRESP),

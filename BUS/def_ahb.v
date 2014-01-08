@@ -29,6 +29,8 @@
 `define HMST_0 3'b000
 `define HMST_1 3'b001
 `define HMST_2 3'b010
+`define HMST_3 3'b011
 
-`define HSEL_1 2'b01
-`define HSEL_2 2'b10
+`define HSEL_1 5'b00001
+`define HSEL_2 5'b00010
+`define HSEL_3 5'b00100
