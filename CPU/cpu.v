@@ -73,7 +73,7 @@ module cpu(
 	wire do_dm_write;
 	wire do_reg_write;
 	wire [2:0] select_alu_src2;
-	wire [1:0] select_imm_extend;
+	wire [2:0] select_imm_extend;
 	wire [1:0] select_write_reg;
 	wire reg_rt_ra_equal;
 	wire reg_rt_zero;

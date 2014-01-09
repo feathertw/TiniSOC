@@ -34,7 +34,7 @@ module controller(
 	input [7:0] sub_op_ls;
 
 	output [2:0] select_alu_src2;
-	output [1:0] select_imm_extend;
+	output [2:0] select_imm_extend;
 	output [1:0] select_write_reg;
 
 	output do_im_read;
@@ -50,7 +50,7 @@ module controller(
 	output reg_rt_negative;
 
 	reg [2:0] select_alu_src2;
-	reg [1:0] select_imm_extend;
+	reg [2:0] select_imm_extend;
 	reg [1:0] select_write_reg;
 
 	reg do_dm_read;
@@ -177,6 +177,14 @@ module controller(
 			`MOVI:begin
 				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_20BIT_SE;
+				select_write_reg=`WRREG_IMMDATA;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
+				do_reg_write=1'b1;
+			end
+			`SETHI:begin
+				select_alu_src2=`ALUSRC2_UNKNOWN;
+				select_imm_extend=`IMM_20BIT_HI;
 				select_write_reg=`WRREG_IMMDATA;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;

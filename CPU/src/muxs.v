@@ -37,7 +37,7 @@ module muxs(
 	input [19:0] imm_20bit;
 
 	input [2:0] select_alu_src2;
-	input [1:0] select_imm_extend;
+	input [2:0] select_imm_extend;
 	input [1:0] select_write_reg;
 
 	output [DataSize-1:0] imm_extend;
@@ -85,6 +85,9 @@ module muxs(
 			end
 			`IMM_20BIT_SE: begin
 				imm_extend={ {12{imm_20bit[19]}}, {imm_20bit} };
+			end
+			`IMM_20BIT_HI: begin
+				imm_extend={ {imm_20bit},{12{1'b0}} };
 			end
 			default: begin
 				imm_extend=32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;

@@ -16,6 +16,7 @@
 `define SWI   	6'b001010
 
 `define MOVI  	6'b100010
+`define SETHI	6'b100011
 
 `define TY_LS	6'b011100
 `define LW	8'b00000010
