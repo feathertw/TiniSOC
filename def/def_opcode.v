@@ -12,6 +12,8 @@
 `define ROTRI 	5'b01011
 
 `define ADDI  	6'b101000
+`define SUBRI	6'b101001
+`define ANDI	6'b101010
 `define ORI   	6'b101100
 `define XORI  	6'b101011
 `define LWI   	6'b000010

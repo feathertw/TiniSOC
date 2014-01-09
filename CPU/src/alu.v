@@ -101,6 +101,15 @@ module alu(
 		            {b,alu_result[31]}=alu_src1[31]+alu_src2[31]+a;
 		            alu_overflow=a^b;
 		        end
+		        `SUBRI:begin
+		            {a,alu_result[30:0]}=alu_src2[30:0]-alu_src1[30:0];
+		            {b,alu_result[31]}=alu_src2[31]-alu_src1[31]-a;
+		            alu_overflow=a^b;
+		        end
+		        `ANDI:begin
+		            alu_result=alu_src1&alu_src2;
+		            alu_overflow=1'b0;
+		        end
 		        `ORI:begin
 		            alu_result=alu_src1|alu_src2;
 		            alu_overflow=1'b0;

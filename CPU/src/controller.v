@@ -174,6 +174,22 @@ module controller(
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
 			end
+			`SUBRI:begin
+				select_alu_src2=`ALUSRC2_IMM;
+				select_imm_extend=`IMM_15BIT_SE;
+				select_write_reg=`WRREG_ALURESULT;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
+				do_reg_write=1'b1;
+			end
+			`ANDI:begin
+				select_alu_src2=`ALUSRC2_IMM;
+				select_imm_extend=`IMM_15BIT_ZE;
+				select_write_reg=`WRREG_ALURESULT;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
+				do_reg_write=1'b1;
+			end
 			`ORI:begin
 				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_ZE;
