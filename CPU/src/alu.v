@@ -68,6 +68,14 @@ module alu(
 		                    alu_result=alu_src1^alu_src2;
 		                    alu_overflow=1'b0;
 		                end
+		                `SRL:begin
+		                    alu_result=alu_src1>>alu_src2;
+		                    alu_overflow=1'b0;
+		                end
+		                `SLL:begin
+		                    alu_result=alu_src1<<alu_src2;
+		                    alu_overflow=1'b0;
+		                end
 		                `SRLI:begin
 		                    alu_result=alu_src1>>alu_src2;
 		                    alu_overflow=1'b0;
