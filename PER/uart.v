@@ -1,8 +1,9 @@
-`define ADDR_TX_FLAG	24'h00_0000
-`define ADDR_RX_FLAG	24'h00_0004
-`define ADDR_TX_DATA	24'h00_0008
-`define ADDR_RX_DATA	24'h00_000C
-`define ADDR_BAUDRATE	24'h00_0010
+`define ADDR_ENABLE	24'h00_0000
+`define ADDR_TX_FLAG	24'h00_0010
+`define ADDR_RX_FLAG	24'h00_0014
+`define ADDR_TX_DATA	24'h00_0020
+`define ADDR_RX_DATA	24'h00_0024
+`define ADDR_BAUDRATE	24'h00_0030
 
 `define WAIT_STATE 2
 `define WS `WAIT_STATE
@@ -43,6 +44,7 @@ module uart(
 	wire [23:0] xMAddress  =REG_MAddress[`WS];
 	wire [31:0] xMWriteData=REG_MWriteData[`WS-1];
 
+	reg ENABLE;
 	reg TX_FLAG;
 	reg RX_FLAG;
 	reg [31:0] TX_DATA;
@@ -98,6 +100,7 @@ module uart(
 				MReady<=1'b0;
 			end
 			if(xMEnable&&xMWrite)begin
+				if(xMAddress==`ADDR_ENABLE)   ENABLE<=xMWriteData[0];
 				if(xMAddress==`ADDR_TX_FLAG)  TX_FLAG<=xMWriteData[0];
 				if(xMAddress==`ADDR_RX_FLAG)  RX_FLAG<=xMWriteData[0];
 				if(xMAddress==`ADDR_TX_DATA)  TX_DATA<=xMWriteData;
@@ -106,6 +109,7 @@ module uart(
 			end
 			if(xMEnable&&xMRead)begin
 				MReady<=1'b1;
+				if(xMAddress==`ADDR_ENABLE)   MReadData<=32'b0|ENABLE;
 				if(xMAddress==`ADDR_TX_FLAG)  MReadData<=32'b0|TX_FLAG;
 				if(xMAddress==`ADDR_RX_FLAG)  MReadData<=32'b0|RX_FLAG;
 				if(xMAddress==`ADDR_TX_DATA)  MReadData<=TX_DATA;
