@@ -53,9 +53,6 @@ module wrp_master_io(
 	input  [ 1:0] HRESP;
 	input  [31:0] HRDATA;
 
-	reg    HBUSREQ;
-	reg    HLOCK;
-
 	reg    [ 1:0] HTRANS;
 	reg    HWRITE;
 	reg    [ 2:0] HSIZE;
@@ -65,6 +62,8 @@ module wrp_master_io(
 	reg    [31:0] HWDATA;
 
 	reg    [31:0] MReadData;
+
+	reg    REG_MReady;
 
 	reg [2:0] state;
 	reg [2:0] next_state;
@@ -76,21 +75,11 @@ module wrp_master_io(
 
 	wire MReady=(state==STATE_IDLE);
 
-	always@(posedge MEnable or posedge MReady)begin
-		if(MEnable)begin
-			HBUSREQ<=1'b1;
-		end
-	end
+	wire HBUSREQ=MEnable&&MReady&&REG_MReady;
+	wire HLOCK=1'b0;
 
-	always@(posedge HCLK)begin
-		if(!HRESETn)begin
-			HBUSREQ<=1'b0;
-			HLOCK<=1'b0;
-		end
-		else if(HGRANT&&HREADY)begin
-			HBUSREQ<=1'b0;
-			HLOCK<=1'b0;
-		end
+	always@(negedge HCLK)begin
+		REG_MReady<=MReady;
 	end
 
 	always@(posedge HCLK)begin
