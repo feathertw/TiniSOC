@@ -46,6 +46,9 @@ module regwalls(
 	iREG4_write_reg_data,
 	oREG4_write_reg_data,
 
+	iREG2_current_pc,
+	oREG3_current_pc,
+
 	do_flush_REG1,
 	do_hazard
 );
@@ -127,6 +130,12 @@ module regwalls(
 	output [31:0] oREG4_write_reg_data;
 	reg    [31:0] oREG4_write_reg_data;
 
+	//pc
+	input  [31:0] iREG2_current_pc;
+	output [31:0] oREG3_current_pc;
+	reg    [31:0] mREG2_current_pc;
+	reg    [31:0] oREG3_current_pc;
+
 	input do_flush_REG1;
 	input do_hazard;
 
@@ -162,6 +171,9 @@ module regwalls(
 			oREG4_do_reg_write  <=1'b0;
 			oREG4_write_reg_addr<=5'b0;
 			oREG4_write_reg_data<=32'b0;
+
+			mREG2_current_pc <= 32'b0;
+			oREG3_current_pc <= 32'b0;
 		end
 		else if(enable_regwalls)begin
 			if(do_hazard)begin
@@ -189,6 +201,8 @@ module regwalls(
 				mREG2_do_reg_write    <=1'b0;
 				mREG2_write_reg_addr  <=5'b0;
 				mREG2_select_write_reg<=2'b0;
+
+				mREG2_current_pc <= 32'b0;
 			end
 			else begin
 				oREG2_reg_ra_data<=iREG2_reg_ra_data;
@@ -205,6 +219,8 @@ module regwalls(
 				mREG2_do_reg_write    <=iREG2_do_reg_write;
 				mREG2_write_reg_addr  <=iREG2_write_reg_addr;
 				mREG2_select_write_reg<=iREG2_select_write_reg;
+
+				mREG2_current_pc <= iREG2_current_pc;
 			end
 
 			oREG3_reg_rt_data     <=mREG2_reg_rt_data;
@@ -216,6 +232,8 @@ module regwalls(
 			mREG3_do_reg_write    <=mREG2_do_reg_write;
 			mREG3_write_reg_addr  <=mREG2_write_reg_addr;
 			oREG3_select_write_reg<=mREG2_select_write_reg;
+
+			oREG3_current_pc <= mREG2_current_pc;
 
 			oREG4_do_reg_write  <=mREG3_do_reg_write;
 			oREG4_write_reg_addr<=mREG3_write_reg_addr;

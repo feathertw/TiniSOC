@@ -74,6 +74,7 @@ module cpu(
 	wire do_reg_write;
 	wire [2:0] select_alu_src2;
 	wire [2:0] select_imm_extend;
+	wire  select_write_reg_addr;
 	wire [1:0] select_write_reg;
 	wire reg_rt_ra_equal;
 	wire reg_rt_zero;
@@ -90,11 +91,11 @@ module cpu(
 	//muxs
 	wire [31:0] alu_src2;
 	wire [31:0] imm_extend;
+	wire [ 4:0] write_reg_addr;
 	wire [31:0] write_reg_data;
 
 	//pc
 	wire [31:0] current_pc;
-	wire do_jump_link;
 
 	//mem
 	wire [31:0] mem_read_data;
@@ -133,6 +134,8 @@ module cpu(
 	wire [ 4:0] xREG4_write_reg_addr;
 	wire [31:0] xREG4_write_reg_data;
 
+	wire [31:0] xREG3_current_pc;
+
 	wire do_flush_REG1;
 	wire do_flush_REG2;
 	wire do_flush_REG3;
@@ -146,6 +149,7 @@ module cpu(
 	wire sub_op_b		=xREG1_instruction[14];
 	wire [3:0] sub_op_bz	=xREG1_instruction[19:16];
 	wire sub_op_j		=xREG1_instruction[24];
+	wire [4:0] sub_op_jr	=xREG1_instruction[4:0];
 
 	wire [4:0] reg_ra_addr  =xREG1_instruction[19:15];
 	wire [4:0] reg_rb_addr  =xREG1_instruction[14:10];
@@ -237,9 +241,6 @@ module cpu(
 		.write_reg_data(xREG4_write_reg_data),
 		.do_reg_write(xREG4_do_reg_write),
 
-		.current_pc(current_pc),
-		.do_jump_link(do_jump_link),
-
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(reg_rt_data)
@@ -250,9 +251,12 @@ module cpu(
 		.reg_rb_data(f_reg_rb_data),
 		.reg_rt_data(f_reg_rt_data),
 
+		.reg_rt_addr(reg_rt_addr),
+
 		.alu_result(xREG3_alu_result),//*
 		.xREG3_imm_extend(xREG3_imm_extend),
 		.mem_read_data(mem_read_data),
+		.xREG3_current_pc(xREG3_current_pc),
 
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
@@ -260,10 +264,12 @@ module cpu(
 
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
+		.select_write_reg_addr(select_write_reg_addr),
 		.select_write_reg(xREG3_select_write_reg),
 
 		.imm_extend(imm_extend),
 		.alu_src2(alu_src2),
+		.write_reg_addr(write_reg_addr),
 		.write_reg_data(write_reg_data)
 	);
 	
@@ -274,9 +280,12 @@ module cpu(
 		.opcode(opcode),
 		.sub_op_base(sub_op_base),
 		.sub_op_ls(sub_op_ls),
+		.sub_op_j(sub_op_j),
+		.sub_op_jr(sub_op_jr),
 
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
+		.select_write_reg_addr(select_write_reg_addr),
 		.select_write_reg(select_write_reg),
 
 		.do_im_read(do_im_read),
@@ -300,7 +309,6 @@ module cpu(
 		.opcode(opcode),
 		.sub_op_b(sub_op_b),
 		.sub_op_bz(sub_op_bz),
-		.sub_op_j(sub_op_j),
 		.reg_rt_ra_equal(reg_rt_ra_equal),
 		.reg_rt_zero(reg_rt_zero),
 		.reg_rt_negative(reg_rt_negative),
@@ -310,7 +318,6 @@ module cpu(
 		.imm_24bit(imm_24bit),
 		.reg_rb_data(f_reg_rb_data),
 
-		.do_jump_link(do_jump_link),
 		.do_flush_REG1(do_flush_REG1),
 		.do_hazard(do_hazard)
 	);
@@ -324,7 +331,7 @@ module cpu(
 		.iREG2_reg_rt_data(f_reg_rt_data),
 		.oREG2_reg_ra_data(xREG2_reg_ra_data),
 		.oREG3_reg_rt_data(xREG3_reg_rt_data),
-		.iREG2_write_reg_addr(reg_rt_addr),
+		.iREG2_write_reg_addr(write_reg_addr),
 		.mREG2_write_reg_addr(xREG2_write_reg_addr),
 		.mREG3_write_reg_addr(xREG3_write_reg_addr),
 		.oREG4_write_reg_addr(xREG4_write_reg_addr),
@@ -359,6 +366,9 @@ module cpu(
 
 		.iREG4_write_reg_data(write_reg_data),
 		.oREG4_write_reg_data(xREG4_write_reg_data),
+
+		.iREG2_current_pc(current_pc),
+		.oREG3_current_pc(xREG3_current_pc),
 
 		.do_flush_REG1(do_flush_REG1),
 		.do_hazard(do_hazard)

@@ -42,4 +42,6 @@
 `define JJ	1'b0
 `define JAL	1'b1
 
-`define JR	6'b100101
+`define TY_JR	6'b100101
+`define JR	5'b00000
+`define JRAL	5'b00001

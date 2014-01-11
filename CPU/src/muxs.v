@@ -5,9 +5,12 @@ module muxs(
 	reg_rb_data,
 	reg_rt_data,
 
+	reg_rt_addr,
+
 	alu_result,
 	xREG3_imm_extend,
 	mem_read_data,
+	xREG3_current_pc,
 
 	imm_5bit,
 	imm_15bit,
@@ -15,10 +18,12 @@ module muxs(
 
 	select_alu_src2,
 	select_imm_extend,
+	select_write_reg_addr,
 	select_write_reg,
 
 	imm_extend,
 	alu_src2,
+	write_reg_addr,
 	write_reg_data
 );
 
@@ -28,9 +33,12 @@ module muxs(
 	input [DataSize-1:0] reg_rb_data;
 	input [DataSize-1:0] reg_rt_data;
 
+	input [4:0] reg_rt_addr;
+
 	input [DataSize-1:0] alu_result;
 	input [DataSize-1:0] xREG3_imm_extend;
 	input [DataSize-1:0] mem_read_data;
+	input [31:0] xREG3_current_pc;
 
 	input [4:0] imm_5bit;
 	input [14:0] imm_15bit;
@@ -38,16 +46,19 @@ module muxs(
 
 	input [2:0] select_alu_src2;
 	input [2:0] select_imm_extend;
+	input select_write_reg_addr;
 	input [1:0] select_write_reg;
 
 	output [DataSize-1:0] imm_extend;
 	output [DataSize-1:0] alu_src2;
+	output [4:0] write_reg_addr;
 	output [DataSize-1:0] write_reg_data;
 	
+	reg [DataSize-1:0] imm_extend;
 	reg [DataSize-1:0] alu_src2;
+	reg [4:0] write_reg_addr;
 	reg [DataSize-1:0] write_reg_data;
 
-	reg [DataSize-1:0] imm_extend;
 
 	always @(select_alu_src2 or reg_rb_data or imm_extend or imm_15bit or sub_op_sv or reg_rt_data) begin
 		case(select_alu_src2)
@@ -95,6 +106,20 @@ module muxs(
 		endcase
 	end
 
+	always @(select_write_reg_addr or reg_rt_addr)begin
+		case(select_write_reg_addr)
+			`WRADDR_RT:begin
+				write_reg_addr=reg_rt_addr;
+			end
+			`WRADDR_LP:begin
+				write_reg_addr=5'b11110;
+			end
+			default:begin
+				write_reg_addr=5'bxxxxx;
+			end
+		endcase
+	end
+
 	always @(select_write_reg or alu_result or xREG3_imm_extend or mem_read_data) begin
 		case(select_write_reg)
 			`WRREG_ALURESULT: begin
@@ -105,6 +130,9 @@ module muxs(
 			end
 			`WRREG_MEM: begin
 				write_reg_data = mem_read_data;
+			end
+			`WRREG_PC: begin
+				write_reg_data = xREG3_current_pc;
 			end
 			default: begin
 				write_reg_data = 32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;

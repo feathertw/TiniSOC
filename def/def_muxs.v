@@ -18,9 +18,14 @@
 `define IMM_20BIT_HI	3'b100
 `define IMM_UNKOWN	3'bxxx
 
+`define WRADDR_RT	1'b0
+`define WRADDR_LP	1'b1
+`define WRADDR_UNKOWN	1'bx
+
 `define WRREG_ALURESULT 2'b00
 `define WRREG_IMMDATA 	2'b01
 `define WRREG_MEM	2'b10
+`define WRREG_PC	2'b11
 `define WRREG_UNKOWN	2'bxx
 
 `define FOR_RG_ORI 	3'b000
