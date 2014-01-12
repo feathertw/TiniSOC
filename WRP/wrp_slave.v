@@ -1,6 +1,6 @@
 module wrp_slaver(
-	HCLK,
-	HRESETn,
+	clock,
+	reset,
 
 	MRead,
 	MWrite,
@@ -24,8 +24,8 @@ module wrp_slaver(
 	HSPLIT,
 	HRDATA
 );
-	input HCLK;
-	input HRESETn;
+	input clock;
+	input reset;
 
 	output MRead;
 	output MWrite;

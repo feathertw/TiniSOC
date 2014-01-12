@@ -2,8 +2,8 @@
 
 `include "wcounter.v"
 module wrp_master(
-	HCLK,
-	HRESETn,
+	clock,
+	reset,
 
 	MRead,
 	MWrite,
@@ -29,8 +29,8 @@ module wrp_master(
 	HRESP,
 	HRDATA
 );
-	input  HCLK;
-	input  HRESETn;
+	input  clock;
+	input  reset;
 
 	input  MRead;
 	input  MWrite;
@@ -88,7 +88,7 @@ module wrp_master(
 	wire MReady=HREADY&&(state==STATE_RADDR||state==STATE_RDATA_C||state==STATE_WADDR);
 
 	hcounter HCOUNTER(
-		.HCLK(HCLK),
+		.clock(clock),
 		.flush(do_counter_flush),
 		.signal(counter_signal),
 		.value(counter_value),
@@ -101,8 +101,8 @@ module wrp_master(
 		end
 	end
 
-	always@(posedge HCLK)begin
-		if(!HRESETn)begin
+	always@(posedge clock)begin
+		if(reset)begin
 			do_counter_flush<=1'b1;
 			do_counter_start<=1'b0;
 			HBUSREQ<=1'b0;
@@ -123,8 +123,8 @@ module wrp_master(
 		end
 	end
 
-	always@(posedge HCLK)begin
-		state<=(!HRESETn)? STATE_IDLE:next_state;
+	always@(posedge clock)begin
+		state<=(reset)? STATE_IDLE:next_state;
 	end
 	always@(*)begin
 		case(state)

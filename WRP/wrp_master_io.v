@@ -1,6 +1,6 @@
 module wrp_master_io(
-	HCLK,
-	HRESETn,
+	clock,
+	reset,
 
 	MRead,
 	MWrite,
@@ -26,8 +26,8 @@ module wrp_master_io(
 	HRESP,
 	HRDATA
 );
-	input  HCLK;
-	input  HRESETn;
+	input  clock;
+	input  reset;
 
 	input  MRead;
 	input  MWrite;
@@ -78,18 +78,18 @@ module wrp_master_io(
 	wire HBUSREQ=MEnable&&MReady&&REG_MReady;
 	wire HLOCK=1'b0;
 
-	always@(negedge HCLK)begin
+	always@(negedge clock)begin
 		REG_MReady<=MReady;
 	end
 
-	always@(posedge HCLK)begin
+	always@(posedge clock)begin
 		if(state==STATE_RDATA)begin
 			MReadData<=HRDATA;
 		end
 	end
 
-	always@(posedge HCLK)begin
-		state<=(!HRESETn)? STATE_IDLE:next_state;
+	always@(posedge clock)begin
+		state<=(reset)? STATE_IDLE:next_state;
 	end
 	always@(*)begin
 		case(state)

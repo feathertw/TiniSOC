@@ -239,8 +239,8 @@ module soc(
 		.MReady(IOMReady)
 	);
 	wrp_master WRP_MST_IM(
-		.HCLK(clock),
-		.HRESETn(!reset),
+		.clock(clock),
+		.reset(reset),
 		.MRead(IM_read),
 		.MWrite(IM_write),
 		.MEnable(IM_enable),
@@ -263,8 +263,8 @@ module soc(
 		.HRDATA(HRDATA)
 	);
 	wrp_master WRP_MST_DM(
-		.HCLK(clock),
-		.HRESETn(!reset),
+		.clock(clock),
+		.reset(reset),
 		.MRead(DM_read),
 		.MWrite(DM_write),
 		.MEnable(DM_enable),
@@ -287,8 +287,8 @@ module soc(
 		.HRDATA(HRDATA)
 	);
 	wrp_master_io WRP_MST_IOM(
-		.HCLK(clock),
-		.HRESETn(!reset),
+		.clock(clock),
+		.reset(reset),
 		.MRead(IOM_read),
 		.MWrite(IOM_write),
 		.MEnable(IOM_enable),
@@ -311,8 +311,8 @@ module soc(
 		.HRDATA(HRDATA)
 	);
 	wrp_slaver WRP_SLV_IM(
-		.HCLK(clock),
-		.HRESETn(!reset),
+		.clock(clock),
+		.reset(reset),
 		.MRead(IMRead),
 		.MWrite(IMWrite),
 		.MEnable(IMEnable),
@@ -335,8 +335,8 @@ module soc(
 		.HRDATA(HRDATA_S1)
 	);
 	wrp_slaver WRP_SLV_DM(
-		.HCLK(clock),
-		.HRESETn(!reset),
+		.clock(clock),
+		.reset(reset),
 		.MRead(DMRead),
 		.MWrite(DMWrite),
 		.MEnable(DMEnable),
@@ -359,8 +359,8 @@ module soc(
 		.HRDATA(HRDATA_S2)
 	);
 	wrp_slaver WRP_SLV_IOM(
-		.HCLK(clock),
-		.HRESETn(!reset),
+		.clock(clock),
+		.reset(reset),
 		.MRead(IOMRead),
 		.MWrite(IOMWrite),
 		.MEnable(IOMEnable),

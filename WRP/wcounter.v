@@ -1,11 +1,11 @@
 module hcounter(
-	HCLK,
+	clock,
 	flush,
 	signal,
 	value,
 	readup
 );
-	input HCLK;
+	input clock;
 	input flush;
 	input signal;
 	output [3:0] value;
@@ -13,7 +13,7 @@ module hcounter(
 	output readup;
 	reg    readup;
 
-	always@(posedge HCLK)begin
+	always@(posedge clock)begin
 		if(flush)begin
 			value<='b0;
 			readup<=1'b0;
