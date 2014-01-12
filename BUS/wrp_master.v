@@ -85,7 +85,7 @@ module wrp_master(
 	wire [31:0] MReadData=HRDATA;
 	wire counter_signal= do_counter_start&&(!counter_up)&&HREADY;
 
-	wire MReady=HREADY&&(state==STATE_RDATA_C||state==STATE_WADDR);
+	wire MReady=HREADY&&(state==STATE_RADDR||state==STATE_RDATA_C||state==STATE_WADDR);
 
 	hcounter HCOUNTER(
 		.HCLK(HCLK),

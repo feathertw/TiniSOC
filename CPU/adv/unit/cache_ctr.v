@@ -80,7 +80,8 @@ module cache_ctr(
 				else		     			       next_state=STATE_READMISS;
 			end
 			STATE_READMISS:begin
-				next_state=STATE_READSYS;
+				if(SysReady) next_state=STATE_READSYS;
+				else	     next_state=STATE_READMISS;
 			end
 			STATE_READSYS:begin
 				if(readup) next_state=STATE_READDATA;
