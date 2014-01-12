@@ -6,7 +6,7 @@
 `include "src/regwalls.v"
 `include "src/forward.v"
 `include "src/memctr.v"
-`include "adv/cache.v"
+`include "src/cache.v"
 module cpu(
 	clock,
 	reset,

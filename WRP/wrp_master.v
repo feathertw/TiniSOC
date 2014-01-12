@@ -1,6 +1,6 @@
 `define ADDR_OFS 32'hffff_ffc0
 
-`include "hcounter.v"
+`include "wcounter.v"
 module wrp_master(
 	HCLK,
 	HRESETn,
