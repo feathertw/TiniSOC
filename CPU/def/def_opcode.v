@@ -5,6 +5,8 @@
 `define AND	5'b00010
 `define OR	5'b00100
 `define XOR   	5'b00011
+`define SLT	5'b00110
+`define SLTS	5'b00111
 `define SRL	5'b01101
 `define SLL	5'b01100
 `define SRLI  	5'b01001

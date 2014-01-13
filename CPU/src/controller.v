@@ -128,6 +128,24 @@ module controller(
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
 					end
+					`SLT:begin
+						select_alu_src2=`ALUSRC2_RBDATA;
+						select_imm_extend=`IMM_UNKOWN;
+						select_write_reg_addr=`WRADDR_RT;
+						select_write_reg=`WRREG_ALURESULT;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
+						do_reg_write=1'b1;
+					end
+					`SLTS:begin
+						select_alu_src2=`ALUSRC2_RBDATA;
+						select_imm_extend=`IMM_UNKOWN;
+						select_write_reg_addr=`WRADDR_RT;
+						select_write_reg=`WRREG_ALURESULT;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
+						do_reg_write=1'b1;
+					end
 					`SRL:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
