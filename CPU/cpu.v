@@ -74,6 +74,7 @@ module cpu(
 	wire do_reg_write;
 	wire [2:0] select_alu_src2;
 	wire [2:0] select_imm_extend;
+	wire  select_mem_addr;
 	wire  select_write_reg_addr;
 	wire [1:0] select_write_reg;
 	wire reg_rt_ra_equal;
@@ -98,6 +99,7 @@ module cpu(
 	wire [31:0] current_pc;
 
 	//mem
+	wire [31:0] mem_address;
 	wire [31:0] mem_read_data;
 
 	//forward
@@ -111,9 +113,11 @@ module cpu(
 
 	wire [31:0] xREG3_reg_rt_data;
 	wire [31:0] xREG2_reg_ra_data;
+	wire [31:0] xREG3_reg_ra_data;
 
 	wire [ 5:0] xREG2_opcode;
 	wire [ 4:0] xREG2_sub_op_base;
+	wire xREG3_select_mem_addr;
 	wire [ 1:0] xREG2_select_write_reg;
 	wire [ 1:0] xREG3_select_write_reg;
 	wire xREG2_do_dm_read;
@@ -177,7 +181,7 @@ module cpu(
 
 	wire dPStrobe=do_dmem_enable;
 	wire dPRw=(xREG3_do_dm_read)? 1'b1:1'b0;
-	wire [31:0] dPAddress=xREG3_alu_result;
+	wire [31:0] dPAddress=mem_address;
 	wire iCReady;
 	wire dCReady;
 	wire [31:0] dPData_in;
@@ -212,7 +216,7 @@ module cpu(
 	wire IOM_read=xREG3_do_dm_read;
 	wire IOM_write=xREG3_do_dm_write;
 	wire IOM_enable=do_iomem_enable;
-	wire [31:0] IOM_address=xREG3_alu_result;
+	wire [31:0] IOM_address=mem_address;
 	wire [31:0] IOM_in=xREG3_reg_rt_data;
 	wire [31:0] IOM_out;
 	wire IOM_ready;
@@ -253,10 +257,11 @@ module cpu(
 
 		.reg_rt_addr(reg_rt_addr),
 
-		.alu_result(xREG3_alu_result),//*
+		.xREG3_alu_result(xREG3_alu_result),//*
 		.xREG3_imm_extend(xREG3_imm_extend),
 		.mem_read_data(mem_read_data),
 		.xREG3_current_pc(xREG3_current_pc),
+		.xREG3_reg_ra_data(xREG3_reg_ra_data),
 
 		.imm_5bit(imm_5bit),
 		.imm_15bit(imm_15bit),
@@ -264,11 +269,13 @@ module cpu(
 
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
+		.select_mem_addr(xREG3_select_mem_addr),
 		.select_write_reg_addr(select_write_reg_addr),
 		.select_write_reg(xREG3_select_write_reg),
 
-		.imm_extend(imm_extend),
 		.alu_src2(alu_src2),
+		.imm_extend(imm_extend),
+		.mem_address(mem_address),
 		.write_reg_addr(write_reg_addr),
 		.write_reg_data(write_reg_data)
 	);
@@ -285,6 +292,7 @@ module cpu(
 
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
+		.select_mem_addr(select_mem_addr),
 		.select_write_reg_addr(select_write_reg_addr),
 		.select_write_reg(select_write_reg),
 
@@ -328,8 +336,9 @@ module cpu(
 		.iREG1_instruction(iPData_in),
 		.oREG1_instruction(xREG1_instruction),
 		.iREG2_reg_ra_data(f_reg_ra_data),
+		.mREG2_reg_ra_data(xREG2_reg_ra_data),
+		.oREG3_reg_ra_data(xREG3_reg_ra_data),
 		.iREG2_reg_rt_data(f_reg_rt_data),
-		.oREG2_reg_ra_data(xREG2_reg_ra_data),
 		.oREG3_reg_rt_data(xREG3_reg_rt_data),
 		.iREG2_write_reg_addr(write_reg_addr),
 		.mREG2_write_reg_addr(xREG2_write_reg_addr),
@@ -341,6 +350,8 @@ module cpu(
 		.oREG2_opcode(xREG2_opcode),
 		.oREG2_sub_op_base(xREG2_sub_op_base),
 
+		.iREG2_select_mem_addr(select_mem_addr),
+		.oREG3_select_mem_addr(xREG3_select_mem_addr),
 		.iREG2_select_write_reg(select_write_reg),
 		.mREG2_select_write_reg(xREG2_select_write_reg),
 		.oREG3_select_write_reg(xREG3_select_write_reg),
@@ -408,7 +419,7 @@ module cpu(
 	memctr MEMCTR(
 		.do_mem_read(xREG3_do_dm_read),
 		.do_mem_write(xREG3_do_dm_write),
-		.mem_address(xREG3_alu_result),
+		.mem_address(mem_address),
 		.do_dmem_enable(do_dmem_enable),
 		.do_iomem_enable(do_iomem_enable)
 	);

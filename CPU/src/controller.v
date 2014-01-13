@@ -13,6 +13,7 @@ module controller(
 
 	select_alu_src2,
 	select_imm_extend,
+	select_mem_addr,
 	select_write_reg_addr,
 	select_write_reg,
 
@@ -40,6 +41,7 @@ module controller(
 
 	output [2:0] select_alu_src2;
 	output [2:0] select_imm_extend;
+	output select_mem_addr;
 	output select_write_reg_addr;
 	output [1:0] select_write_reg;
 
@@ -57,6 +59,7 @@ module controller(
 
 	reg [2:0] select_alu_src2;
 	reg [2:0] select_imm_extend;
+	reg select_mem_addr;
 	reg select_write_reg_addr;
 	reg [1:0] select_write_reg;
 
@@ -78,6 +81,7 @@ module controller(
 					//`NOP:begin
 					//	select_alu_src2=`ALUSRC2_RBDATA;
 					//	select_imm_extend=`IMM_UNKOWN;
+					//	select_mem_addr=`MADDR_UNKOWN;
 					//	select_write_reg_addr=`WRADDR_UNKOWN;
 					//	select_write_reg=`WRREG_ALURESULT;
 					//	do_dm_read=1'b0;
@@ -86,6 +90,7 @@ module controller(
 					`ADD:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -95,6 +100,7 @@ module controller(
 					`SUB:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -104,6 +110,7 @@ module controller(
 					`AND:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -113,6 +120,7 @@ module controller(
 					`OR :begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -122,6 +130,7 @@ module controller(
 					`XOR:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -131,6 +140,7 @@ module controller(
 					`SLT:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -140,6 +150,7 @@ module controller(
 					`SLTS:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -149,6 +160,7 @@ module controller(
 					`SRL:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -158,6 +170,7 @@ module controller(
 					`SLL:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -168,6 +181,7 @@ module controller(
 					`SRLI:begin
 						select_alu_src2=`ALUSRC2_IMM;
 						select_imm_extend=`IMM_5BIT_ZE;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -177,6 +191,7 @@ module controller(
 					`SLLI:begin
 						select_alu_src2=`ALUSRC2_IMM;
 						select_imm_extend=`IMM_5BIT_ZE;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -186,6 +201,7 @@ module controller(
 					`ROTRI:begin
 						select_alu_src2=`ALUSRC2_IMM;
 						select_imm_extend=`IMM_5BIT_ZE;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
 						do_dm_read=1'b0;
@@ -195,6 +211,7 @@ module controller(
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
 						do_dm_read=1'b0;
@@ -206,6 +223,7 @@ module controller(
 			`ADDI:begin
 				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_SE;
+				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
 				do_dm_read=1'b0;
@@ -215,6 +233,7 @@ module controller(
 			`SUBRI:begin
 				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_SE;
+				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
 				do_dm_read=1'b0;
@@ -224,6 +243,7 @@ module controller(
 			`ANDI:begin
 				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_ZE;
+				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
 				do_dm_read=1'b0;
@@ -233,6 +253,7 @@ module controller(
 			`ORI:begin
 				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_ZE;
+				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
 				do_dm_read=1'b0;
@@ -242,6 +263,7 @@ module controller(
 			`XORI:begin
 				select_alu_src2=`ALUSRC2_IMM;
 				select_imm_extend=`IMM_15BIT_ZE;
+				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
 				do_dm_read=1'b0;
@@ -251,6 +273,7 @@ module controller(
 			`MOVI:begin
 				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_20BIT_SE;
+				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_IMMDATA;
 				do_dm_read=1'b0;
@@ -260,6 +283,7 @@ module controller(
 			`SETHI:begin
 				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_20BIT_HI;
+				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_IMMDATA;
 				do_dm_read=1'b0;
@@ -269,6 +293,7 @@ module controller(
 			`LWI:begin
 				select_alu_src2=`ALUSRC2_LSWI;
 				select_imm_extend=`IMM_UNKOWN;
+				select_mem_addr=`MADDR_ALURESULT;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_MEM;
 				do_dm_read=1'b1;
@@ -278,6 +303,7 @@ module controller(
 			`SWI:begin
 				select_alu_src2=`ALUSRC2_LSWI;
 				select_imm_extend=`IMM_UNKOWN;
+				select_mem_addr=`MADDR_ALURESULT;
 				select_write_reg_addr=`WRADDR_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
 				do_dm_read=1'b0;
@@ -289,6 +315,7 @@ module controller(
 					`LW:begin
 						select_alu_src2=`ALUSRC2_LSW;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_ALURESULT;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_MEM;
 						do_dm_read=1'b1;
@@ -298,6 +325,7 @@ module controller(
 					`SW:begin
 						select_alu_src2=`ALUSRC2_LSW;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_ALURESULT;
 						select_write_reg_addr=`WRADDR_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
 						do_dm_read=1'b0;
@@ -307,6 +335,7 @@ module controller(
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
 						do_dm_read=1'b0;
@@ -318,6 +347,7 @@ module controller(
 			`TY_B:begin
 				select_alu_src2=`ALUSRC2_BENX;
 				select_imm_extend=`IMM_UNKOWN;
+				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
 				do_dm_read=1'b0;
@@ -329,6 +359,7 @@ module controller(
 					`JAL:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_LP;
 						select_write_reg=`WRREG_PC;
 						do_dm_read=1'b0;
@@ -338,6 +369,7 @@ module controller(
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
 						do_dm_read=1'b0;
@@ -351,6 +383,7 @@ module controller(
 					`JRAL:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_PC;
 						do_dm_read=1'b0;
@@ -360,6 +393,7 @@ module controller(
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
 						do_dm_read=1'b0;
@@ -371,6 +405,7 @@ module controller(
 			default:begin
 				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_UNKOWN;
+				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
 				do_dm_read=1'b0;

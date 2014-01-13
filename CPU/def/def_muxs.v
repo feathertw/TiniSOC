@@ -18,6 +18,10 @@
 `define IMM_20BIT_HI	3'b100
 `define IMM_UNKOWN	3'bxxx
 
+`define MADDR_ALURESULT	1'b0
+`define MADDR_RADATA	1'b1
+`define MADDR_UNKOWN	1'bx
+
 `define WRADDR_RT	1'b0
 `define WRADDR_LP	1'b1
 `define WRADDR_UNKOWN	1'bx

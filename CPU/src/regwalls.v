@@ -6,8 +6,9 @@ module regwalls(
 	oREG1_instruction,
 
 	iREG2_reg_ra_data,
+	mREG2_reg_ra_data,
+	oREG3_reg_ra_data,
 	iREG2_reg_rt_data,
-	oREG2_reg_ra_data,
 	oREG3_reg_rt_data,
 
 	iREG2_write_reg_addr,
@@ -20,6 +21,8 @@ module regwalls(
 	oREG2_opcode,
 	oREG2_sub_op_base,
 
+	iREG2_select_mem_addr,
+	oREG3_select_mem_addr,
 	iREG2_select_write_reg,
 	mREG2_select_write_reg,
 	oREG3_select_write_reg,
@@ -62,8 +65,10 @@ module regwalls(
 
 	//regfile
 	input  [31:0] iREG2_reg_ra_data;
-	output [31:0] oREG2_reg_ra_data;
-	reg    [31:0] oREG2_reg_ra_data;
+	output [31:0] mREG2_reg_ra_data;
+	output [31:0] oREG3_reg_ra_data;
+	reg    [31:0] mREG2_reg_ra_data;
+	reg    [31:0] oREG3_reg_ra_data;
 
 	input  [31:0] iREG2_reg_rt_data;
 	output [31:0] oREG3_reg_rt_data;
@@ -86,6 +91,10 @@ module regwalls(
 	reg    [ 5:0] oREG2_opcode;
 	reg    [ 4:0] oREG2_sub_op_base;
 
+	input  iREG2_select_mem_addr;
+	output oREG3_select_mem_addr;
+	reg    mREG2_select_mem_addr;
+	reg    oREG3_select_mem_addr;
 	input  [ 1:0] iREG2_select_write_reg;
 	output [ 1:0] mREG2_select_write_reg;
 	output [ 1:0] oREG3_select_write_reg;
@@ -143,7 +152,8 @@ module regwalls(
 		if(reset)begin
 			oREG1_instruction<=32'b0;
 
-			oREG2_reg_ra_data<=32'b0;
+			mREG2_reg_ra_data<=32'b0;
+			oREG3_reg_ra_data<=32'b0;
 			mREG2_reg_rt_data<=32'b0;
 
 			oREG2_opcode     <=6'b0;
@@ -156,6 +166,7 @@ module regwalls(
 			mREG2_do_dm_write     <=1'b0;
 			mREG2_do_reg_write    <=1'b0;
 			mREG2_write_reg_addr  <=5'b0;
+			mREG2_select_mem_addr <=1'b0;
 			mREG2_select_write_reg<=2'b0;
 
 			oREG3_reg_rt_data     <=32'b0;
@@ -166,6 +177,7 @@ module regwalls(
 			oREG3_do_dm_write     <=1'b0;
 			mREG3_do_reg_write    <=1'b0;
 			mREG3_write_reg_addr  <=5'b0;
+			oREG3_select_mem_addr <=1'b0;
 			oREG3_select_write_reg<=2'b0;
 
 			oREG4_do_reg_write  <=1'b0;
@@ -187,7 +199,7 @@ module regwalls(
 			end
 
 			if(do_hazard)begin
-				oREG2_reg_ra_data<=32'b0;
+				mREG2_reg_ra_data<=32'b0;
 				mREG2_reg_rt_data<=32'b0;
 
 				oREG2_opcode     <=6'b0;
@@ -200,12 +212,13 @@ module regwalls(
 				mREG2_do_dm_write     <=1'b0;
 				mREG2_do_reg_write    <=1'b0;
 				mREG2_write_reg_addr  <=5'b0;
+				mREG2_select_mem_addr <=1'b0;
 				mREG2_select_write_reg<=2'b0;
 
 				mREG2_current_pc <= 32'b0;
 			end
 			else begin
-				oREG2_reg_ra_data<=iREG2_reg_ra_data;
+				mREG2_reg_ra_data<=iREG2_reg_ra_data;
 				mREG2_reg_rt_data<=iREG2_reg_rt_data;
 
 				oREG2_opcode     <=iREG2_opcode;
@@ -218,11 +231,13 @@ module regwalls(
 				mREG2_do_dm_write     <=iREG2_do_dm_write;
 				mREG2_do_reg_write    <=iREG2_do_reg_write;
 				mREG2_write_reg_addr  <=iREG2_write_reg_addr;
+				mREG2_select_mem_addr <=iREG2_select_mem_addr;
 				mREG2_select_write_reg<=iREG2_select_write_reg;
 
 				mREG2_current_pc <= iREG2_current_pc;
 			end
 
+			oREG3_reg_ra_data     <=mREG2_reg_ra_data;
 			oREG3_reg_rt_data     <=mREG2_reg_rt_data;
 			oREG3_alu_result      <=iREG3_alu_result;
 			oREG3_imm_extend      <=mREG2_imm_extend;
@@ -231,6 +246,7 @@ module regwalls(
 			oREG3_do_dm_write     <=mREG2_do_dm_write;
 			mREG3_do_reg_write    <=mREG2_do_reg_write;
 			mREG3_write_reg_addr  <=mREG2_write_reg_addr;
+			oREG3_select_mem_addr <=mREG2_select_mem_addr;
 			oREG3_select_write_reg<=mREG2_select_write_reg;
 
 			oREG3_current_pc <= mREG2_current_pc;
