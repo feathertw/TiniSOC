@@ -291,6 +291,28 @@ module controller(
 				do_reg_write=1'b1;
 				do_ra_write=1'b0;
 			end
+			`SLTI:begin
+				select_alu_src2=`ALUSRC2_IMM;
+				select_imm_extend=`IMM_15BIT_SE;
+				select_mem_addr=`MADDR_UNKOWN;
+				select_write_reg_addr=`WRADDR_RT;
+				select_write_reg=`WRREG_ALURESULT;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
+				do_reg_write=1'b1;
+				do_ra_write=1'b0;
+			end
+			`SLTSI:begin
+				select_alu_src2=`ALUSRC2_IMM;
+				select_imm_extend=`IMM_15BIT_SE;
+				select_mem_addr=`MADDR_UNKOWN;
+				select_write_reg_addr=`WRADDR_RT;
+				select_write_reg=`WRREG_ALURESULT;
+				do_dm_read=1'b0;
+				do_dm_write=1'b0;
+				do_reg_write=1'b1;
+				do_ra_write=1'b0;
+			end
 			`MOVI:begin
 				select_alu_src2=`ALUSRC2_UNKNOWN;
 				select_imm_extend=`IMM_20BIT_SE;

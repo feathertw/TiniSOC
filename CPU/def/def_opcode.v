@@ -18,6 +18,8 @@
 `define ANDI	6'b101010
 `define ORI   	6'b101100
 `define XORI  	6'b101011
+`define SLTI	6'b101110
+`define SLTSI	6'b101111
 `define LWI   	6'b000010
 `define SWI   	6'b001010
 `define LWIBI	6'b000110

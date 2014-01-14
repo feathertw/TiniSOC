@@ -132,6 +132,20 @@ module alu(
 		            alu_result=alu_src1^alu_src2;
 		            alu_overflow=1'b0;
 		        end
+		        `SLTI:begin
+			    if(alu_src1<alu_src2) alu_result=32'b1;
+			    else		  alu_result=32'b0;
+		            alu_overflow=1'b0;
+		        end
+		        `SLTSI:begin
+			    if(alu_src1[31]<alu_src2[31])	  alu_result=32'b0;
+			    else if(alu_src1[31]>alu_src2[31])	  alu_result=32'b1;
+			    else begin
+				if(alu_src1[30:0]<alu_src2[30:0]) alu_result=32'b1;
+				else				  alu_result=32'b0;
+			    end
+		            alu_overflow=1'b0;
+		        end
 			`LWI:begin
 		            {a,alu_result[30:0]}=alu_src1[30:0]+alu_src2[30:0];
 		            {b,alu_result[31]}=alu_src1[31]+alu_src2[31]+a;
