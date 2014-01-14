@@ -20,6 +20,8 @@
 `define XORI  	6'b101011
 `define LWI   	6'b000010
 `define SWI   	6'b001010
+`define LWIBI	6'b000110
+`define SWIBI	6'b001110
 
 `define MOVI  	6'b100010
 `define SETHI	6'b100011

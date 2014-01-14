@@ -22,6 +22,7 @@ module controller(
 	do_dm_read,
 	do_dm_write,
 	do_reg_write,
+	do_ra_write,
 
 	reg_rt_data,
 	reg_ra_data,
@@ -50,6 +51,7 @@ module controller(
 	output do_dm_read;
 	output do_dm_write;
 	output do_reg_write;
+	output do_ra_write;
 
 	input [31:0] reg_rt_data;
 	input [31:0] reg_ra_data;
@@ -66,6 +68,7 @@ module controller(
 	reg do_dm_read;
 	reg do_dm_write;
 	reg do_reg_write;
+	reg do_ra_write;
 
 	assign do_im_read  = (reset)?1'b0:1'b1;
 	assign do_im_write = (reset)?1'b0:1'b0;
@@ -96,6 +99,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`SUB:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
@@ -106,6 +110,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`AND:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
@@ -116,6 +121,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`OR :begin
 						select_alu_src2=`ALUSRC2_RBDATA;
@@ -126,6 +132,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`XOR:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
@@ -136,6 +143,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`SLT:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
@@ -146,6 +154,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`SLTS:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
@@ -156,6 +165,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`SRL:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
@@ -166,6 +176,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`SLL:begin
 						select_alu_src2=`ALUSRC2_RBDATA;
@@ -176,6 +187,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					//Immediate
 					`SRLI:begin
@@ -187,6 +199,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`SLLI:begin
 						select_alu_src2=`ALUSRC2_IMM;
@@ -197,6 +210,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`ROTRI:begin
 						select_alu_src2=`ALUSRC2_IMM;
@@ -207,6 +221,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
@@ -217,6 +232,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b0;
+						do_ra_write=1'b0;
 					end
 				endcase	
 			end
@@ -229,6 +245,7 @@ module controller(
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
+				do_ra_write=1'b0;
 			end
 			`SUBRI:begin
 				select_alu_src2=`ALUSRC2_IMM;
@@ -239,6 +256,7 @@ module controller(
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
+				do_ra_write=1'b0;
 			end
 			`ANDI:begin
 				select_alu_src2=`ALUSRC2_IMM;
@@ -249,6 +267,7 @@ module controller(
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
+				do_ra_write=1'b0;
 			end
 			`ORI:begin
 				select_alu_src2=`ALUSRC2_IMM;
@@ -259,6 +278,7 @@ module controller(
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
+				do_ra_write=1'b0;
 			end
 			`XORI:begin
 				select_alu_src2=`ALUSRC2_IMM;
@@ -269,6 +289,7 @@ module controller(
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
+				do_ra_write=1'b0;
 			end
 			`MOVI:begin
 				select_alu_src2=`ALUSRC2_UNKNOWN;
@@ -279,6 +300,7 @@ module controller(
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
+				do_ra_write=1'b0;
 			end
 			`SETHI:begin
 				select_alu_src2=`ALUSRC2_UNKNOWN;
@@ -289,6 +311,7 @@ module controller(
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
+				do_ra_write=1'b0;
 			end
 			`LWI:begin
 				select_alu_src2=`ALUSRC2_LSWI;
@@ -299,6 +322,7 @@ module controller(
 				do_dm_read=1'b1;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
+				do_ra_write=1'b0;
 			end
 			`SWI:begin
 				select_alu_src2=`ALUSRC2_LSWI;
@@ -309,6 +333,29 @@ module controller(
 				do_dm_read=1'b0;
 				do_dm_write=1'b1;
 				do_reg_write=1'b0;
+				do_ra_write=1'b0;
+			end
+			`LWIBI:begin
+				select_alu_src2=`ALUSRC2_LSWI;
+				select_imm_extend=`IMM_UNKOWN;
+				select_mem_addr=`MADDR_RADATA;
+				select_write_reg_addr=`WRADDR_RT;
+				select_write_reg=`WRREG_MEM;
+				do_dm_read=1'b1;
+				do_dm_write=1'b0;
+				do_reg_write=1'b1;
+				do_ra_write=1'b1;
+			end
+			`SWIBI:begin
+				select_alu_src2=`ALUSRC2_LSWI;
+				select_imm_extend=`IMM_UNKOWN;
+				select_mem_addr=`MADDR_RADATA;
+				select_write_reg_addr=`WRADDR_UNKOWN;
+				select_write_reg=`WRREG_UNKOWN;
+				do_dm_read=1'b0;
+				do_dm_write=1'b1;
+				do_reg_write=1'b0;
+				do_ra_write=1'b1;
 			end
 			`TY_LS:begin
 				case(sub_op_ls)
@@ -321,6 +368,7 @@ module controller(
 						do_dm_read=1'b1;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					`SW:begin
 						select_alu_src2=`ALUSRC2_LSW;
@@ -331,6 +379,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b1;
 						do_reg_write=1'b0;
+						do_ra_write=1'b0;
 					end
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
@@ -341,6 +390,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b0;
+						do_ra_write=1'b0;
 					end
 				endcase
 			end
@@ -353,6 +403,7 @@ module controller(
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b0;
+				do_ra_write=1'b0;
 			end
 			`TY_J:begin
 				case(sub_op_j)
@@ -365,6 +416,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
@@ -375,6 +427,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b0;
+						do_ra_write=1'b0;
 					end
 				endcase
 			end
@@ -389,6 +442,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
+						do_ra_write=1'b0;
 					end
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
@@ -399,6 +453,7 @@ module controller(
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b0;
+						do_ra_write=1'b0;
 					end
 				endcase
 			end
@@ -411,6 +466,7 @@ module controller(
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b0;
+				do_ra_write=1'b0;
 			end
 		endcase
 	end

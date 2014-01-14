@@ -142,6 +142,16 @@ module alu(
 		            {b,alu_result[31]}=alu_src1[31]+alu_src2[31]+a;
 		            alu_overflow=a^b;
 			end
+			`LWIBI:begin
+		            {a,alu_result[30:0]}=alu_src1[30:0]+alu_src2[30:0];
+		            {b,alu_result[31]}=alu_src1[31]+alu_src2[31]+a;
+		            alu_overflow=a^b;
+			end
+			`SWIBI:begin
+		            {a,alu_result[30:0]}=alu_src1[30:0]+alu_src2[30:0];
+		            {b,alu_result[31]}=alu_src1[31]+alu_src2[31]+a;
+		            alu_overflow=a^b;
+			end
 			`TY_LS:begin
 				{a,alu_result[30:0]}=alu_src1[30:0]+alu_src2[30:0];
 				{b,alu_result[31]}=alu_src1[31]+alu_src2[31]+a;

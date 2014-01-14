@@ -15,6 +15,10 @@ module regwalls(
 	mREG2_write_reg_addr,
 	mREG3_write_reg_addr,
 	oREG4_write_reg_addr,
+	iREG2_write_ra_addr,
+	mREG2_write_ra_addr,
+	mREG3_write_ra_addr,
+	oREG4_write_ra_addr,
 
 	iREG2_opcode,
 	iREG2_sub_op_base,
@@ -30,12 +34,16 @@ module regwalls(
 	iREG2_do_dm_read,
 	iREG2_do_dm_write,
 	iREG2_do_reg_write,
+	iREG2_do_ra_write,
 	mREG2_do_dm_read,
 	mREG2_do_reg_write,
 	mREG3_do_reg_write,
+	mREG2_do_ra_write,
+	mREG3_do_ra_write,
 	oREG3_do_dm_read,
 	oREG3_do_dm_write,
 	oREG4_do_reg_write,
+	oREG4_do_ra_write,
 
 	iREG2_alu_src2,
 	oREG2_alu_src2,
@@ -48,6 +56,9 @@ module regwalls(
 
 	iREG4_write_reg_data,
 	oREG4_write_reg_data,
+	iREG3_write_ra_data,
+	mREG3_write_ra_data,
+	oREG4_write_ra_data,
 
 	iREG2_current_pc,
 	oREG3_current_pc,
@@ -82,6 +93,13 @@ module regwalls(
 	reg    [ 4:0] mREG2_write_reg_addr;
 	reg    [ 4:0] mREG3_write_reg_addr;
 	reg    [ 4:0] oREG4_write_reg_addr;
+	input  [ 4:0] iREG2_write_ra_addr;
+	output [ 4:0] mREG2_write_ra_addr;
+	output [ 4:0] mREG3_write_ra_addr;
+	output [ 4:0] oREG4_write_ra_addr;
+	reg    [ 4:0] mREG2_write_ra_addr;
+	reg    [ 4:0] mREG3_write_ra_addr;
+	reg    [ 4:0] oREG4_write_ra_addr;
 
 	//controller
 	input  [ 5:0] iREG2_opcode;
@@ -104,19 +122,26 @@ module regwalls(
 	input  iREG2_do_dm_read;
 	input  iREG2_do_dm_write;
 	input  iREG2_do_reg_write;
+	input  iREG2_do_ra_write;
 	output mREG2_do_dm_read;
 	output mREG2_do_reg_write;
 	output mREG3_do_reg_write;
+	output mREG2_do_ra_write;
+	output mREG3_do_ra_write;
 	output oREG3_do_dm_read;
 	output oREG3_do_dm_write;
 	output oREG4_do_reg_write;
+	output oREG4_do_ra_write;
 	reg    mREG2_do_dm_read;
 	reg    mREG2_do_dm_write;
 	reg    mREG2_do_reg_write;
+	reg    mREG2_do_ra_write;
 	reg    oREG3_do_dm_read;
 	reg    oREG3_do_dm_write;
 	reg    mREG3_do_reg_write;
+	reg    mREG3_do_ra_write;
 	reg    oREG4_do_reg_write;
+	reg    oREG4_do_ra_write;
 
 	//muxs
 	input  [31:0] iREG2_alu_src2;
@@ -133,6 +158,11 @@ module regwalls(
 	input  [31:0] iREG3_alu_result;
 	output [31:0] oREG3_alu_result;
 	reg    [31:0] oREG3_alu_result;
+	input  [31:0] iREG3_write_ra_data;
+	output [31:0] mREG3_write_ra_data;
+	output [31:0] oREG4_write_ra_data;
+	reg    [31:0] mREG3_write_ra_data;
+	reg    [31:0] oREG4_write_ra_data;
 
 	//muxs
 	input  [31:0] iREG4_write_reg_data;
@@ -165,7 +195,9 @@ module regwalls(
 			mREG2_do_dm_read      <=1'b0;
 			mREG2_do_dm_write     <=1'b0;
 			mREG2_do_reg_write    <=1'b0;
+			mREG2_do_ra_write     <=1'b0;
 			mREG2_write_reg_addr  <=5'b0;
+			mREG2_write_ra_addr   <=5'b0;
 			mREG2_select_mem_addr <=1'b0;
 			mREG2_select_write_reg<=2'b0;
 
@@ -176,13 +208,19 @@ module regwalls(
 			oREG3_do_dm_read      <=1'b0;
 			oREG3_do_dm_write     <=1'b0;
 			mREG3_do_reg_write    <=1'b0;
+			mREG3_do_ra_write     <=1'b0;
 			mREG3_write_reg_addr  <=5'b0;
+			mREG3_write_ra_addr   <=5'b0;
+			mREG3_write_ra_data   <=32'b0;
 			oREG3_select_mem_addr <=1'b0;
 			oREG3_select_write_reg<=2'b0;
 
 			oREG4_do_reg_write  <=1'b0;
+			oREG4_do_ra_write   <=1'b0;
 			oREG4_write_reg_addr<=5'b0;
+			oREG4_write_ra_addr <=5'b0;
 			oREG4_write_reg_data<=32'b0;
+			oREG4_write_ra_data <=32'b0;
 
 			mREG2_current_pc <= 32'b0;
 			oREG3_current_pc <= 32'b0;
@@ -211,7 +249,9 @@ module regwalls(
 				mREG2_do_dm_read      <=1'b0;
 				mREG2_do_dm_write     <=1'b0;
 				mREG2_do_reg_write    <=1'b0;
+				mREG2_do_ra_write     <=1'b0;
 				mREG2_write_reg_addr  <=5'b0;
+				mREG2_write_ra_addr   <=5'b0;
 				mREG2_select_mem_addr <=1'b0;
 				mREG2_select_write_reg<=2'b0;
 
@@ -230,7 +270,9 @@ module regwalls(
 				mREG2_do_dm_read      <=iREG2_do_dm_read;
 				mREG2_do_dm_write     <=iREG2_do_dm_write;
 				mREG2_do_reg_write    <=iREG2_do_reg_write;
+				mREG2_do_ra_write     <=iREG2_do_ra_write;
 				mREG2_write_reg_addr  <=iREG2_write_reg_addr;
+				mREG2_write_ra_addr   <=iREG2_write_ra_addr;
 				mREG2_select_mem_addr <=iREG2_select_mem_addr;
 				mREG2_select_write_reg<=iREG2_select_write_reg;
 
@@ -245,15 +287,21 @@ module regwalls(
 			oREG3_do_dm_read      <=mREG2_do_dm_read;
 			oREG3_do_dm_write     <=mREG2_do_dm_write;
 			mREG3_do_reg_write    <=mREG2_do_reg_write;
+			mREG3_do_ra_write     <=mREG2_do_ra_write;
 			mREG3_write_reg_addr  <=mREG2_write_reg_addr;
+			mREG3_write_ra_addr   <=mREG2_write_ra_addr;
+			mREG3_write_ra_data   <=iREG3_write_ra_data;
 			oREG3_select_mem_addr <=mREG2_select_mem_addr;
 			oREG3_select_write_reg<=mREG2_select_write_reg;
 
 			oREG3_current_pc <= mREG2_current_pc;
 
 			oREG4_do_reg_write  <=mREG3_do_reg_write;
+			oREG4_do_ra_write   <=mREG3_do_ra_write;
 			oREG4_write_reg_addr<=mREG3_write_reg_addr;
+			oREG4_write_ra_addr <=mREG3_write_ra_addr;
 			oREG4_write_reg_data<=iREG4_write_reg_data;
+			oREG4_write_ra_data <=mREG3_write_ra_data;
 		end
 	end
 endmodule

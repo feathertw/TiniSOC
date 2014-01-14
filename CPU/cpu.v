@@ -72,6 +72,7 @@ module cpu(
 	wire do_dm_read;
 	wire do_dm_write;
 	wire do_reg_write;
+	wire do_ra_write;
 	wire [2:0] select_alu_src2;
 	wire [2:0] select_imm_extend;
 	wire  select_mem_addr;
@@ -88,6 +89,7 @@ module cpu(
 
 	//alu
 	wire [31:0] alu_result;
+	wire [31:0] write_ra_data = alu_result[31:0];
 
 	//muxs
 	wire [31:0] alu_src2;
@@ -126,6 +128,9 @@ module cpu(
 	wire xREG3_do_dm_write;
 	wire xREG3_do_reg_write;
 	wire xREG4_do_reg_write;
+	wire xREG2_do_ra_write;
+	wire xREG3_do_ra_write;
+	wire xREG4_do_ra_write;
 
 	wire [31:0] xREG2_alu_src2;
 	wire [31:0] xREG2_imm_extend;
@@ -136,7 +141,12 @@ module cpu(
 	wire [ 4:0] xREG2_write_reg_addr;
 	wire [ 4:0] xREG3_write_reg_addr;
 	wire [ 4:0] xREG4_write_reg_addr;
+	wire [ 4:0] xREG2_write_ra_addr;
+	wire [ 4:0] xREG3_write_ra_addr;
+	wire [ 4:0] xREG4_write_ra_addr;
 	wire [31:0] xREG4_write_reg_data;
+	wire [31:0] xREG3_write_ra_data;
+	wire [31:0] xREG4_write_ra_data;
 
 	wire [31:0] xREG3_current_pc;
 
@@ -243,7 +253,10 @@ module cpu(
 		.reg_rt_addr(reg_rt_addr),
 		.write_reg_addr(xREG4_write_reg_addr),
 		.write_reg_data(xREG4_write_reg_data),
+		.write_ra_addr(xREG4_write_ra_addr),
+		.write_ra_data(xREG4_write_ra_data),
 		.do_reg_write(xREG4_do_reg_write),
+		.do_ra_write(xREG4_do_ra_write),
 
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
@@ -301,6 +314,7 @@ module cpu(
 		.do_dm_read(do_dm_read),
 		.do_dm_write(do_dm_write),
 		.do_reg_write(do_reg_write),
+		.do_ra_write(do_ra_write),
 
 		.reg_rt_data(f_reg_rt_data),
 		.reg_ra_data(f_reg_ra_data),
@@ -344,6 +358,10 @@ module cpu(
 		.mREG2_write_reg_addr(xREG2_write_reg_addr),
 		.mREG3_write_reg_addr(xREG3_write_reg_addr),
 		.oREG4_write_reg_addr(xREG4_write_reg_addr),
+		.iREG2_write_ra_addr(reg_ra_addr),
+		.mREG2_write_ra_addr(xREG2_write_ra_addr),
+		.mREG3_write_ra_addr(xREG3_write_ra_addr),
+		.oREG4_write_ra_addr(xREG4_write_ra_addr),
 
 		.iREG2_opcode(opcode),
 		.iREG2_sub_op_base(sub_op_base),
@@ -359,12 +377,16 @@ module cpu(
 		.iREG2_do_dm_read(do_dm_read),
 		.iREG2_do_dm_write(do_dm_write),
 		.iREG2_do_reg_write(do_reg_write),
+		.iREG2_do_ra_write(do_ra_write),
 		.mREG2_do_dm_read(xREG2_do_dm_read),
 		.mREG2_do_reg_write(xREG2_do_reg_write),
+		.mREG3_do_reg_write(xREG3_do_reg_write),
+		.mREG2_do_ra_write(xREG2_do_ra_write),
+		.mREG3_do_ra_write(xREG3_do_ra_write),
 		.oREG3_do_dm_read(xREG3_do_dm_read),
 		.oREG3_do_dm_write(xREG3_do_dm_write),
-		.mREG3_do_reg_write(xREG3_do_reg_write),
 		.oREG4_do_reg_write(xREG4_do_reg_write),
+		.oREG4_do_ra_write(xREG4_do_ra_write),
 
 		.iREG2_alu_src2(alu_src2),
 		.oREG2_alu_src2(xREG2_alu_src2),
@@ -377,6 +399,9 @@ module cpu(
 
 		.iREG4_write_reg_data(write_reg_data),
 		.oREG4_write_reg_data(xREG4_write_reg_data),
+		.iREG3_write_ra_data(write_ra_data),
+		.mREG3_write_ra_data(xREG3_write_ra_data),
+		.oREG4_write_ra_data(xREG4_write_ra_data),
 
 		.iREG2_current_pc(current_pc),
 		.oREG3_current_pc(xREG3_current_pc),
@@ -385,29 +410,36 @@ module cpu(
 		.do_hazard(do_hazard)
 	);
 	forward FORWARD(
-		.alu_result(alu_result),
-		.xREG2_imm_extend(xREG2_imm_extend),
-
 		.reg_ra_addr(reg_ra_addr),
 		.reg_rb_addr(reg_rb_addr),
 		.reg_rt_addr(reg_rt_addr),
-
-		.xREG2_do_dm_read(xREG2_do_dm_read),
-		.xREG2_do_reg_write(xREG2_do_reg_write),
-		.xREG2_select_write_reg(xREG2_select_write_reg),
-		.xREG2_write_reg_addr(xREG2_write_reg_addr),
-
-		.xREG3_do_reg_write(xREG3_do_reg_write),
-		.xREG3_write_reg_addr(xREG3_write_reg_addr),
-		.write_reg_data(write_reg_data),
-
-		.xREG4_do_reg_write(xREG4_do_reg_write),
-		.xREG4_write_reg_addr(xREG4_write_reg_addr),
-		.xREG4_write_reg_data(xREG4_write_reg_data),
-
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(reg_rt_data),
+
+		.xREG2_do_dm_read(xREG2_do_dm_read),
+		.xREG2_select_write_reg(xREG2_select_write_reg),
+
+		.xREG2_do_reg_write(xREG2_do_reg_write),
+		.xREG3_do_reg_write(xREG3_do_reg_write),
+		.xREG4_do_reg_write(xREG4_do_reg_write),
+		.xREG2_write_reg_addr(xREG2_write_reg_addr),
+		.xREG3_write_reg_addr(xREG3_write_reg_addr),
+		.xREG4_write_reg_addr(xREG4_write_reg_addr),
+		.xREG2_imm_extend(xREG2_imm_extend),
+		.alu_result(alu_result),
+		.write_reg_data(write_reg_data),
+		.xREG4_write_reg_data(xREG4_write_reg_data),
+
+		.xREG2_do_ra_write(xREG2_do_ra_write),
+		.xREG3_do_ra_write(xREG3_do_ra_write),
+		.xREG4_do_ra_write(xREG4_do_ra_write),
+		.xREG2_write_ra_addr(xREG2_write_ra_addr),
+		.xREG3_write_ra_addr(xREG3_write_ra_addr),
+		.xREG4_write_ra_addr(xREG4_write_ra_addr),
+		.write_ra_data(write_ra_data),
+		.xREG3_write_ra_data(xREG3_write_ra_data),
+		.xREG4_write_ra_data(xREG4_write_ra_data),
 
 		.f_reg_ra_data(f_reg_ra_data),
 		.f_reg_rb_data(f_reg_rb_data),
