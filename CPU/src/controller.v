@@ -10,6 +10,7 @@ module controller(
 	sub_op_ls,
 	sub_op_j,
 	sub_op_jr,
+	sub_op_misc,
 
 	select_alu_src2,
 	select_imm_extend,
@@ -17,6 +18,8 @@ module controller(
 	select_write_reg_addr,
 	select_write_reg,
 
+	do_syscall_it,
+	do_it_return,
 	do_im_read,
 	do_im_write,
 	do_dm_read,
@@ -39,6 +42,7 @@ module controller(
 	input [7:0] sub_op_ls;
 	input sub_op_j;
 	input [4:0] sub_op_jr;
+	input [4:0] sub_op_misc;
 
 	output [2:0] select_alu_src2;
 	output [2:0] select_imm_extend;
@@ -46,6 +50,8 @@ module controller(
 	output select_write_reg_addr;
 	output [1:0] select_write_reg;
 
+	output do_syscall_it;
+	output do_it_return;
 	output do_im_read;
 	output do_im_write;
 	output do_dm_read;
@@ -65,6 +71,8 @@ module controller(
 	reg select_write_reg_addr;
 	reg [1:0] select_write_reg;
 
+	reg do_syscall_it;
+	reg do_it_return;
 	reg do_dm_read;
 	reg do_dm_write;
 	reg do_reg_write;
@@ -87,6 +95,8 @@ module controller(
 					//	select_mem_addr=`MADDR_UNKOWN;
 					//	select_write_reg_addr=`WRADDR_UNKOWN;
 					//	select_write_reg=`WRREG_ALURESULT;
+					//	do_syscall_it=1'b0;
+					//	do_it_return=1'b0;
 					//	do_dm_read=1'b0;
 					//	do_dm_write=1'b0;
 					//end
@@ -96,6 +106,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -107,6 +119,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -118,6 +132,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -129,6 +145,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -140,6 +158,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -151,6 +171,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -162,6 +184,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -173,6 +197,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -184,6 +210,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -196,6 +224,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -207,6 +237,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -218,6 +250,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_ALURESULT;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -229,6 +263,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b0;
@@ -242,6 +278,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -253,6 +291,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -264,6 +304,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -275,6 +317,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -286,6 +330,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -297,6 +343,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -308,6 +356,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_ALURESULT;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -319,6 +369,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_IMMDATA;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -330,6 +382,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_IMMDATA;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -341,6 +395,8 @@ module controller(
 				select_mem_addr=`MADDR_ALURESULT;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_MEM;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b1;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -352,6 +408,8 @@ module controller(
 				select_mem_addr=`MADDR_ALURESULT;
 				select_write_reg_addr=`WRADDR_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b1;
 				do_reg_write=1'b0;
@@ -363,6 +421,8 @@ module controller(
 				select_mem_addr=`MADDR_RADATA;
 				select_write_reg_addr=`WRADDR_RT;
 				select_write_reg=`WRREG_MEM;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b1;
 				do_dm_write=1'b0;
 				do_reg_write=1'b1;
@@ -374,6 +434,8 @@ module controller(
 				select_mem_addr=`MADDR_RADATA;
 				select_write_reg_addr=`WRADDR_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b1;
 				do_reg_write=1'b0;
@@ -387,6 +449,8 @@ module controller(
 						select_mem_addr=`MADDR_ALURESULT;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_MEM;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b1;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -398,6 +462,8 @@ module controller(
 						select_mem_addr=`MADDR_ALURESULT;
 						select_write_reg_addr=`WRADDR_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b1;
 						do_reg_write=1'b0;
@@ -409,6 +475,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b0;
@@ -422,6 +490,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b0;
@@ -435,6 +505,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_LP;
 						select_write_reg=`WRREG_PC;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -446,6 +518,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b0;
@@ -461,6 +535,8 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_RT;
 						select_write_reg=`WRREG_PC;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b1;
@@ -472,6 +548,51 @@ module controller(
 						select_mem_addr=`MADDR_UNKOWN;
 						select_write_reg_addr=`WRADDR_UNKOWN;
 						select_write_reg=`WRREG_UNKOWN;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
+						do_reg_write=1'b0;
+						do_ra_write=1'b0;
+					end
+				endcase
+			end
+			`TY_MISC:begin
+				case(sub_op_misc)
+					`SYSCALL:begin
+						select_alu_src2=`ALUSRC2_UNKNOWN;
+						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
+						select_write_reg_addr=`WRADDR_UNKOWN;
+						select_write_reg=`WRREG_UNKOWN;
+						do_syscall_it=1'b1;
+						do_it_return=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
+						do_reg_write=1'b0;
+						do_ra_write=1'b0;
+					end
+					`IRET:begin
+						select_alu_src2=`ALUSRC2_UNKNOWN;
+						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
+						select_write_reg_addr=`WRADDR_UNKOWN;
+						select_write_reg=`WRREG_UNKOWN;
+						do_syscall_it=1'b0;
+						do_it_return=1'b1;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
+						do_reg_write=1'b0;
+						do_ra_write=1'b0;
+					end
+					default:begin
+						select_alu_src2=`ALUSRC2_UNKNOWN;
+						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
+						select_write_reg_addr=`WRADDR_UNKOWN;
+						select_write_reg=`WRREG_UNKOWN;
+						do_syscall_it=1'b0;
+						do_it_return=1'b0;
 						do_dm_read=1'b0;
 						do_dm_write=1'b0;
 						do_reg_write=1'b0;
@@ -485,6 +606,8 @@ module controller(
 				select_mem_addr=`MADDR_UNKOWN;
 				select_write_reg_addr=`WRADDR_UNKOWN;
 				select_write_reg=`WRREG_UNKOWN;
+				do_syscall_it=1'b0;
+				do_it_return=1'b0;
 				do_dm_read=1'b0;
 				do_dm_write=1'b0;
 				do_reg_write=1'b0;

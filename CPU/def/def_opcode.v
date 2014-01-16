@@ -51,3 +51,7 @@
 `define TY_JR	6'b100101
 `define JR	5'b00000
 `define JRAL	5'b00001
+
+`define TY_MISC	6'b110010
+`define SYSCALL	5'b01011
+`define	IRET	5'b00100

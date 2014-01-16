@@ -7,6 +7,7 @@
 `include "src/forward.v"
 `include "src/memctr.v"
 `include "src/cache.v"
+`include "src/interrupt.v"
 module cpu(
 	clock,
 	reset,
@@ -67,6 +68,8 @@ module cpu(
 	input do_system;
 
 	//controller
+	wire do_syscall_it;
+	wire do_it_return;
 	wire do_im_read;
 	wire do_im_write;
 	wire do_dm_read;
@@ -150,10 +153,34 @@ module cpu(
 
 	wire [31:0] xREG3_current_pc;
 
-	wire do_flush_REG1;
+	wire do_flush_REG1_pc;
+	wire do_flush_REG1_interrupt;
+	wire do_flush_REG1=do_flush_REG1_pc||do_flush_REG1_interrupt;
 	wire do_flush_REG2;
 	wire do_flush_REG3;
 	wire do_flush_REG4;
+
+	//interrupt
+	wire do_halt_pc;
+	wire do_interrupt;
+	wire [31:0] interrupt_pc;
+	wire [ 5:0] it_opcode;
+	wire [ 4:0] it_reg_rt_addr;
+	wire [ 4:0] it_reg_ra_addr;
+	wire [ 4:0] it_reg_rb_addr;
+	wire [14:0] it_imm_15bit;
+	wire do_it_store_pc;
+	wire do_it_load_pc;
+	wire do_it_state;
+
+	wire [31:0] it_return_pc=xREG4_write_reg_data;
+
+	wire [ 5:0] final_opcode	=(do_it_state)? it_opcode:opcode;
+	wire [ 4:0] final_reg_rt_addr	=(do_it_state)? it_reg_rt_addr:reg_rt_addr;
+	wire [ 4:0] final_reg_ra_addr	=(do_it_state)? it_reg_ra_addr:reg_ra_addr;
+	wire [ 4:0] final_reg_rb_addr	=(do_it_state)? it_reg_rb_addr:reg_rb_addr;
+	wire [14:0] final_imm_15bit	=(do_it_state)? it_imm_15bit:imm_15bit;
+	wire [31:0] final_reg_rt_data	=(do_it_state&&do_it_store_pc)? current_pc:f_reg_rt_data;
 
 	//top
 	wire [5:0] opcode	=xREG1_instruction[30:25];
@@ -164,6 +191,7 @@ module cpu(
 	wire [3:0] sub_op_bz	=xREG1_instruction[19:16];
 	wire sub_op_j		=xREG1_instruction[24];
 	wire [4:0] sub_op_jr	=xREG1_instruction[4:0];
+	wire [4:0] sub_op_misc	=xREG1_instruction[4:0];
 
 	wire [4:0] reg_ra_addr  =xREG1_instruction[19:15];
 	wire [4:0] reg_rb_addr  =xREG1_instruction[14:10];
@@ -248,9 +276,9 @@ module cpu(
 		.reset(reset),
 		.enable_reg_fetch(enable_system),
 		.enable_reg_write(enable_system),
-		.reg_ra_addr(reg_ra_addr),
-		.reg_rb_addr(reg_rb_addr),
-		.reg_rt_addr(reg_rt_addr),
+		.reg_ra_addr(final_reg_ra_addr),
+		.reg_rb_addr(final_reg_rb_addr),
+		.reg_rt_addr(final_reg_rt_addr),
 		.write_reg_addr(xREG4_write_reg_addr),
 		.write_reg_data(xREG4_write_reg_data),
 		.write_ra_addr(xREG4_write_ra_addr),
@@ -266,9 +294,9 @@ module cpu(
 	muxs MUXS(
 		.sub_op_sv(sub_op_sv),
 		.reg_rb_data(f_reg_rb_data),
-		.reg_rt_data(f_reg_rt_data),
+		.reg_rt_data(final_reg_rt_data),
 
-		.reg_rt_addr(reg_rt_addr),
+		.reg_rt_addr(final_reg_rt_addr),
 
 		.xREG3_alu_result(xREG3_alu_result),//*
 		.xREG3_imm_extend(xREG3_imm_extend),
@@ -277,7 +305,7 @@ module cpu(
 		.xREG3_reg_ra_data(xREG3_reg_ra_data),
 
 		.imm_5bit(imm_5bit),
-		.imm_15bit(imm_15bit),
+		.imm_15bit(final_imm_15bit),
 		.imm_20bit(imm_20bit),
 
 		.select_alu_src2(select_alu_src2),
@@ -297,11 +325,12 @@ module cpu(
 		.clock(clock),
 		.reset(reset),
 
-		.opcode(opcode),
+		.opcode(final_opcode),
 		.sub_op_base(sub_op_base),
 		.sub_op_ls(sub_op_ls),
 		.sub_op_j(sub_op_j),
 		.sub_op_jr(sub_op_jr),
+		.sub_op_misc(sub_op_misc),
 
 		.select_alu_src2(select_alu_src2),
 		.select_imm_extend(select_imm_extend),
@@ -309,6 +338,8 @@ module cpu(
 		.select_write_reg_addr(select_write_reg_addr),
 		.select_write_reg(select_write_reg),
 
+		.do_syscall_it(do_syscall_it),
+		.do_it_return(do_it_return),
 		.do_im_read(do_im_read),
 		.do_im_write(do_im_write),
 		.do_dm_read(do_dm_read),
@@ -316,7 +347,7 @@ module cpu(
 		.do_reg_write(do_reg_write),
 		.do_ra_write(do_ra_write),
 
-		.reg_rt_data(f_reg_rt_data),
+		.reg_rt_data(final_reg_rt_data),
 		.reg_ra_data(f_reg_ra_data),
 		.reg_rt_ra_equal(reg_rt_ra_equal),
 		.reg_rt_zero(reg_rt_zero),
@@ -328,7 +359,7 @@ module cpu(
 		.enable_pc(enable_system),
 		.current_pc(current_pc),
 
-		.opcode(opcode),
+		.opcode(final_opcode),
 		.sub_op_b(sub_op_b),
 		.sub_op_bz(sub_op_bz),
 		.reg_rt_ra_equal(reg_rt_ra_equal),
@@ -340,8 +371,13 @@ module cpu(
 		.imm_24bit(imm_24bit),
 		.reg_rb_data(f_reg_rb_data),
 
-		.do_flush_REG1(do_flush_REG1),
-		.do_hazard(do_hazard)
+		.do_flush_REG1(do_flush_REG1_pc),
+		.do_hazard(do_hazard),
+		.do_halt_pc(do_halt_pc),
+		.do_interrupt(do_interrupt),
+		.interrupt_pc(interrupt_pc),
+		.do_it_load_pc(do_it_load_pc),
+		.it_return_pc(it_return_pc)
 	);
 	regwalls REGWALLS(
 		.clock(clock),
@@ -352,18 +388,18 @@ module cpu(
 		.iREG2_reg_ra_data(f_reg_ra_data),
 		.mREG2_reg_ra_data(xREG2_reg_ra_data),
 		.oREG3_reg_ra_data(xREG3_reg_ra_data),
-		.iREG2_reg_rt_data(f_reg_rt_data),
+		.iREG2_reg_rt_data(final_reg_rt_data),
 		.oREG3_reg_rt_data(xREG3_reg_rt_data),
 		.iREG2_write_reg_addr(write_reg_addr),
 		.mREG2_write_reg_addr(xREG2_write_reg_addr),
 		.mREG3_write_reg_addr(xREG3_write_reg_addr),
 		.oREG4_write_reg_addr(xREG4_write_reg_addr),
-		.iREG2_write_ra_addr(reg_ra_addr),
+		.iREG2_write_ra_addr(final_reg_ra_addr),
 		.mREG2_write_ra_addr(xREG2_write_ra_addr),
 		.mREG3_write_ra_addr(xREG3_write_ra_addr),
 		.oREG4_write_ra_addr(xREG4_write_ra_addr),
 
-		.iREG2_opcode(opcode),
+		.iREG2_opcode(final_opcode),
 		.iREG2_sub_op_base(sub_op_base),
 		.oREG2_opcode(xREG2_opcode),
 		.oREG2_sub_op_base(xREG2_sub_op_base),
@@ -410,9 +446,9 @@ module cpu(
 		.do_hazard(do_hazard)
 	);
 	forward FORWARD(
-		.reg_ra_addr(reg_ra_addr),
-		.reg_rb_addr(reg_rb_addr),
-		.reg_rt_addr(reg_rt_addr),
+		.reg_ra_addr(final_reg_ra_addr),
+		.reg_rb_addr(final_reg_rb_addr),
+		.reg_rt_addr(final_reg_rt_addr),
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
 		.reg_rt_data(reg_rt_data),
@@ -487,5 +523,24 @@ module cpu(
 		.SysData_in(dSysData_in),
 		.SysData_out(dSysData_out),
 		.SysReady(dSysReady)
+	);
+	interrupt INTERRUPT(
+		.clock(clock),
+		.reset(reset),
+		.enable_system(enable_system),
+		.do_syscall_it(do_syscall_it),
+		.do_it_return(do_it_return),
+		.do_halt_pc(do_halt_pc),
+		.do_flush_REG1(do_flush_REG1_interrupt),
+		.do_interrupt(do_interrupt),
+		.interrupt_pc(interrupt_pc),
+		.it_opcode(it_opcode),
+		.it_reg_rt_addr(it_reg_rt_addr),
+		.it_reg_ra_addr(it_reg_ra_addr),
+		.it_reg_rb_addr(it_reg_rb_addr),
+		.it_imm_15bit(it_imm_15bit),
+		.do_it_store_pc(do_it_store_pc),
+		.do_it_load_pc(do_it_load_pc),
+		.do_it_state(do_it_state)
 	);
 endmodule

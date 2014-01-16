@@ -19,7 +19,13 @@ module pc(
 	reg_rb_data,
 
 	do_flush_REG1,
-	do_hazard
+	do_hazard,
+
+	do_halt_pc,
+	do_interrupt,
+	interrupt_pc,
+	do_it_load_pc,
+	it_return_pc
 );
 	input clock;
 	input reset;
@@ -41,6 +47,12 @@ module pc(
 	output do_flush_REG1;
 	input  do_hazard;
 
+	input  do_halt_pc;
+	input  do_interrupt;
+	input  [31:0] interrupt_pc;
+	input  do_it_load_pc;
+	input  [31:0] it_return_pc;
+
 	reg [31:0] current_pc;
 	reg [31:0] next_pc;
 	reg [2:0] select_pc;
@@ -50,8 +62,11 @@ module pc(
 	always@(negedge clock) begin
 		if(reset) 	      current_pc<=32'b0;
 		else if(enable_pc)begin
-			if(do_hazard) current_pc<=current_pc;
-			else	      current_pc<=next_pc;
+			if(do_it_load_pc)     current_pc<=it_return_pc;
+			else if(do_interrupt) current_pc<=interrupt_pc;
+			else if(do_hazard)    current_pc<=current_pc;
+			else if(do_halt_pc)   current_pc<=current_pc;
+			else		      current_pc<=next_pc;
 		end
 	end
 

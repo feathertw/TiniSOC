@@ -13,9 +13,7 @@
 		or xREG2_write_reg_addr or xREG2_write_ra_addr
 `define HAZARD_ADDR_CONDITION \
 		   ( (reg_rt_addr==xREG2_write_reg_addr)&&(!do_reg_write) ) \
-		|| ( (reg_rt_addr==xREG2_write_ra_addr )&&(!do_reg_write) ) \
-		|| reg_ra_addr==xREG2_write_reg_addr || reg_rb_addr==xREG2_write_reg_addr \
-		|| reg_ra_addr==xREG2_write_ra_addr  || reg_rb_addr==xREG2_write_ra_addr
+		|| reg_ra_addr==xREG2_write_reg_addr || reg_rb_addr==xREG2_write_reg_addr
 
 module forw(
 	reg_rx_addr,
@@ -251,7 +249,7 @@ module forward(
 		.reg_rx_addr(reg_rt_addr),
 		.reg_rx_data(reg_rt_data),
 	
-		.xREG2_do_dm_read(xREG2_do_dm_read),
+		.xREG2_do_dm_read(1'b0),
 		.xREG2_do_rx_write(xREG2_do_ra_write),
 		.xREG2_select_write_rx(`WRREG_ALURESULT),
 		.xREG2_write_rx_addr(xREG2_write_ra_addr),
@@ -274,7 +272,7 @@ module forward(
 		.reg_rx_addr(reg_ra_addr),
 		.reg_rx_data(reg_ra_data),
 	
-		.xREG2_do_dm_read(xREG2_do_dm_read),
+		.xREG2_do_dm_read(1'b0),
 		.xREG2_do_rx_write(xREG2_do_ra_write),
 		.xREG2_select_write_rx(`WRREG_ALURESULT),
 		.xREG2_write_rx_addr(xREG2_write_ra_addr),
@@ -297,7 +295,7 @@ module forward(
 		.reg_rx_addr(reg_rb_addr),
 		.reg_rx_data(reg_rb_data),
 	
-		.xREG2_do_dm_read(xREG2_do_dm_read),
+		.xREG2_do_dm_read(1'b0),
 		.xREG2_do_rx_write(xREG2_do_ra_write),
 		.xREG2_select_write_rx(`WRREG_ALURESULT),
 		.xREG2_write_rx_addr(xREG2_write_ra_addr),
