@@ -7,6 +7,7 @@
 `include "src/forward.v"
 `include "src/memctr.v"
 `include "src/cache.v"
+`include "src/jcache.v"
 `include "src/interrupt.v"
 module cpu(
 	clock,
@@ -102,6 +103,8 @@ module cpu(
 
 	//pc
 	wire [31:0] current_pc;
+	wire [31:0] next_pc;
+	wire [31:0] write_reg_pc=(xREG1_do_jcache_link)? xREG1_current_pc+4:current_pc;
 
 	//mem
 	wire [31:0] mem_address;
@@ -115,6 +118,9 @@ module cpu(
 
 	//REGWALL
 	wire [31:0] xREG1_instruction;
+	wire [31:0] xREG1_current_pc;
+	wire xREG1_do_jcache_link;
+	wire xREG1_do_jcache;
 
 	wire [31:0] xREG3_reg_rt_data;
 	wire [31:0] xREG2_reg_ra_data;
@@ -151,7 +157,7 @@ module cpu(
 	wire [31:0] xREG3_write_ra_data;
 	wire [31:0] xREG4_write_ra_data;
 
-	wire [31:0] xREG3_current_pc;
+	wire [31:0] xREG3_write_reg_pc;
 
 	wire do_flush_REG1_pc;
 	wire do_flush_REG1_interrupt;
@@ -159,6 +165,11 @@ module cpu(
 	wire do_flush_REG2;
 	wire do_flush_REG3;
 	wire do_flush_REG4;
+
+	//jcache
+	wire [31:0] jcache_pc;
+	wire do_jcache_link;
+	wire do_jcache;
 
 	//interrupt
 	wire do_halt_pc;
@@ -301,7 +312,7 @@ module cpu(
 		.xREG3_alu_result(xREG3_alu_result),//*
 		.xREG3_imm_extend(xREG3_imm_extend),
 		.mem_read_data(mem_read_data),
-		.xREG3_current_pc(xREG3_current_pc),
+		.xREG3_write_reg_pc(xREG3_write_reg_pc),
 		.xREG3_reg_ra_data(xREG3_reg_ra_data),
 
 		.imm_5bit(imm_5bit),
@@ -358,6 +369,7 @@ module cpu(
 		.reset(reset),
 		.enable_pc(enable_system),
 		.current_pc(current_pc),
+		.next_pc(next_pc),
 
 		.opcode(final_opcode),
 		.sub_op_b(sub_op_b),
@@ -373,6 +385,11 @@ module cpu(
 
 		.do_flush_REG1(do_flush_REG1_pc),
 		.do_hazard(do_hazard),
+
+		.xREG1_do_jcache(xREG1_do_jcache),
+		.jcache_pc(jcache_pc),
+		.do_jcache(do_jcache),
+
 		.do_halt_pc(do_halt_pc),
 		.do_interrupt(do_interrupt),
 		.interrupt_pc(interrupt_pc),
@@ -385,6 +402,12 @@ module cpu(
 		.enable_regwalls(enable_system),
 		.iREG1_instruction(iPData_in),
 		.oREG1_instruction(xREG1_instruction),
+		.iREG1_current_pc(current_pc),
+		.oREG1_current_pc(xREG1_current_pc),
+		.iREG1_do_jcache_link(do_jcache_link),
+		.oREG1_do_jcache_link(xREG1_do_jcache_link),
+		.iREG1_do_jcache(do_jcache),
+		.oREG1_do_jcache(xREG1_do_jcache),
 		.iREG2_reg_ra_data(f_reg_ra_data),
 		.mREG2_reg_ra_data(xREG2_reg_ra_data),
 		.oREG3_reg_ra_data(xREG3_reg_ra_data),
@@ -439,8 +462,8 @@ module cpu(
 		.mREG3_write_ra_data(xREG3_write_ra_data),
 		.oREG4_write_ra_data(xREG4_write_ra_data),
 
-		.iREG2_current_pc(current_pc),
-		.oREG3_current_pc(xREG3_current_pc),
+		.iREG2_write_reg_pc(write_reg_pc),
+		.oREG3_write_reg_pc(xREG3_write_reg_pc),
 
 		.do_flush_REG1(do_flush_REG1),
 		.do_hazard(do_hazard)
@@ -523,6 +546,19 @@ module cpu(
 		.SysData_in(dSysData_in),
 		.SysData_out(dSysData_out),
 		.SysReady(dSysReady)
+	);
+	jcache JCACHE(
+		.clock(clock),
+		.reset(reset),
+		.enable_jcache(enable_system),
+		.current_pc(current_pc),
+		.next_pc(next_pc),
+		.opcode(final_opcode),
+		.sub_op_j(sub_op_j),
+		.xREG1_do_jcache(xREG1_do_jcache),
+		.jcache_pc(jcache_pc),
+		.do_jcache_link(do_jcache_link),
+		.do_jcache(do_jcache)
 	);
 	interrupt INTERRUPT(
 		.clock(clock),

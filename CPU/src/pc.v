@@ -5,6 +5,7 @@ module pc(
 	reset,
 	enable_pc,
 	current_pc,
+	next_pc,
 
 	opcode,
 	sub_op_b,
@@ -21,6 +22,10 @@ module pc(
 	do_flush_REG1,
 	do_hazard,
 
+	xREG1_do_jcache,
+	jcache_pc,
+	do_jcache,
+
 	do_halt_pc,
 	do_interrupt,
 	interrupt_pc,
@@ -31,6 +36,7 @@ module pc(
 	input reset;
 	input enable_pc;
 	output [31:0] current_pc;
+	output [31:0] next_pc;
 
 	input [5:0] opcode;
 	input sub_op_b;
@@ -47,15 +53,21 @@ module pc(
 	output do_flush_REG1;
 	input  do_hazard;
 
+	input xREG1_do_jcache;
+	input [31:0] jcache_pc;
+	input do_jcache;
+
 	input  do_halt_pc;
 	input  do_interrupt;
 	input  [31:0] interrupt_pc;
 	input  do_it_load_pc;
 	input  [31:0] it_return_pc;
 
+	wire [ 2:0] final_select_pc=(xREG1_do_jcache)? `PC_4:select_pc;
+
 	reg [31:0] current_pc;
 	reg [31:0] next_pc;
-	reg [2:0] select_pc;
+	reg [ 2:0] select_pc;
 
 	reg do_flush_REG1;
 
@@ -66,6 +78,7 @@ module pc(
 			else if(do_interrupt) current_pc<=interrupt_pc;
 			else if(do_hazard)    current_pc<=current_pc;
 			else if(do_halt_pc)   current_pc<=current_pc;
+			else if(final_select_pc==`PC_4&&do_jcache) current_pc<=jcache_pc;
 			else		      current_pc<=next_pc;
 		end
 	end
@@ -98,8 +111,8 @@ module pc(
 		endcase
 	end
 
-	always @(select_pc or current_pc or imm_14bit or imm_16bit or imm_24bit or reg_rb_data) begin
-		case(select_pc)
+	always @(final_select_pc or current_pc or imm_14bit or imm_16bit or imm_24bit or reg_rb_data) begin
+		case(final_select_pc)
 			`PC_4:begin
 				next_pc=current_pc+4;
 				do_flush_REG1=1'b0;

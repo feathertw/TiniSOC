@@ -4,6 +4,12 @@ module regwalls(
 	enable_regwalls,
 	iREG1_instruction,
 	oREG1_instruction,
+	iREG1_current_pc,
+	oREG1_current_pc,
+	iREG1_do_jcache_link,
+	oREG1_do_jcache_link,
+	iREG1_do_jcache,
+	oREG1_do_jcache,
 
 	iREG2_reg_ra_data,
 	mREG2_reg_ra_data,
@@ -60,8 +66,8 @@ module regwalls(
 	mREG3_write_ra_data,
 	oREG4_write_ra_data,
 
-	iREG2_current_pc,
-	oREG3_current_pc,
+	iREG2_write_reg_pc,
+	oREG3_write_reg_pc,
 
 	do_flush_REG1,
 	do_hazard
@@ -73,6 +79,15 @@ module regwalls(
 	input  [31:0] iREG1_instruction;
 	output [31:0] oREG1_instruction;
 	reg    [31:0] oREG1_instruction;
+	input  [31:0] iREG1_current_pc;
+	output [31:0] oREG1_current_pc;
+	reg    [31:0] oREG1_current_pc;
+	input  iREG1_do_jcache_link;
+	output oREG1_do_jcache_link;
+	reg    oREG1_do_jcache_link;
+	input  iREG1_do_jcache;
+	output oREG1_do_jcache;
+	reg    oREG1_do_jcache;
 
 	//regfile
 	input  [31:0] iREG2_reg_ra_data;
@@ -170,17 +185,20 @@ module regwalls(
 	reg    [31:0] oREG4_write_reg_data;
 
 	//pc
-	input  [31:0] iREG2_current_pc;
-	output [31:0] oREG3_current_pc;
-	reg    [31:0] mREG2_current_pc;
-	reg    [31:0] oREG3_current_pc;
+	input  [31:0] iREG2_write_reg_pc;
+	output [31:0] oREG3_write_reg_pc;
+	reg    [31:0] mREG2_write_reg_pc;
+	reg    [31:0] oREG3_write_reg_pc;
 
 	input do_flush_REG1;
 	input do_hazard;
 
 	always@(negedge clock)begin
 		if(reset)begin
-			oREG1_instruction<=32'b0;
+			oREG1_instruction   <=32'b0;
+			oREG1_current_pc    <=32'b0;
+			oREG1_do_jcache_link<= 1'b0;
+			oREG1_do_jcache     <= 1'b0;
 
 			mREG2_reg_ra_data<=32'b0;
 			oREG3_reg_ra_data<=32'b0;
@@ -222,18 +240,27 @@ module regwalls(
 			oREG4_write_reg_data<=32'b0;
 			oREG4_write_ra_data <=32'b0;
 
-			mREG2_current_pc <= 32'b0;
-			oREG3_current_pc <= 32'b0;
+			mREG2_write_reg_pc <= 32'b0;
+			oREG3_write_reg_pc <= 32'b0;
 		end
 		else if(enable_regwalls)begin
 			if(do_hazard)begin
-				oREG1_instruction<=oREG1_instruction;
+				oREG1_instruction   <=oREG1_instruction;
+				oREG1_current_pc    <=oREG1_current_pc;
+				oREG1_do_jcache_link<=oREG1_do_jcache_link;
+				oREG1_do_jcache     <=oREG1_do_jcache;
 			end
 			else if(do_flush_REG1)begin
-				oREG1_instruction<=32'b0;
+				oREG1_instruction   <=32'b0;
+				oREG1_current_pc    <=32'b0;
+				oREG1_do_jcache_link<= 1'b0;
+				oREG1_do_jcache     <= 1'b0;
 			end
 			else begin
-				oREG1_instruction<=iREG1_instruction;
+				oREG1_instruction   <=iREG1_instruction;
+				oREG1_current_pc    <=iREG1_current_pc;
+				oREG1_do_jcache_link<=iREG1_do_jcache_link;
+				oREG1_do_jcache     <=iREG1_do_jcache;
 			end
 
 			if(do_hazard)begin
@@ -255,7 +282,7 @@ module regwalls(
 				mREG2_select_mem_addr <=1'b0;
 				mREG2_select_write_reg<=2'b0;
 
-				mREG2_current_pc <= 32'b0;
+				mREG2_write_reg_pc <= 32'b0;
 			end
 			else begin
 				mREG2_reg_ra_data<=iREG2_reg_ra_data;
@@ -276,7 +303,7 @@ module regwalls(
 				mREG2_select_mem_addr <=iREG2_select_mem_addr;
 				mREG2_select_write_reg<=iREG2_select_write_reg;
 
-				mREG2_current_pc <= iREG2_current_pc;
+				mREG2_write_reg_pc <= iREG2_write_reg_pc;
 			end
 
 			oREG3_reg_ra_data     <=mREG2_reg_ra_data;
@@ -294,7 +321,7 @@ module regwalls(
 			oREG3_select_mem_addr <=mREG2_select_mem_addr;
 			oREG3_select_write_reg<=mREG2_select_write_reg;
 
-			oREG3_current_pc <= mREG2_current_pc;
+			oREG3_write_reg_pc <= mREG2_write_reg_pc;
 
 			oREG4_do_reg_write  <=mREG3_do_reg_write;
 			oREG4_do_ra_write   <=mREG3_do_ra_write;
