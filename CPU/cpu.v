@@ -101,11 +101,6 @@ module cpu(
 	wire [ 4:0] write_reg_addr;
 	wire [31:0] write_reg_data;
 
-	//pc
-	wire [31:0] current_pc;
-	wire [31:0] next_pc;
-	wire [31:0] write_reg_pc=(xREG1_do_jcache_link)? xREG1_current_pc+4:current_pc;
-
 	//mem
 	wire [31:0] mem_address;
 	wire [31:0] mem_read_data;
@@ -166,32 +161,15 @@ module cpu(
 	wire do_flush_REG3;
 	wire do_flush_REG4;
 
+	//pc
+	wire [31:0] current_pc;
+	wire [31:0] next_pc;
+	wire [31:0] write_reg_pc=(xREG1_do_jcache_link)? xREG1_current_pc+4:current_pc;
+
 	//jcache
 	wire [31:0] jcache_pc;
 	wire do_jcache_link;
 	wire do_jcache;
-
-	//interrupt
-	wire do_halt_pc;
-	wire do_interrupt;
-	wire [31:0] interrupt_pc;
-	wire [ 5:0] it_opcode;
-	wire [ 4:0] it_reg_rt_addr;
-	wire [ 4:0] it_reg_ra_addr;
-	wire [ 4:0] it_reg_rb_addr;
-	wire [14:0] it_imm_15bit;
-	wire do_it_store_pc;
-	wire do_it_load_pc;
-	wire do_it_state;
-
-	wire [31:0] it_return_pc=xREG4_write_reg_data;
-
-	wire [ 5:0] final_opcode	=(do_it_state)? it_opcode:opcode;
-	wire [ 4:0] final_reg_rt_addr	=(do_it_state)? it_reg_rt_addr:reg_rt_addr;
-	wire [ 4:0] final_reg_ra_addr	=(do_it_state)? it_reg_ra_addr:reg_ra_addr;
-	wire [ 4:0] final_reg_rb_addr	=(do_it_state)? it_reg_rb_addr:reg_rb_addr;
-	wire [14:0] final_imm_15bit	=(do_it_state)? it_imm_15bit:imm_15bit;
-	wire [31:0] final_reg_rt_data	=(do_it_state&&do_it_store_pc)? current_pc:f_reg_rt_data;
 
 	//top
 	wire [5:0] opcode	=xREG1_instruction[30:25];
@@ -214,6 +192,27 @@ module cpu(
 	wire [15:0] imm_16bit   =xREG1_instruction[15:0];
 	wire [19:0] imm_20bit   =xREG1_instruction[19:0];
 	wire [23:0] imm_24bit   =xREG1_instruction[23:0];
+
+	//interrupt
+	wire do_halt_pc;
+	wire do_interrupt;
+	wire [31:0] interrupt_pc;
+	wire [ 5:0] it_opcode;
+	wire [ 4:0] it_reg_rt_addr;
+	wire [ 4:0] it_reg_ra_addr;
+	wire [ 4:0] it_reg_rb_addr;
+	wire [14:0] it_imm_15bit;
+	wire do_it_store_pc;
+	wire do_it_load_pc;
+	wire do_it_state;
+	wire [31:0] it_return_pc=xREG4_write_reg_data;
+
+	wire [ 5:0] final_opcode	=(do_it_state)? it_opcode:opcode;
+	wire [ 4:0] final_reg_rt_addr	=(do_it_state)? it_reg_rt_addr:reg_rt_addr;
+	wire [ 4:0] final_reg_ra_addr	=(do_it_state)? it_reg_ra_addr:reg_ra_addr;
+	wire [ 4:0] final_reg_rb_addr	=(do_it_state)? it_reg_rb_addr:reg_rb_addr;
+	wire [14:0] final_imm_15bit	=(do_it_state)? it_imm_15bit:imm_15bit;
+	wire [31:0] final_reg_rt_data	=(do_it_state&&do_it_store_pc)? current_pc:f_reg_rt_data;
 
 	wire do_dmem_enable;
 	wire do_iomem_enable;

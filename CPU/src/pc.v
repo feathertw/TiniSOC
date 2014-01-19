@@ -63,13 +63,13 @@ module pc(
 	input  do_it_load_pc;
 	input  [31:0] it_return_pc;
 
-	wire [ 2:0] final_select_pc=(xREG1_do_jcache)? `PC_4:select_pc;
-
 	reg [31:0] current_pc;
 	reg [31:0] next_pc;
 	reg [ 2:0] select_pc;
 
 	reg do_flush_REG1;
+
+	wire [ 2:0] final_select_pc=(xREG1_do_jcache)? `PC_4:select_pc;
 
 	always@(negedge clock) begin
 		if(reset) 	      current_pc<=32'b0;
