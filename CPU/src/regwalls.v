@@ -10,6 +10,12 @@ module regwalls(
 	oREG1_do_jcache_link,
 	iREG1_do_jcache,
 	oREG1_do_jcache,
+	iREG1_bcache_opc,
+	oREG1_bcache_opc,
+	iREG1_do_hit_bcache,
+	oREG1_do_hit_bcache,
+	iREG1_do_bcache,
+	oREG1_do_bcache,
 
 	iREG2_reg_ra_data,
 	mREG2_reg_ra_data,
@@ -88,6 +94,15 @@ module regwalls(
 	input  iREG1_do_jcache;
 	output oREG1_do_jcache;
 	reg    oREG1_do_jcache;
+	input  [31:0] iREG1_bcache_opc;
+	output [31:0] oREG1_bcache_opc;
+	reg    [31:0] oREG1_bcache_opc;
+	input  iREG1_do_hit_bcache;
+	output oREG1_do_hit_bcache;
+	reg    oREG1_do_hit_bcache;
+	input  iREG1_do_bcache;
+	output oREG1_do_bcache;
+	reg    oREG1_do_bcache;
 
 	//regfile
 	input  [31:0] iREG2_reg_ra_data;
@@ -199,6 +214,9 @@ module regwalls(
 			oREG1_current_pc    <=32'b0;
 			oREG1_do_jcache_link<= 1'b0;
 			oREG1_do_jcache     <= 1'b0;
+			oREG1_bcache_opc    <=32'b0;
+			oREG1_do_hit_bcache <= 1'b0;
+			oREG1_do_bcache     <= 1'b0;
 
 			mREG2_reg_ra_data<=32'b0;
 			oREG3_reg_ra_data<=32'b0;
@@ -249,18 +267,27 @@ module regwalls(
 				oREG1_current_pc    <=oREG1_current_pc;
 				oREG1_do_jcache_link<=oREG1_do_jcache_link;
 				oREG1_do_jcache     <=oREG1_do_jcache;
+				oREG1_bcache_opc    <=oREG1_bcache_opc;
+				oREG1_do_hit_bcache <=oREG1_do_hit_bcache;
+				oREG1_do_bcache     <=oREG1_do_bcache;
 			end
 			else if(do_flush_REG1)begin
 				oREG1_instruction   <=32'b0;
 				oREG1_current_pc    <=32'b0;
 				oREG1_do_jcache_link<= 1'b0;
 				oREG1_do_jcache     <= 1'b0;
+				oREG1_bcache_opc    <=32'b0;
+				oREG1_do_hit_bcache <= 1'b0;
+				oREG1_do_bcache     <= 1'b0;
 			end
 			else begin
 				oREG1_instruction   <=iREG1_instruction;
 				oREG1_current_pc    <=iREG1_current_pc;
 				oREG1_do_jcache_link<=iREG1_do_jcache_link;
 				oREG1_do_jcache     <=iREG1_do_jcache;
+				oREG1_bcache_opc    <=iREG1_bcache_opc;
+				oREG1_do_hit_bcache <=iREG1_do_hit_bcache;
+				oREG1_do_bcache     <=iREG1_do_bcache;
 			end
 
 			if(do_hazard)begin

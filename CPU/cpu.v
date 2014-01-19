@@ -8,6 +8,7 @@
 `include "src/memctr.v"
 `include "src/cache.v"
 `include "src/jcache.v"
+`include "src/bcache.v"
 `include "src/interrupt.v"
 module cpu(
 	clock,
@@ -116,6 +117,9 @@ module cpu(
 	wire [31:0] xREG1_current_pc;
 	wire xREG1_do_jcache_link;
 	wire xREG1_do_jcache;
+	wire [31:0] xREG1_bcache_opc;
+	wire xREG1_do_hit_bcache;
+	wire xREG1_do_bcache;
 
 	wire [31:0] xREG3_reg_rt_data;
 	wire [31:0] xREG2_reg_ra_data;
@@ -163,13 +167,20 @@ module cpu(
 
 	//pc
 	wire [31:0] current_pc;
-	wire [31:0] next_pc;
+	wire [31:0] target_pc;
 	wire [31:0] write_reg_pc=(xREG1_do_jcache_link)? xREG1_current_pc+4:current_pc;
+	wire do_branch;
 
 	//jcache
 	wire [31:0] jcache_pc;
 	wire do_jcache_link;
 	wire do_jcache;
+
+	//bcache
+	wire [31:0] bcache_opc;
+	wire [31:0] bcache_pc;
+	wire do_hit_bcache;
+	wire do_bcache;
 
 	//top
 	wire [5:0] opcode	=xREG1_instruction[30:25];
@@ -368,7 +379,8 @@ module cpu(
 		.reset(reset),
 		.enable_pc(enable_system),
 		.current_pc(current_pc),
-		.next_pc(next_pc),
+		.target_pc(target_pc),
+		.do_branch(do_branch),
 
 		.opcode(final_opcode),
 		.sub_op_b(sub_op_b),
@@ -388,6 +400,10 @@ module cpu(
 		.xREG1_do_jcache(xREG1_do_jcache),
 		.jcache_pc(jcache_pc),
 		.do_jcache(do_jcache),
+		.xREG1_bcache_opc(xREG1_bcache_opc),
+		.xREG1_do_bcache(xREG1_do_bcache),
+		.bcache_pc(bcache_pc),
+		.do_bcache(do_bcache),
 
 		.do_halt_pc(do_halt_pc),
 		.do_interrupt(do_interrupt),
@@ -407,6 +423,12 @@ module cpu(
 		.oREG1_do_jcache_link(xREG1_do_jcache_link),
 		.iREG1_do_jcache(do_jcache),
 		.oREG1_do_jcache(xREG1_do_jcache),
+		.iREG1_bcache_opc(bcache_opc),
+		.oREG1_bcache_opc(xREG1_bcache_opc),
+		.iREG1_do_hit_bcache(do_hit_bcache),
+		.oREG1_do_hit_bcache(xREG1_do_hit_bcache),
+		.iREG1_do_bcache(do_bcache),
+		.oREG1_do_bcache(xREG1_do_bcache),
 		.iREG2_reg_ra_data(f_reg_ra_data),
 		.mREG2_reg_ra_data(xREG2_reg_ra_data),
 		.oREG3_reg_ra_data(xREG3_reg_ra_data),
@@ -551,13 +573,29 @@ module cpu(
 		.reset(reset),
 		.enable_jcache(enable_system),
 		.current_pc(current_pc),
-		.next_pc(next_pc),
+		.target_pc(target_pc),
 		.opcode(final_opcode),
 		.sub_op_j(sub_op_j),
+		.do_flush_REG1(do_flush_REG1),
 		.xREG1_do_jcache(xREG1_do_jcache),
 		.jcache_pc(jcache_pc),
 		.do_jcache_link(do_jcache_link),
 		.do_jcache(do_jcache)
+	);
+	bcache BCACHE(
+		.clock(clock),
+		.reset(reset),
+		.enable_bcache(enable_system),
+		.current_pc(current_pc),
+		.target_pc(target_pc),
+		.do_branch(do_branch),
+		.opcode(final_opcode),
+		.do_flush_REG1(do_flush_REG1),
+		.xREG1_do_hit_bcache(xREG1_do_hit_bcache),
+		.bcache_opc(bcache_opc),
+		.bcache_pc(bcache_pc),
+		.do_hit_bcache(do_hit_bcache),
+		.do_bcache(do_bcache)
 	);
 	interrupt INTERRUPT(
 		.clock(clock),

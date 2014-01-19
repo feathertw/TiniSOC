@@ -4,9 +4,10 @@ module jcache(
 	reset,
 	enable_jcache,
 	current_pc,
-	next_pc,
+	target_pc,
 	opcode,
 	sub_op_j,
+	do_flush_REG1,
 	xREG1_do_jcache,
 	jcache_pc,
 	do_jcache_link,
@@ -16,10 +17,11 @@ module jcache(
 	input  reset;
 	input  enable_jcache;
 	input  [31:0] current_pc;
-	input  [31:0] next_pc;
+	input  [31:0] target_pc;
 	input  [ 5:0] opcode;
 	input  sub_op_j;
-	input xREG1_do_jcache;
+	input  do_flush_REG1;
+	input  xREG1_do_jcache;
 
 	output [31:0] jcache_pc;
 	output do_jcache_link;
@@ -41,9 +43,13 @@ module jcache(
 		.enable_ram(enable_jcache),
 		.do_write(do_write),
 		.current_pc(current_pc),
-		.next_pc(next_pc),
+		.target_pc(target_pc),
+		.do_branch(),
 		.sub_op_j(sub_op_j),
+		.do_flush_REG1(do_flush_REG1),
+		.hit_addr(),
 		.hit_target(hit_target),
+		.hit_branch(),
 		.hit_link(hit_link),
 		.hit(hit)
 	);
