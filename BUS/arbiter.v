@@ -91,7 +91,7 @@ module arbiter(
 		endcase
 	end
 
-	always@(posedge HCLK or HRESETn)begin
+	always@(posedge HCLK or negedge HRESETn)begin
 		if(!HRESETn)    CurrentMaster<= `HMST_0;
 		else if(HREADY) CurrentMaster<= (HTRANS==`TRN_BUSY)? CurrentMaster:GrantMaster;
 	end
