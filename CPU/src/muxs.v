@@ -141,7 +141,7 @@ module muxs(
 		endcase
 	end
 
-	always @(select_write_reg or xREG3_alu_result or xREG3_imm_extend or mem_read_data) begin
+	always @(select_write_reg or xREG3_alu_result or xREG3_imm_extend or mem_read_data or xREG3_write_reg_pc) begin
 		case(select_write_reg)
 			`WRREG_ALURESULT: begin
 				write_reg_data = xREG3_alu_result;

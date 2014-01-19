@@ -85,7 +85,7 @@ module controller(
 	assign reg_rt_zero=!(|reg_rt_data);//*
 	assign reg_rt_negative=reg_rt_data[31];
 
-	always@(opcode or sub_op_base or sub_op_ls) begin
+	always@(opcode or sub_op_base or sub_op_ls or sub_op_j or sub_op_jr or sub_op_misc) begin
 		case(opcode)
 			`TY_BASE: begin
 				case(sub_op_base)
