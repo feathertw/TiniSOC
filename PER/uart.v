@@ -1,4 +1,5 @@
-`define ADDR_ENABLE	24'h00_0000
+`define ADDR_TX_ENABLE	24'h00_0000
+`define ADDR_RX_ENABLE	24'h00_0004
 `define ADDR_TX_FLAG	24'h00_0010
 `define ADDR_RX_FLAG	24'h00_0014
 `define ADDR_TX_DATA	24'h00_0020
@@ -44,7 +45,8 @@ module uart(
 	wire [23:0] xMAddress  =REG_MAddress[`WS];
 	wire [31:0] xMWriteData=REG_MWriteData[`WS-1];
 
-	reg ENABLE;
+	reg TX_ENABLE;
+	reg RX_ENABLE;
 	reg TX_FLAG;
 	reg RX_FLAG;
 	reg [31:0] TX_DATA;
@@ -100,21 +102,23 @@ module uart(
 				MReady<=1'b0;
 			end
 			if(xMEnable&&xMWrite)begin
-				if(xMAddress==`ADDR_ENABLE)   ENABLE<=xMWriteData[0];
-				if(xMAddress==`ADDR_TX_FLAG)  TX_FLAG<=xMWriteData[0];
-				if(xMAddress==`ADDR_RX_FLAG)  RX_FLAG<=xMWriteData[0];
-				if(xMAddress==`ADDR_TX_DATA)  TX_DATA<=xMWriteData;
-				if(xMAddress==`ADDR_RX_DATA)  RX_DATA<=xMWriteData;
-				if(xMAddress==`ADDR_BAUDRATE) BAUDRATE<=xMWriteData;
+				if(xMAddress==`ADDR_TX_ENABLE) TX_ENABLE<=xMWriteData[0];
+				if(xMAddress==`ADDR_RX_ENABLE) RX_ENABLE<=xMWriteData[0];
+				if(xMAddress==`ADDR_TX_FLAG)   TX_FLAG  <=xMWriteData[0];
+				if(xMAddress==`ADDR_RX_FLAG)   RX_FLAG  <=xMWriteData[0];
+				if(xMAddress==`ADDR_TX_DATA)   TX_DATA  <=xMWriteData;
+				if(xMAddress==`ADDR_RX_DATA)   RX_DATA  <=xMWriteData;
+				if(xMAddress==`ADDR_BAUDRATE)  BAUDRATE <=xMWriteData;
 			end
 			if(xMEnable&&xMRead)begin
 				MReady<=1'b1;
-				if(xMAddress==`ADDR_ENABLE)   MReadData<=32'b0|ENABLE;
-				if(xMAddress==`ADDR_TX_FLAG)  MReadData<=32'b0|TX_FLAG;
-				if(xMAddress==`ADDR_RX_FLAG)  MReadData<=32'b0|RX_FLAG;
-				if(xMAddress==`ADDR_TX_DATA)  MReadData<=TX_DATA;
-				if(xMAddress==`ADDR_RX_DATA)  MReadData<=RX_DATA;
-				if(xMAddress==`ADDR_BAUDRATE) MReadData<=BAUDRATE;
+				if(xMAddress==`ADDR_TX_ENABLE) MReadData<=32'b0|TX_ENABLE;
+				if(xMAddress==`ADDR_RX_ENABLE) MReadData<=32'b0|RX_ENABLE;
+				if(xMAddress==`ADDR_TX_FLAG)   MReadData<=32'b0|TX_FLAG;
+				if(xMAddress==`ADDR_RX_FLAG)   MReadData<=32'b0|RX_FLAG;
+				if(xMAddress==`ADDR_TX_DATA)   MReadData<=TX_DATA;
+				if(xMAddress==`ADDR_RX_DATA)   MReadData<=RX_DATA;
+				if(xMAddress==`ADDR_BAUDRATE)  MReadData<=BAUDRATE;
 			end
 		end
 	end
