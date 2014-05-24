@@ -1,10 +1,12 @@
 `define VECTOR_RESET	32'h0000_0000
 `define VECTOR_SYSCALL	32'h0000_0004
+`define VECTOR_SYSTICK	32'h0000_0008
 module interrupt(
 	clock,
 	reset,
 	enable_system,
 	do_syscall_it,
+	do_systick_it,
 	do_it_return,
 
 	do_halt_pc,
@@ -25,6 +27,7 @@ module interrupt(
 	input  reset;
 	input  enable_system;
 	input  do_syscall_it;
+	input  do_systick_it;
 	input  do_it_return;
 
 	output do_halt_pc;
@@ -55,33 +58,34 @@ module interrupt(
 	reg [4:0] state;
 	reg [4:0] next_state;
 	parameter STATE_IDLE	  =5'd0;
-	parameter STATE_STORE_PC  =5'd1;
-	parameter STATE_STORE_LP  =5'd2;
-	parameter STATE_STORE_GP  =5'd3;
-	parameter STATE_STORE_FP  =5'd4;
-	parameter STATE_STORE_R3  =5'd5;
-	parameter STATE_STORE_R2  =5'd6;
-	parameter STATE_STORE_R1  =5'd7;
-	parameter STATE_STORE_R0  =5'd8;
-	parameter STATE_STORE_FSP =5'd9;
-	parameter STATE_STORE_W1  =5'd10;
-	parameter STATE_STORE_W2  =5'd11;
-	parameter STATE_STORE_W3  =5'd12;
-	parameter STATE_LOAD_R0	  =5'd13;
-	parameter STATE_LOAD_R1	  =5'd14;
-	parameter STATE_LOAD_R2	  =5'd15;
-	parameter STATE_LOAD_R3	  =5'd16;
-	parameter STATE_LOAD_FP	  =5'd17;
-	parameter STATE_LOAD_GP	  =5'd18;
-	parameter STATE_LOAD_LP	  =5'd19;
-	parameter STATE_LOAD_PC	  =5'd20;
-	parameter STATE_LOAD_FSP  =5'd21;
-	parameter STATE_LOAD_W1	  =5'd22;
-	parameter STATE_LOAD_W2	  =5'd23;
-	parameter STATE_LOAD_W3	  =5'd24;
+	parameter STATE_WAIT	  =5'd1;
+	parameter STATE_STORE_PC  =5'd2;
+	parameter STATE_STORE_LP  =5'd3;
+	parameter STATE_STORE_GP  =5'd4;
+	parameter STATE_STORE_FP  =5'd5;
+	parameter STATE_STORE_R3  =5'd6;
+	parameter STATE_STORE_R2  =5'd7;
+	parameter STATE_STORE_R1  =5'd8;
+	parameter STATE_STORE_R0  =5'd9;
+	parameter STATE_STORE_FSP =5'd10;
+	parameter STATE_STORE_W1  =5'd11;
+	parameter STATE_STORE_W2  =5'd12;
+	parameter STATE_STORE_W3  =5'd13;
+	parameter STATE_LOAD_R0	  =5'd14;
+	parameter STATE_LOAD_R1	  =5'd15;
+	parameter STATE_LOAD_R2	  =5'd16;
+	parameter STATE_LOAD_R3	  =5'd17;
+	parameter STATE_LOAD_FP	  =5'd18;
+	parameter STATE_LOAD_GP	  =5'd19;
+	parameter STATE_LOAD_LP	  =5'd20;
+	parameter STATE_LOAD_PC	  =5'd21;
+	parameter STATE_LOAD_FSP  =5'd22;
+	parameter STATE_LOAD_W1	  =5'd23;
+	parameter STATE_LOAD_W2	  =5'd24;
+	parameter STATE_LOAD_W3	  =5'd25;
 
 	wire do_flush_REG1=do_halt_pc||do_interrupt;
-	wire do_it_state=(state!=STATE_IDLE
+	wire do_it_state=(state!=STATE_IDLE&&state!=STATE_WAIT
 		&&state!=STATE_STORE_W1&&state!=STATE_STORE_W2&&state!=STATE_STORE_W3
 		&&state!=STATE_LOAD_W3 &&state!=STATE_LOAD_W2 &&state!=STATE_LOAD_W3);
 
@@ -92,9 +96,10 @@ module interrupt(
 	always@(*)begin
 		case(state)
 			STATE_IDLE:begin
-				if(do_syscall_it)     next_state=STATE_STORE_PC;
-				else if(do_it_return) next_state=STATE_LOAD_R0;
-				else		      next_state=STATE_IDLE;
+				if(do_it_return)       next_state=STATE_LOAD_R0;
+				else if(do_syscall_it) next_state=STATE_STORE_PC;
+				else if(do_systick_it) next_state=STATE_WAIT;
+				else		       next_state=STATE_IDLE;
 			end
 			STATE_STORE_W3:begin
 				next_state=STATE_IDLE;
@@ -303,7 +308,7 @@ module interrupt(
 				it_reg_rt_addr	=5'b11111;
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
-				it_imm_15bit	=15'h100;
+				it_imm_15bit	=15'h020;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -353,9 +358,10 @@ module interrupt(
 			interrupt_pc<=32'b0;
 		end
 		else begin
-			if(do_syscall_it)begin
+			if(do_syscall_it||do_systick_it)begin
 				do_halt_pc<=1'b1;
-				interrupt_pc<=`VECTOR_SYSCALL;
+				if(do_syscall_it)      interrupt_pc<=`VECTOR_SYSCALL;
+				else if(do_systick_it) interrupt_pc<=`VECTOR_SYSTICK;
 			end
 			if(do_it_return)begin
 				do_halt_pc<=1'b1;

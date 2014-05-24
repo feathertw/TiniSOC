@@ -6,6 +6,7 @@
 `include "src/regwalls.v"
 `include "src/forward.v"
 `include "src/memctr.v"
+`include "src/sysmem.v"
 `include "src/cache.v"
 `include "src/jcache.v"
 `include "src/bcache.v"
@@ -227,6 +228,7 @@ module cpu(
 
 	wire do_dmem_enable;
 	wire do_iomem_enable;
+	wire do_sysmem_enable;
 
 	wire iPStrobe=do_im_read||do_im_write;
 	wire iPRw=(do_im_read)? 1'b1:1'b0;
@@ -269,7 +271,8 @@ module cpu(
 	assign DM_address=dSysAddress[31:0];
 	assign DM_in=dSysData_in;//*
 	assign dSysData_out=DM_out;
-	assign mem_read_data=(do_dmem_enable)? dPData_in:IOM_out;
+	assign mem_read_data=(do_dmem_enable) ?dPData_in:
+			     (do_iomem_enable)?IOM_out:sysmem_dout;
 	assign dPData_out=xREG3_reg_rt_data;
 
 	wire IOM_read=xREG3_do_dm_read;
@@ -279,6 +282,9 @@ module cpu(
 	wire [31:0] IOM_in=xREG3_reg_rt_data;
 	wire [31:0] IOM_out;
 	wire IOM_ready;
+
+	wire [31:0] sysmem_dout;
+	wire do_systick_it;
 
 	alu ALU(
 		.reset(reset),
@@ -533,7 +539,19 @@ module cpu(
 		.do_mem_write(xREG3_do_dm_write),
 		.mem_address(mem_address),
 		.do_dmem_enable(do_dmem_enable),
-		.do_iomem_enable(do_iomem_enable)
+		.do_iomem_enable(do_iomem_enable),
+		.do_sysmem_enable(do_sysmem_enable)
+	);
+	sysmem SYSMEM(
+		.clock(clock),
+		.reset(reset),
+		.do_mem_read(xREG3_do_dm_read),
+		.do_mem_write(xREG3_do_dm_write),
+		.mem_address(mem_address),
+		.din(xREG3_reg_rt_data),
+		.dout(sysmem_dout),
+		.do_enable(do_sysmem_enable),
+		.do_systick_it(do_systick_it)
 	);
 
 	cache ICACHE(
@@ -602,6 +620,7 @@ module cpu(
 		.reset(reset),
 		.enable_system(enable_system),
 		.do_syscall_it(do_syscall_it),
+		.do_systick_it(do_systick_it),
 		.do_it_return(do_it_return),
 		.do_halt_pc(do_halt_pc),
 		.do_flush_REG1(do_flush_REG1_interrupt),
