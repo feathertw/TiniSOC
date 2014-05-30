@@ -1,3 +1,12 @@
+`include "def_muxs.v"
+
+`define SRIDX_SYSTEM_MODE	128
+`define SRIDX_KERNEL_STACK	169
+`define SRIDX_USER_STACK	170
+
+`define SYSTEM_MODE_KERNEL	0
+`define SYSTEM_MODE_USER	1
+
 module regfile(
 	clock,
 	reset,
@@ -14,9 +23,18 @@ module regfile(
 	do_reg_write,
 	do_ra_write,
 
+	sub_op_sridx,
+	select_misc,
+	do_misc,
+	xREG4_select_misc,
+	xREG4_do_misc,
+	xREG4_sub_op_sridx,
+
+	do_hazard,
 	reg_ra_data,
 	reg_rb_data,
-	reg_rt_data
+	reg_rt_data,
+	system_reg
 );
 
 	parameter DataSize = 32;
@@ -37,20 +55,35 @@ module regfile(
 	input do_reg_write;
 	input do_ra_write;
 
+	input [9:0] sub_op_sridx;
+	input [1:0] select_misc;
+	input do_misc;
+	input [1:0] xREG4_select_misc;
+	input xREG4_do_misc;
+	input [9:0] xREG4_sub_op_sridx;
+
+	output do_hazard;
 	output [DataSize-1:0] reg_ra_data;
 	output [DataSize-1:0] reg_rb_data;
 	output [DataSize-1:0] reg_rt_data;
+	output [DataSize-1:0] system_reg;
 
 	reg [DataSize-1:0] reg_rt_data;
 	reg [DataSize-1:0] reg_ra_data;
 	reg [DataSize-1:0] reg_rb_data;
+	reg [DataSize-1:0] system_reg;
 
 	reg [DataSize-1:0] rw_reg [31:0];
+	reg [DataSize-1:0] rw_r31_banked;
+	reg system_mode;
+
 	integer i;
 
 	always @(posedge clock or posedge reset) begin
 		if(reset) begin
 			for(i=0;i<32;i=i+1) rw_reg[i]<=32'b0;
+			rw_r31_banked	    	     <=32'b0;
+			system_mode		     <= 1'b0;
 		end
 		else begin
 			if(enable_reg_fetch) begin
@@ -63,6 +96,56 @@ module regfile(
 			end
 			if(enable_reg_write && do_ra_write) begin
 				rw_reg[write_ra_addr] <= write_ra_data;
+			end
+			if(do_misc)begin
+				if(select_misc==`MISC_MFSR)begin
+					case(sub_op_sridx)
+						`SRIDX_SYSTEM_MODE:begin
+							system_reg <= system_mode;
+						end
+						`SRIDX_KERNEL_STACK:begin
+							if(system_mode==`SYSTEM_MODE_KERNEL) system_reg <=rw_reg[31];
+							else				     system_reg <=rw_r31_banked;
+						end
+						`SRIDX_USER_STACK:begin
+							if(system_mode==`SYSTEM_MODE_USER) system_reg <=rw_reg[31];
+							else				   system_reg <=rw_r31_banked;
+						end
+					endcase
+				end
+			end
+			if(xREG4_do_misc)begin
+				if(xREG4_select_misc==`MISC_MTSR)begin
+					case(xREG4_sub_op_sridx)
+						`SRIDX_SYSTEM_MODE:begin
+							system_mode <= write_reg_data[0];
+							if(system_mode!=write_reg_data[0])begin
+								rw_reg[31]    <= rw_r31_banked;
+								rw_r31_banked <= rw_reg[31];
+							end
+						end
+					endcase
+				end
+			end
+		end
+	end
+
+	reg work;
+	reg [1:0] count;
+	assign do_hazard = (count>0)? 1:0;
+	always @(posedge clock) begin
+		if(reset)begin
+			work  <= 'b0;
+			count <= 'h0;
+		end
+		else if(work&&count>'d0)begin
+			count <= count -'h1;
+			if(count=='h1) work <= 1'b0;
+		end
+		else if(do_misc)begin
+			if(select_misc==`MISC_MTSR)begin
+				work <= 1'b1;
+				count <=2'h3;
 			end
 		end
 	end

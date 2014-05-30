@@ -42,7 +42,7 @@ module forw(
 
 	input xREG2_do_dm_read;
 	input xREG2_do_rx_write;
-	input [ 1:0] xREG2_select_write_rx;
+	input [ 2:0] xREG2_select_write_rx;
 	input [ 4:0] xREG2_write_rx_addr;
 	input [31:0] xREG2_imm_extend;
 	input [31:0] alu_result;
@@ -127,7 +127,7 @@ module forward(
 	input [31:0] reg_rt_data;
 
 	input xREG2_do_dm_read;
-	input [ 1:0] xREG2_select_write_reg;
+	input [ 2:0] xREG2_select_write_reg;
 
 	input xREG2_do_reg_write;
 	input xREG3_do_reg_write;

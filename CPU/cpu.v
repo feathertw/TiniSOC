@@ -71,8 +71,7 @@ module cpu(
 	input do_system;
 
 	//controller
-	wire do_syscall_it;
-	wire do_it_return;
+	wire do_misc;
 	wire do_im_read;
 	wire do_im_write;
 	wire do_dm_read;
@@ -83,7 +82,8 @@ module cpu(
 	wire [2:0] select_imm_extend;
 	wire  select_mem_addr;
 	wire  select_write_reg_addr;
-	wire [1:0] select_write_reg;
+	wire [2:0] select_write_reg;
+	wire [1:0] select_misc;
 	wire reg_rt_ra_equal;
 	wire reg_rt_zero;
 	wire reg_rt_negative;
@@ -92,6 +92,7 @@ module cpu(
 	wire [31:0] reg_rt_data;
 	wire [31:0] reg_ra_data;
 	wire [31:0] reg_rb_data;
+	wire [31:0] system_reg;
 
 	//alu
 	wire [31:0] alu_result;
@@ -111,7 +112,9 @@ module cpu(
 	wire [31:0] f_reg_rt_data;
 	wire [31:0] f_reg_ra_data;
 	wire [31:0] f_reg_rb_data;
-	wire do_hazard;
+	wire do_hazard_forward;
+	wire do_hazard_regfile;
+	wire do_hazard_pc = do_hazard_forward||do_hazard_regfile;
 
 	//REGWALL
 	wire [31:0] xREG1_instruction;
@@ -125,12 +128,16 @@ module cpu(
 	wire [31:0] xREG3_reg_rt_data;
 	wire [31:0] xREG2_reg_ra_data;
 	wire [31:0] xREG3_reg_ra_data;
+	wire [31:0] xREG3_system_reg;
 
 	wire [ 5:0] xREG2_opcode;
 	wire [ 4:0] xREG2_sub_op_base;
+	wire [ 9:0] xREG4_sub_op_sridx;
 	wire xREG3_select_mem_addr;
-	wire [ 1:0] xREG2_select_write_reg;
-	wire [ 1:0] xREG3_select_write_reg;
+	wire [ 2:0] xREG2_select_write_reg;
+	wire [ 2:0] xREG3_select_write_reg;
+	wire [ 1:0] xREG4_select_misc;
+	wire xREG4_do_misc;
 	wire xREG2_do_dm_read;
 	wire xREG2_do_reg_write;
 	wire xREG3_do_dm_read;
@@ -193,6 +200,7 @@ module cpu(
 	wire sub_op_j		=xREG1_instruction[24];
 	wire [4:0] sub_op_jr	=xREG1_instruction[4:0];
 	wire [4:0] sub_op_misc	=xREG1_instruction[4:0];
+	wire [9:0] sub_op_sridx =xREG1_instruction[19:10];
 
 	wire [4:0] reg_ra_addr  =xREG1_instruction[19:15];
 	wire [4:0] reg_rb_addr  =xREG1_instruction[14:10];
@@ -313,9 +321,18 @@ module cpu(
 		.do_reg_write(xREG4_do_reg_write),
 		.do_ra_write(xREG4_do_ra_write),
 
+		.sub_op_sridx(sub_op_sridx),
+		.select_misc(select_misc),
+		.do_misc(do_misc),
+		.xREG4_select_misc(xREG4_select_misc),
+		.xREG4_do_misc(xREG4_do_misc),
+		.xREG4_sub_op_sridx(xREG4_sub_op_sridx),
+
+		.do_hazard(do_hazard_regfile),
 		.reg_ra_data(reg_ra_data),
 		.reg_rb_data(reg_rb_data),
-		.reg_rt_data(reg_rt_data)
+		.reg_rt_data(reg_rt_data),
+		.system_reg(system_reg)
 	);
 
 	muxs MUXS(
@@ -329,6 +346,8 @@ module cpu(
 		.xREG3_imm_extend(xREG3_imm_extend),
 		.mem_read_data(mem_read_data),
 		.xREG3_write_reg_pc(xREG3_write_reg_pc),
+		.xREG3_reg_rt_data(xREG3_reg_rt_data),
+		.xREG3_system_reg(xREG3_system_reg),
 		.xREG3_reg_ra_data(xREG3_reg_ra_data),
 
 		.imm_5bit(imm_5bit),
@@ -364,9 +383,9 @@ module cpu(
 		.select_mem_addr(select_mem_addr),
 		.select_write_reg_addr(select_write_reg_addr),
 		.select_write_reg(select_write_reg),
+		.select_misc(select_misc),
 
-		.do_syscall_it(do_syscall_it),
-		.do_it_return(do_it_return),
+		.do_misc(do_misc),
 		.do_im_read(do_im_read),
 		.do_im_write(do_im_write),
 		.do_dm_read(do_dm_read),
@@ -401,7 +420,7 @@ module cpu(
 		.reg_rb_data(f_reg_rb_data),
 
 		.do_flush_REG1(do_flush_REG1_pc),
-		.do_hazard(do_hazard),
+		.do_hazard(do_hazard_pc),
 
 		.xREG1_do_jcache(xREG1_do_jcache),
 		.jcache_pc(jcache_pc),
@@ -440,6 +459,8 @@ module cpu(
 		.oREG3_reg_ra_data(xREG3_reg_ra_data),
 		.iREG2_reg_rt_data(final_reg_rt_data),
 		.oREG3_reg_rt_data(xREG3_reg_rt_data),
+		.iREG2_system_reg(system_reg),
+		.oREG3_system_reg(xREG3_system_reg),
 		.iREG2_write_reg_addr(write_reg_addr),
 		.mREG2_write_reg_addr(xREG2_write_reg_addr),
 		.mREG3_write_reg_addr(xREG3_write_reg_addr),
@@ -453,13 +474,19 @@ module cpu(
 		.iREG2_sub_op_base(sub_op_base),
 		.oREG2_opcode(xREG2_opcode),
 		.oREG2_sub_op_base(xREG2_sub_op_base),
+		.iREG2_sub_op_sridx(sub_op_sridx),
+		.oREG4_sub_op_sridx(xREG4_sub_op_sridx),
 
 		.iREG2_select_mem_addr(select_mem_addr),
 		.oREG3_select_mem_addr(xREG3_select_mem_addr),
 		.iREG2_select_write_reg(select_write_reg),
 		.mREG2_select_write_reg(xREG2_select_write_reg),
 		.oREG3_select_write_reg(xREG3_select_write_reg),
+		.iREG2_select_misc(select_misc),
+		.oREG4_select_misc(xREG4_select_misc),
 
+		.iREG2_do_misc(do_misc),
+		.oREG4_do_misc(xREG4_do_misc),
 		.iREG2_do_dm_read(do_dm_read),
 		.iREG2_do_dm_write(do_dm_write),
 		.iREG2_do_reg_write(do_reg_write),
@@ -493,7 +520,8 @@ module cpu(
 		.oREG3_write_reg_pc(xREG3_write_reg_pc),
 
 		.do_flush_REG1(do_flush_REG1),
-		.do_hazard(do_hazard)
+		.do_hazard_REG1(do_hazard_regfile),
+		.do_hazard_REG2(do_hazard_forward)
 	);
 	forward FORWARD(
 		.reg_ra_addr(final_reg_ra_addr),
@@ -532,7 +560,7 @@ module cpu(
 		.f_reg_rt_data(f_reg_rt_data),
 
 		.do_reg_write(do_reg_write),
-		.do_hazard(do_hazard)
+		.do_hazard(do_hazard_forward)
 	);
 	memctr MEMCTR(
 		.do_mem_read(xREG3_do_dm_read),
@@ -619,9 +647,9 @@ module cpu(
 		.clock(clock),
 		.reset(reset),
 		.enable_system(enable_system),
-		.do_syscall_it(do_syscall_it),
+		.select_misc(select_misc),
+		.do_misc(do_misc),
 		.do_systick_it(do_systick_it),
-		.do_it_return(do_it_return),
 		.do_halt_pc(do_halt_pc),
 		.do_flush_REG1(do_flush_REG1_interrupt),
 		.do_interrupt(do_interrupt),

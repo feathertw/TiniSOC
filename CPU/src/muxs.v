@@ -11,6 +11,8 @@ module muxs(
 	xREG3_imm_extend,
 	mem_read_data,
 	xREG3_write_reg_pc,
+	xREG3_reg_rt_data,
+	xREG3_system_reg,
 	xREG3_reg_ra_data,
 
 	imm_5bit,
@@ -42,6 +44,8 @@ module muxs(
 	input [DataSize-1:0] xREG3_imm_extend;
 	input [DataSize-1:0] mem_read_data;
 	input [31:0] xREG3_write_reg_pc;
+	input [31:0] xREG3_reg_rt_data;
+	input [31:0] xREG3_system_reg;
 	input [31:0] xREG3_reg_ra_data;
 
 	input [4:0] imm_5bit;
@@ -52,7 +56,7 @@ module muxs(
 	input [2:0] select_imm_extend;
 	input select_mem_addr;
 	input select_write_reg_addr;
-	input [1:0] select_write_reg;
+	input [2:0] select_write_reg;
 
 	output [DataSize-1:0] imm_extend;
 	output [DataSize-1:0] alu_src2;
@@ -141,7 +145,7 @@ module muxs(
 		endcase
 	end
 
-	always @(select_write_reg or xREG3_alu_result or xREG3_imm_extend or mem_read_data or xREG3_write_reg_pc) begin
+	always @(select_write_reg or xREG3_alu_result or xREG3_imm_extend or mem_read_data or xREG3_write_reg_pc or xREG3_reg_rt_data or xREG3_system_reg) begin
 		case(select_write_reg)
 			`WRREG_ALURESULT: begin
 				write_reg_data = xREG3_alu_result;
@@ -154,6 +158,12 @@ module muxs(
 			end
 			`WRREG_PC: begin
 				write_reg_data = xREG3_write_reg_pc;
+			end
+			`WRREG_RTDATA: begin
+				write_reg_data = xREG3_reg_rt_data;
+			end
+			`WRREG_SYSREG: begin
+				write_reg_data = xREG3_system_reg;
 			end
 			default: begin
 				write_reg_data = 32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;

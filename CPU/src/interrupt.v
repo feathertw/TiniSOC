@@ -5,9 +5,9 @@ module interrupt(
 	clock,
 	reset,
 	enable_system,
-	do_syscall_it,
+	select_misc,
+	do_misc,
 	do_systick_it,
-	do_it_return,
 
 	do_halt_pc,
 	do_flush_REG1,
@@ -26,9 +26,9 @@ module interrupt(
 	input  clock;
 	input  reset;
 	input  enable_system;
-	input  do_syscall_it;
+	input  [1:0] select_misc;
+	input  do_misc;
 	input  do_systick_it;
-	input  do_it_return;
 
 	output do_halt_pc;
 	output do_flush_REG1;
@@ -96,10 +96,12 @@ module interrupt(
 	always@(*)begin
 		case(state)
 			STATE_IDLE:begin
-				if(do_it_return)       next_state=STATE_LOAD_R0;
-				else if(do_syscall_it) next_state=STATE_STORE_PC;
-				else if(do_systick_it) next_state=STATE_WAIT;
-				else		       next_state=STATE_IDLE;
+				if(do_misc)begin
+					if(select_misc==`MISC_IRET)     next_state=STATE_LOAD_R0;
+					if(select_misc==`MISC_SYSCALL)  next_state=STATE_STORE_PC;
+				end
+				else if(do_systick_it) 			next_state=STATE_WAIT;
+				else		       			next_state=STATE_IDLE;
 			end
 			STATE_STORE_W3:begin
 				next_state=STATE_IDLE;
@@ -358,13 +360,18 @@ module interrupt(
 			interrupt_pc<=32'b0;
 		end
 		else begin
-			if(do_syscall_it||do_systick_it)begin
-				do_halt_pc<=1'b1;
-				if(do_syscall_it)      interrupt_pc<=`VECTOR_SYSCALL;
-				else if(do_systick_it) interrupt_pc<=`VECTOR_SYSTICK;
+			if(do_misc)begin
+				if(select_misc==`MISC_IRET)begin
+					do_halt_pc<=1'b1;
+				end
+				if(select_misc==`MISC_SYSCALL)begin
+					do_halt_pc<=1'b1;
+					interrupt_pc<=`VECTOR_SYSCALL;
+				end
 			end
-			if(do_it_return)begin
+			if(do_systick_it)begin
 				do_halt_pc<=1'b1;
+				interrupt_pc<=`VECTOR_SYSTICK;
 			end
 			if(state==STATE_STORE_W3)begin
 				do_halt_pc<=1'b0;

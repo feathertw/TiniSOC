@@ -26,14 +26,22 @@
 `define WRADDR_LP	1'b1
 `define WRADDR_UNKOWN	1'bx
 
-`define WRREG_ALURESULT 2'b00
-`define WRREG_IMMDATA 	2'b01
-`define WRREG_MEM	2'b10
-`define WRREG_PC	2'b11
-`define WRREG_UNKOWN	2'bxx
+`define WRREG_ALURESULT 3'b000
+`define WRREG_IMMDATA 	3'b001
+`define WRREG_MEM	3'b010
+`define WRREG_PC	3'b011
+`define WRREG_RTDATA	3'b100
+`define WRREG_SYSREG	3'b101
+`define WRREG_UNKOWN	3'bxxx
 
 `define FOR_RG_ORI 	3'b000
 `define FOR_RG_REG4	3'b001
 `define FOR_RG_REG3	3'b010
 `define FOR_RG_REG2_IMM 3'b011
 `define FOR_RG_REG2_ALU 3'b100
+
+`define MISC_MTSR	2'b00
+`define MISC_MFSR	2'b01
+`define MISC_SYSCALL	2'b10
+`define MISC_IRET	2'b11
+`define MISC_UNKNOW	2'bxx
