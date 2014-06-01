@@ -32,6 +32,7 @@
 `define WRREG_PC	3'b011
 `define WRREG_RTDATA	3'b100
 `define WRREG_SYSREG	3'b101
+`define WRREG_CMOV	3'b110
 `define WRREG_UNKOWN	3'bxxx
 
 `define FOR_RG_ORI 	3'b000

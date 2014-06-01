@@ -257,6 +257,32 @@ module controller(
 						do_reg_write=1'b1;
 						do_ra_write=1'b0;
 					end
+					`CMOVN:begin
+						select_alu_src2=`ALUSRC2_UNKNOWN;
+						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
+						select_write_reg_addr=`WRADDR_RT;
+						select_write_reg=`WRREG_CMOV;
+						select_misc=`MISC_UNKNOW;
+						do_misc=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
+						do_reg_write=1'b1;
+						do_ra_write=1'b0;
+					end
+					`CMOVZ:begin
+						select_alu_src2=`ALUSRC2_UNKNOWN;
+						select_imm_extend=`IMM_UNKOWN;
+						select_mem_addr=`MADDR_UNKOWN;
+						select_write_reg_addr=`WRADDR_RT;
+						select_write_reg=`WRREG_CMOV;
+						select_misc=`MISC_UNKNOW;
+						do_misc=1'b0;
+						do_dm_read=1'b0;
+						do_dm_write=1'b0;
+						do_reg_write=1'b1;
+						do_ra_write=1'b0;
+					end
 					default:begin
 						select_alu_src2=`ALUSRC2_UNKNOWN;
 						select_imm_extend=`IMM_UNKOWN;

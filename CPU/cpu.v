@@ -128,10 +128,12 @@ module cpu(
 	wire [31:0] xREG3_reg_rt_data;
 	wire [31:0] xREG2_reg_ra_data;
 	wire [31:0] xREG3_reg_ra_data;
+	wire [31:0] xREG3_reg_rb_data;
 	wire [31:0] xREG3_system_reg;
 
 	wire [ 5:0] xREG2_opcode;
 	wire [ 4:0] xREG2_sub_op_base;
+	wire [ 4:0] xREG3_sub_op_base;
 	wire [ 9:0] xREG4_sub_op_sridx;
 	wire xREG3_select_mem_addr;
 	wire [ 2:0] xREG2_select_write_reg;
@@ -352,6 +354,9 @@ module cpu(
 		.xREG3_system_reg(xREG3_system_reg),
 		.xREG3_reg_ra_data(xREG3_reg_ra_data),
 
+		.xREG3_reg_rb_data(xREG3_reg_rb_data),
+		.xREG3_sub_op_base(xREG3_sub_op_base),
+
 		.imm_5bit(imm_5bit),
 		.imm_15bit(final_imm_15bit),
 		.imm_20bit(imm_20bit),
@@ -459,6 +464,8 @@ module cpu(
 		.iREG2_reg_ra_data(f_reg_ra_data),
 		.mREG2_reg_ra_data(xREG2_reg_ra_data),
 		.oREG3_reg_ra_data(xREG3_reg_ra_data),
+		.iREG2_reg_rb_data(f_reg_rb_data),
+		.oREG3_reg_rb_data(xREG3_reg_rb_data),
 		.iREG2_reg_rt_data(final_reg_rt_data),
 		.oREG3_reg_rt_data(xREG3_reg_rt_data),
 		.iREG2_system_reg(system_reg),
@@ -475,7 +482,8 @@ module cpu(
 		.iREG2_opcode(final_opcode),
 		.iREG2_sub_op_base(sub_op_base),
 		.oREG2_opcode(xREG2_opcode),
-		.oREG2_sub_op_base(xREG2_sub_op_base),
+		.mREG2_sub_op_base(xREG2_sub_op_base),
+		.oREG3_sub_op_base(xREG3_sub_op_base),
 		.iREG2_sub_op_sridx(sub_op_sridx),
 		.oREG4_sub_op_sridx(xREG4_sub_op_sridx),
 

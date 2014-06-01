@@ -12,6 +12,8 @@
 `define SRLI  	5'b01001
 `define SLLI  	5'b01000
 `define ROTRI 	5'b01011
+`define CMOVN	5'b11011
+`define CMOVZ	5'b11010
 
 `define ADDI  	6'b101000
 `define SUBRI	6'b101001
