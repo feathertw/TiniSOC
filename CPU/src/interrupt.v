@@ -19,6 +19,7 @@ module interrupt(
 	it_reg_ra_addr,
 	it_reg_rb_addr,
 	it_imm_15bit,
+	do_kernel_mode,
 	do_it_store_pc,
 	do_it_load_pc,
 	do_it_state
@@ -43,6 +44,7 @@ module interrupt(
 	output [ 4:0] it_reg_ra_addr;
 	output [ 4:0] it_reg_rb_addr;
 	output [14:0] it_imm_15bit;
+	output do_kernel_mode;
 	output do_it_store_pc;
 	output do_it_load_pc;
 	output do_it_state;
@@ -52,6 +54,7 @@ module interrupt(
 	reg    [ 4:0] it_reg_ra_addr;
 	reg    [ 4:0] it_reg_rb_addr;
 	reg    [14:0] it_imm_15bit;
+	reg    do_kernel_mode;
 	reg    do_it_store_pc;
 	reg    do_it_load_pc;
 
@@ -71,22 +74,23 @@ module interrupt(
 	parameter STATE_STORE_W1  =5'd11;
 	parameter STATE_STORE_W2  =5'd12;
 	parameter STATE_STORE_W3  =5'd13;
-	parameter STATE_LOAD_R0	  =5'd14;
-	parameter STATE_LOAD_R1	  =5'd15;
-	parameter STATE_LOAD_R2	  =5'd16;
-	parameter STATE_LOAD_R3	  =5'd17;
-	parameter STATE_LOAD_FP	  =5'd18;
-	parameter STATE_LOAD_GP	  =5'd19;
-	parameter STATE_LOAD_LP	  =5'd20;
-	parameter STATE_LOAD_PC	  =5'd21;
-	parameter STATE_LOAD_FSP  =5'd22;
-	parameter STATE_LOAD_W1	  =5'd23;
-	parameter STATE_LOAD_W2	  =5'd24;
-	parameter STATE_LOAD_W3	  =5'd25;
+	parameter STATE_KMODE     =5'd14;
+	parameter STATE_LOAD_R0	  =5'd15;
+	parameter STATE_LOAD_R1	  =5'd16;
+	parameter STATE_LOAD_R2	  =5'd17;
+	parameter STATE_LOAD_R3	  =5'd18;
+	parameter STATE_LOAD_FP	  =5'd19;
+	parameter STATE_LOAD_GP	  =5'd20;
+	parameter STATE_LOAD_LP	  =5'd21;
+	parameter STATE_LOAD_PC	  =5'd22;
+	parameter STATE_LOAD_FSP  =5'd23;
+	parameter STATE_LOAD_W1	  =5'd24;
+	parameter STATE_LOAD_W2	  =5'd25;
+	parameter STATE_LOAD_W3	  =5'd26;
 
 	wire do_flush_REG1=do_halt_pc||do_interrupt;
 	wire do_it_state=(state!=STATE_IDLE&&state!=STATE_WAIT
-		&&state!=STATE_STORE_W1&&state!=STATE_STORE_W2&&state!=STATE_STORE_W3
+		&&state!=STATE_STORE_W1&&state!=STATE_STORE_W2&&state!=STATE_STORE_W3&&state!=STATE_KMODE
 		&&state!=STATE_LOAD_W3 &&state!=STATE_LOAD_W2 &&state!=STATE_LOAD_W3);
 
 	always@(negedge clock)begin
@@ -103,7 +107,7 @@ module interrupt(
 				else if(do_systick_it) 			next_state=STATE_WAIT;
 				else		       			next_state=STATE_IDLE;
 			end
-			STATE_STORE_W3:begin
+			STATE_KMODE:begin
 				next_state=STATE_IDLE;
 			end
 			STATE_LOAD_W3:begin
@@ -122,6 +126,7 @@ module interrupt(
 				it_reg_ra_addr	='bx;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	='bx;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -131,6 +136,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h7FFF;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b1;
 				do_it_load_pc	=1'b0;
 			end
@@ -140,6 +146,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h7FFE;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -149,6 +156,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h7FFD;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -158,6 +166,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h7FFC;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -167,6 +176,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h7FFB;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -176,6 +186,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h7FFA;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -185,6 +196,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h7FF9;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -194,6 +206,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h7FF8;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -203,6 +216,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h7FE0;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -212,6 +226,7 @@ module interrupt(
 				it_reg_ra_addr	='bx;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	='bx;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -221,6 +236,7 @@ module interrupt(
 				it_reg_ra_addr	='bx;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	='bx;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -230,6 +246,17 @@ module interrupt(
 				it_reg_ra_addr	='bx;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	='bx;
+				do_kernel_mode	=1'b0;
+				do_it_store_pc	=1'b0;
+				do_it_load_pc	=1'b0;
+			end
+			STATE_KMODE:begin
+				it_opcode	='bx;
+				it_reg_rt_addr	='bx;
+				it_reg_ra_addr	='bx;
+				it_reg_rb_addr	='bx;
+				it_imm_15bit	='bx;
+				do_kernel_mode	=1'b1;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -239,6 +266,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h0;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -248,6 +276,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h1;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -257,6 +286,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h2;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -266,6 +296,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h3;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -275,6 +306,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h4;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -284,6 +316,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h5;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -293,6 +326,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h6;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -302,6 +336,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h7;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -311,6 +346,7 @@ module interrupt(
 				it_reg_ra_addr	=5'b11111;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	=15'h020;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -320,6 +356,7 @@ module interrupt(
 				it_reg_ra_addr	='bx;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	='bx;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -329,6 +366,7 @@ module interrupt(
 				it_reg_ra_addr	='bx;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	='bx;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b1;
 			end
@@ -338,6 +376,7 @@ module interrupt(
 				it_reg_ra_addr	='bx;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	='bx;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end
@@ -347,6 +386,7 @@ module interrupt(
 				it_reg_ra_addr	='bx;
 				it_reg_rb_addr	='bx;
 				it_imm_15bit	='bx;
+				do_kernel_mode	=1'b0;
 				do_it_store_pc	=1'b0;
 				do_it_load_pc	=1'b0;
 			end

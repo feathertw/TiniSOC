@@ -1,8 +1,8 @@
 `include "def_muxs.v"
 
 `define SRIDX_SYSTEM_MODE	128
-`define SRIDX_KERNEL_STACK	169
-`define SRIDX_USER_STACK	170
+`define SRIDX_KERNEL_STACK	178
+`define SRIDX_USER_STACK	186
 
 `define SYSTEM_MODE_KERNEL	0
 `define SYSTEM_MODE_USER	1
@@ -29,6 +29,7 @@ module regfile(
 	xREG4_select_misc,
 	xREG4_do_misc,
 	xREG4_sub_op_sridx,
+	do_kernel_mode,
 
 	do_hazard,
 	reg_ra_data,
@@ -61,6 +62,7 @@ module regfile(
 	input [1:0] xREG4_select_misc;
 	input xREG4_do_misc;
 	input [9:0] xREG4_sub_op_sridx;
+	input do_kernel_mode;
 
 	output do_hazard;
 	output [DataSize-1:0] reg_ra_data;
@@ -114,7 +116,14 @@ module regfile(
 					endcase
 				end
 			end
-			if(xREG4_do_misc)begin
+			if(do_kernel_mode)begin
+				system_mode <= 1'b0;
+				if(system_mode!=1'b0)begin
+					rw_reg[31]    <= rw_r31_banked;
+					rw_r31_banked <= rw_reg[31];
+				end
+			end
+			else if(xREG4_do_misc)begin
 				if(xREG4_select_misc==`MISC_MTSR)begin
 					case(xREG4_sub_op_sridx)
 						`SRIDX_SYSTEM_MODE:begin

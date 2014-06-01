@@ -222,6 +222,7 @@ module cpu(
 	wire [ 4:0] it_reg_ra_addr;
 	wire [ 4:0] it_reg_rb_addr;
 	wire [14:0] it_imm_15bit;
+	wire do_kernel_mode;
 	wire do_it_store_pc;
 	wire do_it_load_pc;
 	wire do_it_state;
@@ -327,6 +328,7 @@ module cpu(
 		.xREG4_select_misc(xREG4_select_misc),
 		.xREG4_do_misc(xREG4_do_misc),
 		.xREG4_sub_op_sridx(xREG4_sub_op_sridx),
+		.do_kernel_mode(do_kernel_mode),
 
 		.do_hazard(do_hazard_regfile),
 		.reg_ra_data(reg_ra_data),
@@ -659,6 +661,7 @@ module cpu(
 		.it_reg_ra_addr(it_reg_ra_addr),
 		.it_reg_rb_addr(it_reg_rb_addr),
 		.it_imm_15bit(it_imm_15bit),
+		.do_kernel_mode(do_kernel_mode),
 		.do_it_store_pc(do_it_store_pc),
 		.do_it_load_pc(do_it_load_pc),
 		.do_it_state(do_it_state)
