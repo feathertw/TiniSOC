@@ -68,6 +68,14 @@ module alu(
 		                    alu_result=alu_src1^alu_src2;
 		                    alu_overflow=1'b0;
 		                end
+		                `SEB:begin
+		                    alu_result={{24{alu_src1[7]}},alu_src1[7:0]};
+		                    alu_overflow=1'b0;
+		                end
+		                `SEH:begin
+		                    alu_result={{16{alu_src1[15]}},alu_src1[15:0]};
+		                    alu_overflow=1'b0;
+		                end
 		                `SLT:begin
 				    if(alu_src1<alu_src2) alu_result=32'b1;
 				    else		  alu_result=32'b0;
