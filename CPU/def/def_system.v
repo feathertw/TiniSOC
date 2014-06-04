@@ -1,0 +1,2 @@
+`define SYSTEM_MODE_KERNEL	0
+`define SYSTEM_MODE_USER	1
