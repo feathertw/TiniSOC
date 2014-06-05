@@ -11,8 +11,10 @@
 `define SLTS	5'b00111
 `define SRL	5'b01101
 `define SLL	5'b01100
+`define SRA	5'b01110
 `define SRLI  	5'b01001
 `define SLLI  	5'b01000
+`define SRAI	5'b01010
 `define ROTRI 	5'b01011
 `define CMOVN	5'b11011
 `define CMOVZ	5'b11010

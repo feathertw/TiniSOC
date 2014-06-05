@@ -25,14 +25,14 @@ module alu(
 	reg [31:0] alu_result;
 	reg alu_overflow;
 
-	reg [63:0] rotate;
+	reg [63:0] extend;
 	reg a;
 	reg b;
 
 	always @(reset or enable_execute or opcode or sub_op_base or alu_src1 or alu_src2) begin
 		a='bx;
 		b='bx;
-		rotate='bx;
+		extend='bx;
 		if(reset) begin
 		    alu_result=32'b0;
 		    alu_overflow=1'b0;
@@ -98,6 +98,11 @@ module alu(
 		                    alu_result=alu_src1<<alu_src2;
 		                    alu_overflow=1'b0;
 		                end
+		                `SRA:begin
+				    extend={ {32{alu_src1[31]}},alu_src1 }>>alu_src2;
+				    alu_result=extend[31:0];
+		                    alu_overflow=1'b0;
+		                end
 		                `SRLI:begin
 		                    alu_result=alu_src1>>alu_src2;
 		                    alu_overflow=1'b0;
@@ -106,9 +111,14 @@ module alu(
 		                    alu_result=alu_src1<<alu_src2;
 		                    alu_overflow=1'b0;
 		                end
+		                `SRAI:begin
+				    extend={ {32{alu_src1[31]}},alu_src1 }>>alu_src2;
+				    alu_result=extend[31:0];
+		                    alu_overflow=1'b0;
+		                end
 		                `ROTRI:begin
-		                    rotate={alu_src1,alu_src1}>>alu_src2;
-		                    alu_result=rotate[31:0];
+		                    extend={alu_src1,alu_src1}>>alu_src2;
+		                    alu_result=extend[31:0];
 		                    alu_overflow=1'b0;
 		                end
 
