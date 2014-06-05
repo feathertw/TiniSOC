@@ -35,11 +35,14 @@
 `define WRREG_CMOV	3'b110
 `define WRREG_UNKOWN	3'bxxx
 
-`define FOR_RG_ORI 	3'b000
-`define FOR_RG_REG4	3'b001
-`define FOR_RG_REG3	3'b010
-`define FOR_RG_REG2_IMM 3'b011
-`define FOR_RG_REG2_ALU 3'b100
+`define FOR_RG_ORI 	   3'b000
+`define FOR_RG_REG4	   3'b001
+`define FOR_RG_REG3	   3'b010
+`define FOR_RG_REG2_IMM    3'b011
+`define FOR_RG_REG2_ALU    3'b100
+`define FOR_RG_REG2_PC     3'b101
+`define FOR_RG_REG2_SYSREG 3'b110
+`define FOR_RG_REG2_CMOV   3'b111
 
 `define MISC_MTSR	2'b00
 `define MISC_MFSR	2'b01

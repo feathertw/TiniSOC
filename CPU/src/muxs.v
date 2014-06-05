@@ -16,8 +16,12 @@ module muxs(
 	xREG3_system_reg,
 	xREG3_reg_ra_data,
 
-	xREG3_reg_rb_data,
-	xREG3_sub_op_base,
+	xREG2_reg_rt_data,
+	xREG2_reg_ra_data,
+	xREG2_reg_rb_data,
+	xREG2_sub_op_base,
+	cmov_value,
+	xREG3_cmov_value,
 
 	imm_5bit,
 	imm_15bit,
@@ -52,8 +56,12 @@ module muxs(
 	input [31:0] xREG3_system_reg;
 	input [31:0] xREG3_reg_ra_data;
 
-	input [31:0] xREG3_reg_rb_data;
-	input [ 4:0] xREG3_sub_op_base;
+	input  [31:0] xREG2_reg_rt_data;
+	input  [31:0] xREG2_reg_ra_data;
+	input  [31:0] xREG2_reg_rb_data;
+	input  [ 4:0] xREG2_sub_op_base;
+	output [31:0] cmov_value;
+	input  [31:0] xREG3_cmov_value;
 
 	input [4:0] imm_5bit;
 	input [14:0] imm_15bit;
@@ -77,9 +85,9 @@ module muxs(
 	reg [4:0] write_reg_addr;
 	reg [DataSize-1:0] write_reg_data;
 
-	wire [31:0] cmov_value=(xREG3_sub_op_base==`CMOVN&&xREG3_reg_rb_data!=32'h0)? xREG3_reg_ra_data
-			      :(xREG3_sub_op_base==`CMOVZ&&xREG3_reg_rb_data==32'h0)? xREG3_reg_ra_data
-			      :xREG3_reg_rt_data;
+	wire [31:0] cmov_value=(xREG2_sub_op_base==`CMOVN&&xREG2_reg_rb_data!=32'h0)? xREG2_reg_ra_data
+			      :(xREG2_sub_op_base==`CMOVZ&&xREG2_reg_rb_data==32'h0)? xREG2_reg_ra_data
+			      :xREG2_reg_rt_data;
 
 	always @(select_alu_src2 or reg_rb_data or imm_extend or imm_15bit or sub_op_sv or reg_rt_data) begin
 		case(select_alu_src2)
@@ -155,7 +163,7 @@ module muxs(
 		endcase
 	end
 
-	always @(select_write_reg or xREG3_alu_result or xREG3_imm_extend or mem_read_data or xREG3_write_reg_pc or xREG3_reg_rt_data or xREG3_system_reg or cmov_value) begin
+	always @(select_write_reg or xREG3_alu_result or xREG3_imm_extend or mem_read_data or xREG3_write_reg_pc or xREG3_reg_rt_data or xREG3_system_reg or xREG3_cmov_value) begin
 		case(select_write_reg)
 			`WRREG_ALURESULT: begin
 				write_reg_data = xREG3_alu_result;
@@ -176,7 +184,7 @@ module muxs(
 				write_reg_data = xREG3_system_reg;
 			end
 			`WRREG_CMOV: begin
-				write_reg_data = cmov_value;
+				write_reg_data = xREG3_cmov_value;
 			end
 			default: begin
 				write_reg_data = 32'bxxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx;

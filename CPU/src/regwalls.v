@@ -21,10 +21,12 @@ module regwalls(
 	mREG2_reg_ra_data,
 	oREG3_reg_ra_data,
 	iREG2_reg_rb_data,
-	oREG3_reg_rb_data,
+	oREG2_reg_rb_data,
 	iREG2_reg_rt_data,
+	mREG2_reg_rt_data,
 	oREG3_reg_rt_data,
 	iREG2_system_reg,
+	mREG2_system_reg,
 	oREG3_system_reg,
 
 	iREG2_write_reg_addr,
@@ -39,8 +41,7 @@ module regwalls(
 	iREG2_opcode,
 	iREG2_sub_op_base,
 	oREG2_opcode,
-	mREG2_sub_op_base,
-	oREG3_sub_op_base,
+	oREG2_sub_op_base,
 	iREG2_sub_op_sridx,
 	oREG4_sub_op_sridx,
 
@@ -77,6 +78,8 @@ module regwalls(
 	iREG3_alu_result,
 	oREG3_alu_result,
 
+	iREG3_cmov_value,
+	oREG3_cmov_value,
 	iREG4_write_reg_data,
 	oREG4_write_reg_data,
 	iREG3_write_ra_data,
@@ -84,6 +87,7 @@ module regwalls(
 	oREG4_write_ra_data,
 
 	iREG2_write_reg_pc,
+	mREG2_write_reg_pc,
 	oREG3_write_reg_pc,
 
 	do_flush_REG1,
@@ -124,16 +128,17 @@ module regwalls(
 	reg    [31:0] oREG3_reg_ra_data;
 
 	input  [31:0] iREG2_reg_rb_data;
-	output [31:0] oREG3_reg_rb_data;
-	reg    [31:0] mREG2_reg_rb_data;
-	reg    [31:0] oREG3_reg_rb_data;
+	output [31:0] oREG2_reg_rb_data;
+	reg    [31:0] oREG2_reg_rb_data;
 
 	input  [31:0] iREG2_reg_rt_data;
+	output [31:0] mREG2_reg_rt_data;
 	output [31:0] oREG3_reg_rt_data;
 	reg    [31:0] mREG2_reg_rt_data;
 	reg    [31:0] oREG3_reg_rt_data;
 
 	input  [31:0] iREG2_system_reg;
+	output [31:0] mREG2_system_reg;
 	output [31:0] oREG3_system_reg;
 	reg    [31:0] mREG2_system_reg;
 	reg    [31:0] oREG3_system_reg;
@@ -158,12 +163,10 @@ module regwalls(
 	input  [ 4:0] iREG2_sub_op_base;
 	input  [ 9:0] iREG2_sub_op_sridx;
 	output [ 5:0] oREG2_opcode;
-	output [ 4:0] mREG2_sub_op_base;
-	output [ 4:0] oREG3_sub_op_base;
+	output [ 4:0] oREG2_sub_op_base;
 	output [ 9:0] oREG4_sub_op_sridx;
 	reg    [ 5:0] oREG2_opcode;
-	reg    [ 4:0] mREG2_sub_op_base;
-	reg    [ 4:0] oREG3_sub_op_base;
+	reg    [ 4:0] oREG2_sub_op_base;
 	reg    [ 9:0] mREG2_sub_op_sridx;
 	reg    [ 9:0] mREG3_sub_op_sridx;
 	reg    [ 9:0] oREG4_sub_op_sridx;
@@ -234,12 +237,16 @@ module regwalls(
 	reg    [31:0] oREG4_write_ra_data;
 
 	//muxs
+	output [31:0] iREG3_cmov_value;
+	output [31:0] oREG3_cmov_value;
+	reg    [31:0] oREG3_cmov_value;
 	input  [31:0] iREG4_write_reg_data;
 	output [31:0] oREG4_write_reg_data;
 	reg    [31:0] oREG4_write_reg_data;
 
 	//pc
 	input  [31:0] iREG2_write_reg_pc;
+	output [31:0] mREG2_write_reg_pc;
 	output [31:0] oREG3_write_reg_pc;
 	reg    [31:0] mREG2_write_reg_pc;
 	reg    [31:0] oREG3_write_reg_pc;
@@ -260,13 +267,12 @@ module regwalls(
 
 			mREG2_reg_ra_data<=32'b0;
 			oREG3_reg_ra_data<=32'b0;
-			mREG2_reg_rb_data<=32'b0;
+			oREG2_reg_rb_data<=32'b0;
 			mREG2_reg_rt_data<=32'b0;
 			mREG2_system_reg <=32'b0;
 
 			oREG2_opcode     <=6'b0;
-			mREG2_sub_op_base<=5'b0;
-			oREG3_sub_op_base<=5'b0;
+			oREG2_sub_op_base<=5'b0;
 			mREG2_sub_op_sridx<=10'b0;
 			mREG3_sub_op_sridx<=10'b0;
 			oREG4_sub_op_sridx<=10'b0;
@@ -285,10 +291,10 @@ module regwalls(
 			mREG2_select_write_reg<=3'b0;
 			mREG2_select_misc     <=2'b0;
 
-			oREG3_reg_rb_data     <=32'b0;
 			oREG3_reg_rt_data     <=32'b0;
 			oREG3_system_reg      <=32'b0;
 			oREG3_alu_result      <=32'b0;
+			oREG3_cmov_value      <=32'b0;
 			oREG3_imm_extend      <=32'b0;
 
 			mREG3_do_misc         <=1'b0;
@@ -346,12 +352,12 @@ module regwalls(
 
 			if(do_hazard_REG2)begin
 				mREG2_reg_ra_data<=32'b0;
-				mREG2_reg_rb_data<=32'b0;
+				oREG2_reg_rb_data<=32'b0;
 				mREG2_reg_rt_data<=32'b0;
 				mREG2_system_reg <=32'b0;
 
 				oREG2_opcode     <=6'b0;
-				mREG2_sub_op_base<=5'b0;
+				oREG2_sub_op_base<=5'b0;
 				mREG2_sub_op_sridx<=10'b0;
 
 				oREG2_alu_src2   <=32'b0;
@@ -372,12 +378,12 @@ module regwalls(
 			end
 			else begin
 				mREG2_reg_ra_data<=iREG2_reg_ra_data;
-				mREG2_reg_rb_data<=iREG2_reg_rb_data;
+				oREG2_reg_rb_data<=iREG2_reg_rb_data;
 				mREG2_reg_rt_data<=iREG2_reg_rt_data;
 				mREG2_system_reg <=iREG2_system_reg;
 
 				oREG2_opcode     <=iREG2_opcode;
-				mREG2_sub_op_base<=iREG2_sub_op_base;
+				oREG2_sub_op_base<=iREG2_sub_op_base;
 				mREG2_sub_op_sridx<=iREG2_sub_op_sridx;
 
 				oREG2_alu_src2        <=iREG2_alu_src2;
@@ -398,12 +404,11 @@ module regwalls(
 			end
 
 			oREG3_reg_ra_data     <=mREG2_reg_ra_data;
-			oREG3_reg_rb_data     <=mREG2_reg_rb_data;
 			oREG3_reg_rt_data     <=mREG2_reg_rt_data;
 			oREG3_system_reg      <=mREG2_system_reg;
 			oREG3_alu_result      <=iREG3_alu_result;
+			oREG3_cmov_value      <=iREG3_cmov_value;
 			oREG3_imm_extend      <=mREG2_imm_extend;
-			oREG3_sub_op_base     <=mREG2_sub_op_base;
 			mREG3_sub_op_sridx    <=mREG2_sub_op_sridx;
 
 			mREG3_do_misc         <=mREG2_do_misc;

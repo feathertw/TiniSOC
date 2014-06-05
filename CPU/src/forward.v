@@ -1,11 +1,15 @@
 `include "def_muxs.v"
 
-`define CHOOSE_DATA xREG4_write_rx_data or write_rx_data or xREG2_imm_extend or alu_result
+`define CHOOSE_DATA xREG4_write_rx_data or write_rx_data \
+		or xREG2_imm_extend or alu_result or xREG2_write_reg_pc or xREG2_system_reg or cmov_value
 `define CHOOSE_REG4 (xREG4_do_rx_write && (reg_rx_addr==xREG4_write_rx_addr) )
 `define CHOOSE_REG3 (xREG3_do_rx_write && (reg_rx_addr==xREG3_write_rx_addr) )
 `define CHOOSE_REG2 (xREG2_do_rx_write && (reg_rx_addr==xREG2_write_rx_addr) &&(!xREG2_do_dm_read) )
-`define CHOOSE_REG2_IMM (xREG2_select_write_rx==`WRREG_IMMDATA)
-`define CHOOSE_REG2_ALU (xREG2_select_write_rx==`WRREG_ALURESULT)
+`define CHOOSE_REG2_IMM    (xREG2_select_write_rx==`WRREG_IMMDATA)
+`define CHOOSE_REG2_ALU    (xREG2_select_write_rx==`WRREG_ALURESULT)
+`define CHOOSE_REG2_PC     (xREG2_select_write_rx==`WRREG_PC)
+`define CHOOSE_REG2_SYSREG (xREG2_select_write_rx==`WRREG_SYSREG)
+`define CHOOSE_REG2_CMOV   (xREG2_select_write_rx==`WRREG_CMOV)
 `define CHOOSE xREG4_do_rx_write or xREG4_write_rx_addr or xREG3_do_rx_write or xREG3_write_rx_addr \
 		or xREG2_do_rx_write or xREG2_write_rx_addr or xREG2_do_dm_read or xREG2_select_write_rx
 
@@ -23,8 +27,12 @@ module forw(
 	xREG2_do_rx_write,
 	xREG2_select_write_rx,
 	xREG2_write_rx_addr,
+
 	xREG2_imm_extend,
 	alu_result,
+	xREG2_write_reg_pc,
+	xREG2_system_reg,
+	cmov_value,
 
 	xREG3_do_rx_write,
 	xREG3_write_rx_addr,
@@ -44,8 +52,12 @@ module forw(
 	input xREG2_do_rx_write;
 	input [ 2:0] xREG2_select_write_rx;
 	input [ 4:0] xREG2_write_rx_addr;
+
 	input [31:0] xREG2_imm_extend;
 	input [31:0] alu_result;
+	input [31:0] xREG2_write_reg_pc;
+	input [31:0] xREG2_system_reg;
+	input [31:0] cmov_value;
 
 	input xREG3_do_rx_write;
 	input [ 4:0] xREG3_write_rx_addr;
@@ -65,18 +77,24 @@ module forw(
 		if(`CHOOSE_REG4) select_f_reg_rx_data=`FOR_RG_REG4;
 		if(`CHOOSE_REG3) select_f_reg_rx_data=`FOR_RG_REG3;
 		if(`CHOOSE_REG2) begin
-			if(`CHOOSE_REG2_IMM) select_f_reg_rx_data=`FOR_RG_REG2_IMM;
-			if(`CHOOSE_REG2_ALU) select_f_reg_rx_data=`FOR_RG_REG2_ALU;
+			if(`CHOOSE_REG2_IMM) 	select_f_reg_rx_data=`FOR_RG_REG2_IMM;
+			if(`CHOOSE_REG2_ALU) 	select_f_reg_rx_data=`FOR_RG_REG2_ALU;
+			if(`CHOOSE_REG2_PC)  	select_f_reg_rx_data=`FOR_RG_REG2_PC;
+			if(`CHOOSE_REG2_SYSREG)	select_f_reg_rx_data=`FOR_RG_REG2_SYSREG;
+			if(`CHOOSE_REG2_CMOV)	select_f_reg_rx_data=`FOR_RG_REG2_CMOV;
 		end
 	end
 	always @( `CHOOSE_DATA or reg_rx_data or select_f_reg_rx_data)begin
 		case(select_f_reg_rx_data)
-			`FOR_RG_ORI:	 f_reg_rx_data=reg_rx_data;
-			`FOR_RG_REG4:	 f_reg_rx_data=xREG4_write_rx_data;
-			`FOR_RG_REG3:	 f_reg_rx_data=write_rx_data;
-			`FOR_RG_REG2_IMM:f_reg_rx_data=xREG2_imm_extend;
-			`FOR_RG_REG2_ALU:f_reg_rx_data=alu_result;
-			default:	 f_reg_rx_data='bx;
+			`FOR_RG_ORI:	     f_reg_rx_data=reg_rx_data;
+			`FOR_RG_REG4:	     f_reg_rx_data=xREG4_write_rx_data;
+			`FOR_RG_REG3:	     f_reg_rx_data=write_rx_data;
+			`FOR_RG_REG2_IMM:    f_reg_rx_data=xREG2_imm_extend;
+			`FOR_RG_REG2_ALU:    f_reg_rx_data=alu_result;
+			`FOR_RG_REG2_PC:     f_reg_rx_data=xREG2_write_reg_pc;
+			`FOR_RG_REG2_SYSREG: f_reg_rx_data=xREG2_system_reg;
+			`FOR_RG_REG2_CMOV:   f_reg_rx_data=cmov_value;
+			default:	     f_reg_rx_data='bx;
 		endcase
 	end
 endmodule
@@ -99,6 +117,9 @@ module forward(
 	xREG4_write_reg_addr,
 	xREG2_imm_extend,
 	alu_result,
+	xREG2_write_reg_pc,
+	xREG2_system_reg,
+	cmov_value,
 	write_reg_data,
 	xREG4_write_reg_data,
 
@@ -137,6 +158,9 @@ module forward(
 	input [ 4:0] xREG4_write_reg_addr;
 	input [31:0] xREG2_imm_extend;
 	input [31:0] alu_result;
+	input [31:0] xREG2_write_reg_pc;
+	input [31:0] xREG2_system_reg;
+	input [31:0] cmov_value;
 	input [31:0] write_reg_data;
 	input [31:0] xREG4_write_reg_data;
 
@@ -186,6 +210,9 @@ module forward(
 		.xREG2_write_rx_addr(xREG2_write_reg_addr),
 		.xREG2_imm_extend(xREG2_imm_extend),
 		.alu_result(alu_result),
+		.xREG2_write_reg_pc(xREG2_write_reg_pc),
+		.xREG2_system_reg(xREG2_system_reg),
+		.cmov_value(cmov_value),
 
 		.xREG3_do_rx_write(xREG3_do_reg_write),
 		.xREG3_write_rx_addr(xREG3_write_reg_addr),
@@ -209,6 +236,9 @@ module forward(
 		.xREG2_write_rx_addr(xREG2_write_reg_addr),
 		.xREG2_imm_extend(xREG2_imm_extend),
 		.alu_result(alu_result),
+		.xREG2_write_reg_pc(xREG2_write_reg_pc),
+		.xREG2_system_reg(xREG2_system_reg),
+		.cmov_value(cmov_value),
 
 		.xREG3_do_rx_write(xREG3_do_reg_write),
 		.xREG3_write_rx_addr(xREG3_write_reg_addr),
@@ -232,6 +262,9 @@ module forward(
 		.xREG2_write_rx_addr(xREG2_write_reg_addr),
 		.xREG2_imm_extend(xREG2_imm_extend),
 		.alu_result(alu_result),
+		.xREG2_write_reg_pc(xREG2_write_reg_pc),
+		.xREG2_system_reg(xREG2_system_reg),
+		.cmov_value(cmov_value),
 
 		.xREG3_do_rx_write(xREG3_do_reg_write),
 		.xREG3_write_rx_addr(xREG3_write_reg_addr),
@@ -255,6 +288,9 @@ module forward(
 		.xREG2_write_rx_addr(xREG2_write_ra_addr),
 		.xREG2_imm_extend(32'bx),
 		.alu_result(write_ra_data),
+		.xREG2_write_reg_pc(xREG2_write_reg_pc),
+		.xREG2_system_reg(xREG2_system_reg),
+		.cmov_value(cmov_value),
 	
 		.xREG3_do_rx_write(xREG3_do_ra_write),
 		.xREG3_write_rx_addr(xREG3_write_ra_addr),
@@ -278,6 +314,9 @@ module forward(
 		.xREG2_write_rx_addr(xREG2_write_ra_addr),
 		.xREG2_imm_extend(32'bx),
 		.alu_result(write_ra_data),
+		.xREG2_write_reg_pc(xREG2_write_reg_pc),
+		.xREG2_system_reg(xREG2_system_reg),
+		.cmov_value(cmov_value),
 	
 		.xREG3_do_rx_write(xREG3_do_ra_write),
 		.xREG3_write_rx_addr(xREG3_write_ra_addr),
@@ -301,6 +340,9 @@ module forward(
 		.xREG2_write_rx_addr(xREG2_write_ra_addr),
 		.xREG2_imm_extend(32'bx),
 		.alu_result(write_ra_data),
+		.xREG2_write_reg_pc(xREG2_write_reg_pc),
+		.xREG2_system_reg(xREG2_system_reg),
+		.cmov_value(cmov_value),
 	
 		.xREG3_do_rx_write(xREG3_do_ra_write),
 		.xREG3_write_rx_addr(xREG3_write_ra_addr),
