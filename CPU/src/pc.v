@@ -95,9 +95,9 @@ module pc(
 			else if(do_interrupt) current_pc<=interrupt_pc;
 			else if(do_hazard)    current_pc<=current_pc;
 			else if(final_select_pc==`PC_4&&do_jcache) current_pc<=jcache_pc;
-			else if(final_select_pc==`PC_4&&do_bcache) current_pc<=bcache_pc;
+			else if(final_select_pc==`PC_4&&do_bcache&&!do_halt_pc) current_pc<=bcache_pc;
 			else if( (xREG1_do_bcache)&&(!do_branch) ) current_pc<=xREG1_bcache_opc+4;
-			else if(select_pc!=`PC_4) current_pc<=next_pc;
+			else if(final_select_pc!=`PC_4) current_pc<=next_pc;
 			else if(do_halt_pc)   	  current_pc<=current_pc;
 			else		      	  current_pc<=next_pc;
 		end
@@ -131,7 +131,7 @@ module pc(
 		endcase
 	end
 
-	always @(final_select_pc or current_pc or imm_14bit or imm_16bit or imm_24bit or reg_rb_data) begin
+	always @(final_select_pc or current_pc or target_pc or imm_14bit or imm_16bit or imm_24bit or reg_rb_data) begin
 		case(final_select_pc)
 			`PC_4:begin
 				next_pc=current_pc+4;

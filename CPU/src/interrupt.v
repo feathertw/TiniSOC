@@ -478,7 +478,7 @@ module interrupt(
 					interrupt_pc<=`VECTOR_SYSCALL;
 				end
 			end
-			if(do_systick_it)begin
+			if(state==STATE_WAIT)begin
 				do_halt_pc<=1'b1;
 				interrupt_pc<=`VECTOR_SYSTICK;
 			end
