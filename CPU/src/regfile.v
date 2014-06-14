@@ -9,6 +9,7 @@
 module regfile(
 	clock,
 	reset,
+	enable_system,
 	enable_reg_fetch,
 	enable_reg_write,
 
@@ -44,6 +45,7 @@ module regfile(
 
 	input clock;
 	input reset;
+	input enable_system;
 	input enable_reg_fetch; 
 	input enable_reg_write;
 
@@ -124,7 +126,7 @@ module regfile(
 					endcase
 				end
 			end
-			if(do_kernel_mode||do_user_mode)begin
+			if( (enable_system)&&(do_kernel_mode||do_user_mode) )begin
 				iret_mode   <= system_mode;
 				if(do_kernel_mode) 	system_mode <= `SYSTEM_MODE_KERNEL;
 				else if(do_user_mode)   system_mode <= `SYSTEM_MODE_USER;

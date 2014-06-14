@@ -318,6 +318,7 @@ module cpu(
 	regfile REGFILE(
 		.clock(clock),
 		.reset(reset),
+		.enable_system(enable_system),
 		.enable_reg_fetch(enable_system),
 		.enable_reg_write(enable_system),
 		.reg_ra_addr(final_reg_ra_addr),
