@@ -16,7 +16,7 @@ module mem(
 );
 	parameter data_size=32;
 	parameter mem_size=1024*256/4;
-	parameter mem_size_bit=10+8-2;
+	parameter mem_size_bit=10+8;
 
 	input clock;
 	input reset;
