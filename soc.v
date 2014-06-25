@@ -1,10 +1,10 @@
-`include "CPU/cpu.v"
-`include "BUS/ahb.v"
-`include "MEM/mem.v"
-`include "PER/uart.v"
-`include "WRP/wrp_master.v"
-`include "WRP/wrp_master_io.v"
-`include "WRP/wrp_slave.v"
+`include "cpu.v"
+`include "ahb.v"
+`include "mem.v"
+`include "uart.v"
+`include "wrp_master.v"
+`include "wrp_master_io.v"
+`include "wrp_slave.v"
 module soc(
 	clock,
 	reset,
