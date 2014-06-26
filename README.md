@@ -1,16 +1,16 @@
 All rights reserved by fea.
 
-TinySOC
+TiniSOC
 =======
 
-TinySOC is a hardware system including a CPU, BUS, MEMORY, PERIPHERAL, WRAPPER and so on.
-Most TinySOC code is written by verilog and pre-syn run in iverilog.
+TiniSOC is a hardware system including a CPU, BUS, MEMORY, PERIPHERAL, WRAPPER and so on.
+Most TiniSOC code is written by verilog and pre-syn run in iverilog.
 This project is motivated by a class homework and interest.
 The goal is to provide a hardware system that have basic components and
 there are kernel mode and user mode in CPU that can be used in a basic operation system.
-TinySOC project can run with TinyOS project and TinyRUN project.
+TiniSOC project can run with TiniOS project and TiniRUN project.
 
-Characteristics of TinySOC
+Characteristics of TiniSOC
 ==========================
 
 * The CPU ISR refer [AndesStar Instruction Set Architecture](http://goo.gl/Cctf5n) and STM32.
@@ -24,7 +24,7 @@ Characteristics of TinySOC
 * WRAPPER for connect components to BUS.
 
 
-TinySOC-CPU
+TiniSOC-CPU
 ===========
 
 * 5 stage pipeline
